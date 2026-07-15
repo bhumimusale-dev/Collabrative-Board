@@ -81,6 +81,7 @@ func main() {
 	templateHandler := &api.TemplateHandler{Store: store}
 	userHandler := &api.UserHandler{Store: store}
 	versionHandler := &api.VersionHandler{Store: store}
+	saasHandler := &api.SaasHandler{Store: store}
 
 	// Health Check / Basic info
 	http.HandleFunc("/health", CORS(func(w http.ResponseWriter, r *http.Request) {
@@ -157,6 +158,20 @@ func main() {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	})))
+
+	// SaaS Invitation & Workspace endpoints
+	http.HandleFunc("/api/teams/invitations", CORS(api.AuthMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet {
+			saasHandler.ListInvitations(w, r)
+		} else if r.Method == http.MethodPost {
+			saasHandler.SendInvitation(w, r)
+		} else {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	})))
+	http.HandleFunc("/api/teams/invitations/respond", CORS(api.AuthMiddleware(saasHandler.RespondToInvitation)))
+	http.HandleFunc("/api/teams/members", CORS(api.AuthMiddleware(saasHandler.ListTeamMembers)))
+	http.HandleFunc("/api/teams/workspaces", CORS(api.AuthMiddleware(saasHandler.ListTeamWorkspaces)))
 
 	// Template Marketplace Routes
 	http.HandleFunc("/api/templates", CORS(templateHandler.ListTemplates))

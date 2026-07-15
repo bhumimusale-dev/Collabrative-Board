@@ -212,6 +212,21 @@ func NewStore(dbPath string) (*Store, error) {
 		expires_at TIMESTAMP NOT NULL,
 		FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 	);
+
+	-- Team Invitations Table
+	CREATE TABLE IF NOT EXISTS team_invitations (
+		id TEXT PRIMARY KEY,
+		team_id TEXT NOT NULL,
+		email TEXT NOT NULL,
+		role TEXT DEFAULT 'editor',
+		token TEXT NOT NULL UNIQUE,
+		created_by TEXT NOT NULL,
+		expires_at TIMESTAMP NOT NULL,
+		accepted INTEGER DEFAULT 0,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE,
+		FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
+	);
 	`
 	if _, err := db.Exec(query); err != nil {
 		db.Close()
@@ -221,6 +236,7 @@ func NewStore(dbPath string) (*Store, error) {
 	// Migrations: Add description and author_id to board_versions if they don't exist
 	_, _ = db.Exec("ALTER TABLE board_versions ADD COLUMN description TEXT;")
 	_, _ = db.Exec("ALTER TABLE board_versions ADD COLUMN author_id TEXT;")
+	_, _ = db.Exec("ALTER TABLE workspaces ADD COLUMN team_id TEXT;")
 
 	return &Store{db: db}, nil
 }

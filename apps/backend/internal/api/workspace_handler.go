@@ -13,8 +13,9 @@ type WorkspaceHandler struct {
 }
 
 type CreateWorkspaceRequest struct {
-	Name string `json:"name"`
-	Type string `json:"type"` // "personal" or "team"
+	Name   string `json:"name"`
+	Type   string `json:"type"`    // "personal" or "team"
+	TeamID string `json:"team_id"` // Optional: Link to team
 }
 
 func (h *WorkspaceHandler) ListWorkspaces(w http.ResponseWriter, r *http.Request) {
@@ -65,6 +66,7 @@ func (h *WorkspaceHandler) CreateWorkspace(w http.ResponseWriter, r *http.Reques
 		OwnerID: userID,
 		Name:    req.Name,
 		Type:    req.Type,
+		TeamID:  req.TeamID,
 	}
 
 	if err := h.Store.CreateWorkspace(ws); err != nil {
@@ -78,6 +80,29 @@ func (h *WorkspaceHandler) CreateWorkspace(w http.ResponseWriter, r *http.Reques
 		UserID:      userID,
 		Role:        "owner",
 	})
+
+	// If team workspace, automatically add all team members as workspace members
+	if req.TeamID != "" {
+		members, err := h.Store.GetTeamMembers(req.TeamID)
+		if err == nil {
+			for _, m := range members {
+				if m.UserID == userID {
+					continue // Already added as owner
+				}
+				workspaceRole := "editor"
+				if m.Role == "viewer" {
+					workspaceRole = "viewer"
+				} else if m.Role == "owner" || m.Role == "admin" {
+					workspaceRole = "admin"
+				}
+				_ = h.Store.CreateWorkspaceMember(&storage.WorkspaceMember{
+					WorkspaceID: workspaceID,
+					UserID:      m.UserID,
+					Role:        workspaceRole,
+				})
+			}
+		}
+	}
 
 	// Log audit trail
 	auditID, _ := auth.GenerateRandomToken()

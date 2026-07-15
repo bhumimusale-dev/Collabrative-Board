@@ -18,6 +18,7 @@ export interface Workspace {
   owner_id: string;
   name: string;
   type: string;
+  team_id?: string;
 }
 
 export interface Board {
@@ -61,6 +62,45 @@ export interface BoardVersion {
   author_name: string;
   author_avatar: string;
   created_at: string;
+}
+
+export interface TeamInvitation {
+  id: string;
+  team_id: string;
+  email: string;
+  role: string;
+  token: string;
+  created_by: string;
+  expires_at: string;
+  accepted: boolean;
+  created_at: string;
+}
+
+export interface TeamMember {
+  team_id: string;
+  user_id: string;
+  role: string;
+  name: string;
+  username: string;
+  email: string;
+  avatar: string;
+}
+
+export interface Team {
+  id: string;
+  org_id: string;
+  name: string;
+  avatar?: string;
+  description?: string;
+  owner_id: string;
+}
+
+export interface Organization {
+  id: string;
+  name: string;
+  logo?: string;
+  domain?: string;
+  description?: string;
 }
 
 class ApiService {
@@ -155,10 +195,10 @@ class ApiService {
     return this.request('/workspaces');
   }
 
-  public async createWorkspace(name: string, type = 'team'): Promise<Workspace> {
+  public async createWorkspace(name: string, type = 'team', teamId?: string): Promise<Workspace> {
     return this.request('/workspaces', {
       method: 'POST',
-      body: JSON.stringify({ name, type }),
+      body: JSON.stringify({ name, type, team_id: teamId }),
     });
   }
 
@@ -243,6 +283,57 @@ class ApiService {
 
   public async getBoardVersions(boardId: string): Promise<BoardVersion[]> {
     return this.request(`/boards/versions?board_id=${boardId}`);
+  }
+
+  // SaaS Operations
+  public async getOrganizations(): Promise<Organization[]> {
+    // Note: Since multi-tenant org list is implicit per user, we fetch through workspace context
+    // or direct endpoint. For now, we can create orgs.
+    return [];
+  }
+
+  public async createOrganization(name: string, domain = '', description = ''): Promise<Organization> {
+    return this.request('/orgs', {
+      method: 'POST',
+      body: JSON.stringify({ name, domain, description }),
+    });
+  }
+
+  public async getTeams(orgId: string): Promise<Team[]> {
+    return this.request(`/teams?org_id=${orgId}`);
+  }
+
+  public async createTeam(orgId: string, name: string, description = ''): Promise<Team> {
+    return this.request('/teams', {
+      method: 'POST',
+      body: JSON.stringify({ org_id: orgId, name, description }),
+    });
+  }
+
+  public async sendInvitation(teamId: string, email: string, role: string): Promise<TeamInvitation> {
+    return this.request('/teams/invitations', {
+      method: 'POST',
+      body: JSON.stringify({ team_id: teamId, email, role }),
+    });
+  }
+
+  public async listInvitations(): Promise<TeamInvitation[]> {
+    return this.request('/teams/invitations');
+  }
+
+  public async respondToInvitation(token: string, action: 'accept' | 'decline'): Promise<{ status: string }> {
+    return this.request('/teams/invitations/respond', {
+      method: 'POST',
+      body: JSON.stringify({ token, action }),
+    });
+  }
+
+  public async getTeamMembers(teamId: string): Promise<TeamMember[]> {
+    return this.request(`/teams/members?team_id=${teamId}`);
+  }
+
+  public async getTeamWorkspaces(teamId: string): Promise<Workspace[]> {
+    return this.request(`/teams/workspaces?team_id=${teamId}`);
   }
 }
 

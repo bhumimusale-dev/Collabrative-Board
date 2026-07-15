@@ -42,6 +42,7 @@ type Workspace struct {
 	OwnerID   string    `json:"owner_id"`
 	Name      string    `json:"name"`
 	Type      string    `json:"type"`
+	TeamID    string    `json:"team_id,omitempty"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -195,8 +196,14 @@ func (s *Store) DeleteAllSessionsForUser(userID string) error {
 
 // Workspace Queries
 func (s *Store) CreateWorkspace(w *Workspace) error {
-	query := `INSERT INTO workspaces (id, owner_id, name, type) VALUES (?, ?, ?, ?)`
-	_, err := s.db.Exec(query, w.ID, w.OwnerID, w.Name, w.Type)
+	query := `INSERT INTO workspaces (id, owner_id, name, type, team_id) VALUES (?, ?, ?, ?, ?)`
+	var teamIDVal interface{}
+	if w.TeamID != "" {
+		teamIDVal = w.TeamID
+	} else {
+		teamIDVal = nil
+	}
+	_, err := s.db.Exec(query, w.ID, w.OwnerID, w.Name, w.Type, teamIDVal)
 	return err
 }
 
@@ -208,7 +215,7 @@ func (s *Store) CreateWorkspaceMember(m *WorkspaceMember) error {
 
 func (s *Store) GetWorkspacesForUser(userID string) ([]*Workspace, error) {
 	query := `
-	SELECT w.id, w.owner_id, w.name, w.type FROM workspaces w
+	SELECT w.id, w.owner_id, w.name, w.type, COALESCE(w.team_id, '') FROM workspaces w
 	INNER JOIN workspace_members wm ON w.id = wm.workspace_id
 	WHERE wm.user_id = ?`
 	rows, err := s.db.Query(query, userID)
@@ -220,7 +227,7 @@ func (s *Store) GetWorkspacesForUser(userID string) ([]*Workspace, error) {
 	list := make([]*Workspace, 0)
 	for rows.Next() {
 		var w Workspace
-		if err := rows.Scan(&w.ID, &w.OwnerID, &w.Name, &w.Type); err != nil {
+		if err := rows.Scan(&w.ID, &w.OwnerID, &w.Name, &w.Type, &w.TeamID); err != nil {
 			return nil, err
 		}
 		list = append(list, &w)
