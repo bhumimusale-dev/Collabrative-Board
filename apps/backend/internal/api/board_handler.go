@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"collabboard-backend/internal/auth"
@@ -64,6 +65,25 @@ func (h *BoardHandler) CreateBoard(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Bad request", http.StatusBadRequest)
 		return
+	}
+
+	// Verify plan board limits
+	ws, err := h.Store.GetWorkspaceByID(req.WorkspaceID)
+	if err != nil || ws == nil {
+		http.Error(w, "Workspace not found", http.StatusNotFound)
+		return
+	}
+
+	if ws.TeamID != "" {
+		sub, err := h.Store.GetSubscriptionByTeam(ws.TeamID)
+		if err == nil && sub != nil {
+			boardCount, _ := h.Store.CountBoardsInWorkspace(req.WorkspaceID)
+			limit := Tiers[sub.Plan].BoardLimit
+			if boardCount >= limit {
+				http.Error(w, fmt.Sprintf("Board limit reached for %s plan (%d boards). Please upgrade your subscription to create more boards.", sub.Plan, limit), http.StatusForbidden)
+				return
+			}
+		}
 	}
 
 	boardIDToken, _ := auth.GenerateRandomToken()

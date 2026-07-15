@@ -13,11 +13,13 @@ import {
   Menu,
   X,
   Users,
-  UserPlus
+  UserPlus,
+  CreditCard
 } from 'lucide-react';
 import { api } from '../services/api';
 import type { Workspace, Board, TeamInvitation, TeamMember } from '../services/api';
 import { useAuth } from './AuthContext';
+import { BillingPortal } from './BillingPortal';
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -41,6 +43,7 @@ export const Dashboard: React.FC = () => {
   // SaaS Modals / Forms
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
+  const [showBillingModal, setShowBillingModal] = useState(false);
   const [newWorkspaceName, setNewWorkspaceName] = useState('');
   const [newWorkspaceType, setNewWorkspaceType] = useState('team');
   const [inviteEmail, setInviteEmail] = useState('');
@@ -429,6 +432,13 @@ export const Dashboard: React.FC = () => {
                   <Users className="w-4 h-4 text-purple-400" />
                   <span>View Team Members ({teamMembers.length})</span>
                 </button>
+                <button
+                  onClick={() => setShowBillingModal(true)}
+                  className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:bg-slate-900 hover:text-slate-200 transition-colors"
+                >
+                  <CreditCard className="w-4 h-4 text-emerald-400" />
+                  <span>Billing & Plans</span>
+                </button>
               </div>
             </div>
           )}
@@ -755,6 +765,20 @@ export const Dashboard: React.FC = () => {
             </div>
           </form>
         </div>
+      )}
+
+      {activeWorkspace?.team_id && (
+        <BillingPortal
+          teamId={activeWorkspace.team_id!}
+          isOpen={showBillingModal}
+          onClose={() => setShowBillingModal(false)}
+          onPlanChanged={() => {
+            if (activeWorkspace) {
+              loadTeamDetails(activeWorkspace.team_id!);
+              loadBoards(activeWorkspace.id);
+            }
+          }}
+        />
       )}
 
     </div>

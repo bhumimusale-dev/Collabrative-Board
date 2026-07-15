@@ -207,6 +207,17 @@ func (s *Store) CreateWorkspace(w *Workspace) error {
 	return err
 }
 
+func (s *Store) GetWorkspaceByID(id string) (*Workspace, error) {
+	query := `SELECT id, owner_id, name, type, COALESCE(team_id, '') FROM workspaces WHERE id = ?`
+	row := s.db.QueryRow(query, id)
+	var w Workspace
+	err := row.Scan(&w.ID, &w.OwnerID, &w.Name, &w.Type, &w.TeamID)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	return &w, err
+}
+
 func (s *Store) CreateWorkspaceMember(m *WorkspaceMember) error {
 	query := `INSERT INTO workspace_members (workspace_id, user_id, role) VALUES (?, ?, ?)`
 	_, err := s.db.Exec(query, m.WorkspaceID, m.UserID, m.Role)

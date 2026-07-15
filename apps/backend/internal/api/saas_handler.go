@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -52,6 +53,17 @@ func (h *SaasHandler) SendInvitation(w http.ResponseWriter, r *http.Request) {
 	if callerRole != "owner" && callerRole != "admin" {
 		http.Error(w, "Forbidden: Only Owners and Admins can invite members", http.StatusForbidden)
 		return
+	}
+
+	// Verify plan member limits
+	sub, err := h.Store.GetSubscriptionByTeam(req.TeamID)
+	if err == nil && sub != nil {
+		memberCount, _ := h.Store.CountMembersInTeam(req.TeamID)
+		limit := Tiers[sub.Plan].MemberLimit
+		if memberCount >= limit {
+			http.Error(w, fmt.Sprintf("Member limit reached for %s plan (%d members). Please upgrade your subscription to invite more collaborators.", sub.Plan, limit), http.StatusForbidden)
+			return
+		}
 	}
 
 	// 2. Generate invitation token and ID

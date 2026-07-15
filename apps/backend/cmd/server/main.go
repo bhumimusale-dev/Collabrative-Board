@@ -82,6 +82,7 @@ func main() {
 	userHandler := &api.UserHandler{Store: store}
 	versionHandler := &api.VersionHandler{Store: store}
 	saasHandler := &api.SaasHandler{Store: store}
+	billingHandler := &api.BillingHandler{Store: store}
 
 	// Health Check / Basic info
 	http.HandleFunc("/health", CORS(func(w http.ResponseWriter, r *http.Request) {
@@ -172,6 +173,12 @@ func main() {
 	http.HandleFunc("/api/teams/invitations/respond", CORS(api.AuthMiddleware(saasHandler.RespondToInvitation)))
 	http.HandleFunc("/api/teams/members", CORS(api.AuthMiddleware(saasHandler.ListTeamMembers)))
 	http.HandleFunc("/api/teams/workspaces", CORS(api.AuthMiddleware(saasHandler.ListTeamWorkspaces)))
+
+	// SaaS Subscription Billing Routes
+	http.HandleFunc("/api/billing/subscribe", CORS(api.AuthMiddleware(billingHandler.Subscribe)))
+	http.HandleFunc("/api/billing/details", CORS(api.AuthMiddleware(billingHandler.GetBillingDetails)))
+	http.HandleFunc("/api/billing/invoices", CORS(api.AuthMiddleware(billingHandler.GetInvoices)))
+	http.HandleFunc("/api/billing/invoice", CORS(billingHandler.ServeInvoiceHTML))
 
 	// Template Marketplace Routes
 	http.HandleFunc("/api/templates", CORS(templateHandler.ListTemplates))

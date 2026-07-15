@@ -227,6 +227,32 @@ func NewStore(dbPath string) (*Store, error) {
 		FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE,
 		FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
 	);
+
+	-- Subscriptions Table
+	CREATE TABLE IF NOT EXISTS subscriptions (
+		id TEXT PRIMARY KEY,
+		team_id TEXT UNIQUE NOT NULL,
+		plan TEXT DEFAULT 'free',
+		status TEXT DEFAULT 'active',
+		trial_ends_at TIMESTAMP,
+		current_period_start TIMESTAMP,
+		current_period_end TIMESTAMP,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE
+	);
+
+	-- Payment History Table
+	CREATE TABLE IF NOT EXISTS payment_history (
+		id TEXT PRIMARY KEY,
+		team_id TEXT NOT NULL,
+		amount INTEGER NOT NULL,
+		currency TEXT DEFAULT 'USD',
+		status TEXT DEFAULT 'succeeded',
+		invoice_url TEXT,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE
+	);
 	`
 	if _, err := db.Exec(query); err != nil {
 		db.Close()

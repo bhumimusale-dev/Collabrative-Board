@@ -335,6 +335,22 @@ class ApiService {
   public async getTeamWorkspaces(teamId: string): Promise<Workspace[]> {
     return this.request(`/teams/workspaces?team_id=${teamId}`);
   }
+
+  // Billing Operations
+  public async subscribeToPlan(teamId: string, plan: string): Promise<any> {
+    return this.request('/billing/subscribe', {
+      method: 'POST',
+      body: JSON.stringify({ team_id: teamId, plan }),
+    });
+  }
+
+  public async getBillingDetails(teamId: string): Promise<any> {
+    return this.request(`/billing/details?team_id=${teamId}`);
+  }
+
+  public async getInvoices(teamId: string): Promise<any> {
+    return this.request(`/billing/invoices?team_id=${teamId}`);
+  }
 }
 
 export const api = new ApiService();
