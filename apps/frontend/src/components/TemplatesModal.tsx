@@ -290,11 +290,42 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({ onClose, onSelec
     return ALL_TEMPLATES.filter(t => recentUsed.includes(t.id));
   }, [recentUsed]);
 
+  // Lock body scroll and handle Escape key while modal is open
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 font-sans">
-      <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-md" onClick={onClose} />
-      
-      <div className="relative bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-5xl h-[85vh] shadow-2xl flex flex-col overflow-hidden text-slate-100">
+    // Full-screen overlay — perfectly centers the modal
+    <div
+      className="fixed inset-0 z-[999] flex items-center justify-center font-sans"
+      role="dialog"
+      aria-modal="true"
+    >
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-slate-950/80 backdrop-blur-md"
+        onClick={onClose}
+      />
+
+      {/* Modal shell — always centered, never grows the page */}
+      <div
+        className="
+          relative flex flex-col
+          w-[90vw] max-w-[1400px]
+          h-[85vh] max-h-[900px]
+          bg-slate-900 border border-slate-800
+          rounded-[20px] shadow-2xl overflow-hidden
+          text-slate-100
+        "
+      >
         
         {/* Header Block */}
         <header className="px-6 py-5 border-b border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-950/30">
@@ -318,12 +349,22 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({ onClose, onSelec
           </div>
         </header>
 
-        {/* Categories Sidebar & Content area */}
-        <div className="flex-1 flex overflow-hidden">
-          
+        {/* Categories Sidebar — fixed, non-scrolling */}
+        <div className="flex-1 flex min-h-0 overflow-hidden">
+
           {/* Categories Sidebar */}
-          <aside className="w-48 border-r border-slate-800/80 p-3 hidden md:flex flex-col gap-1 overflow-y-auto bg-slate-950/10">
-            <span className="text-[9px] uppercase font-extrabold tracking-widest text-slate-500 px-3 mb-2 block">Categories</span>
+          <aside
+            className="
+              hidden md:flex flex-col
+              w-48 shrink-0
+              border-r border-slate-800/80
+              bg-slate-950/10
+              overflow-y-auto
+              scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent
+            "
+          >
+            <div className="p-3 flex flex-col gap-1">
+              <span className="text-[9px] uppercase font-extrabold tracking-widest text-slate-500 px-3 mb-2 block">Categories</span>
             {CATEGORIES.map((cat) => (
               <button
                 key={cat}
@@ -339,10 +380,18 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({ onClose, onSelec
                 {cat}
               </button>
             ))}
+            </div>
           </aside>
 
-          {/* Grid Layout Container */}
-          <main className="flex-1 p-6 overflow-y-auto space-y-6">
+          {/* Scrollable content — only this area scrolls */}
+          <main
+            className="
+              flex-1 min-w-0
+              overflow-y-auto overflow-x-hidden
+              scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent
+              p-6 space-y-6
+            "
+          >
             
             {/* Recently Used Row */}
             {recentTemplatesList.length > 0 && searchQuery === '' && activeCategory === 'All' && (
@@ -351,7 +400,7 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({ onClose, onSelec
                   <Clock className="w-3.5 h-3.5" />
                   <span>Recently Used Templates</span>
                 </span>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
                   {recentTemplatesList.map((t) => (
                     <div
                       key={`recent-${t.id}`}
@@ -395,7 +444,7 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({ onClose, onSelec
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
                   {filteredTemplates.map((t) => (
                     <div
                       key={t.id}

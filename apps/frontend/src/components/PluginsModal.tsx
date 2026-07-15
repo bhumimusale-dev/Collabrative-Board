@@ -402,11 +402,39 @@ export const PluginsModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
     }
   };
 
+  // Lock body scroll and handle Escape key while modal is open
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 font-sans">
+    // Full-screen overlay — modal always perfectly centered
+    <div
+      className="fixed inset-0 z-[999] flex items-center justify-center font-sans"
+      role="dialog"
+      aria-modal="true"
+    >
+      {/* Backdrop */}
       <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-md" onClick={onClose} />
-      
-      <div className="relative bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-4xl h-[80vh] shadow-2xl flex flex-col overflow-hidden text-slate-100">
+
+      {/* Modal shell */}
+      <div
+        className="
+          relative flex flex-col
+          w-[90vw] max-w-[1400px]
+          h-[85vh] max-h-[900px]
+          bg-slate-900 border border-slate-800
+          rounded-[20px] shadow-2xl overflow-hidden
+          text-slate-100
+        "
+      >
         
         {/* Header Section */}
         <header className="px-6 py-5 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950/30">
@@ -465,10 +493,17 @@ export const PluginsModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
         )}
 
         {/* Body Content Area */}
-        <div className="flex-1 flex overflow-hidden">
-          
-          {/* Main List */}
-          <main className="flex-1 p-6 overflow-y-auto space-y-4">
+        <div className="flex-1 flex min-h-0 overflow-hidden">
+
+          {/* Scrollable main list — only this scrolls */}
+          <main
+            className="
+              flex-1 min-w-0
+              p-6 overflow-y-auto overflow-x-hidden
+              scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent
+              space-y-4
+            "
+          >
             
             {runningPlugin ? (
               // Inner panel for configured settings plugin execution
