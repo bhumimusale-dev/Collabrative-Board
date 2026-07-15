@@ -1,0 +1,82 @@
+import React, { useEffect, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { api } from '../services/api';
+
+export const VerifyEmail: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token') || '';
+
+  const [verifying, setVerifying] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    const doVerify = async () => {
+      if (!token) {
+        setError('Verification token is missing in the URL.');
+        setVerifying(false);
+        return;
+      }
+      try {
+        await api.verifyEmail(token);
+        setSuccess(true);
+      } catch (e: any) {
+        setError(e.message || 'Verification failed. The token may be invalid or expired.');
+      } finally {
+        setVerifying(false);
+      }
+    };
+    doVerify();
+  }, [token]);
+
+  return (
+    <div className="w-full min-h-screen bg-slate-950 flex items-center justify-center font-sans px-4">
+      <div className="w-full max-w-md p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl text-center">
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 mb-4">
+            <span className="text-xl font-bold text-white">CX</span>
+          </div>
+          <h2 className="text-2xl font-bold text-slate-100">Email Verification</h2>
+          <p className="text-sm text-slate-400 mt-1">CollabBoard X security check</p>
+        </div>
+
+        {verifying && (
+          <div className="flex flex-col items-center space-y-4 py-8">
+            <div className="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
+            <p className="text-slate-400 text-sm font-medium">Verifying your email address...</p>
+          </div>
+        )}
+
+        {!verifying && error && (
+          <div className="space-y-6">
+            <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-2xl">
+              {error}
+            </div>
+            <Link
+              to="/login"
+              className="block w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-sm transition-all"
+            >
+              Go to Login
+            </Link>
+          </div>
+        )}
+
+        {!verifying && success && (
+          <div className="space-y-6">
+            <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm rounded-2xl">
+              Your email has been verified successfully! You can now use all features of CollabBoard X.
+            </div>
+            <Link
+              to="/login"
+              className="block w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md transition-all"
+            >
+              Go to Dashboard
+            </Link>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default VerifyEmail;

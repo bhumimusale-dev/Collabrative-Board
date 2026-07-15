@@ -1,0 +1,131 @@
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Link, useSearchParams } from 'react-router-dom';
+import { api } from '../services/api';
+
+const resetPasswordSchema = z.object({
+  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  confirmPassword: z.string().min(6, { message: "Confirm password must be at least 6 characters" }),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
+
+type ResetPasswordForm = z.infer<typeof resetPasswordSchema>;
+
+export const ResetPassword: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token') || '';
+
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const { register, handleSubmit, formState: { errors } } = useForm<ResetPasswordForm>({
+    resolver: zodResolver(resetPasswordSchema),
+  });
+
+  const onSubmit = async (data: ResetPasswordForm) => {
+    if (!token) {
+      setError('Invalid or missing password reset token.');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    try {
+      await api.resetPassword(token, data.password);
+      setSuccess(true);
+    } catch (e: any) {
+      setError(e.message || 'Failed to reset password. The token may be expired.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="w-full min-h-screen bg-slate-950 flex items-center justify-center font-sans px-4">
+      <div className="w-full max-w-md p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl">
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 mb-4">
+            <span className="text-xl font-bold text-white">CX</span>
+          </div>
+          <h2 className="text-2xl font-bold text-slate-100">Set new password</h2>
+          <p className="text-sm text-slate-400 mt-1">Please enter your new password below</p>
+        </div>
+
+        {!token && (
+          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl">
+            No reset token found in the URL. Please request a new password reset link.
+          </div>
+        )}
+
+        {error && (
+          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl">
+            {error}
+          </div>
+        )}
+
+        {success ? (
+          <div className="text-center space-y-4">
+            <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm rounded-2xl">
+              Password has been reset successfully! All other active sessions have been terminated.
+            </div>
+            <Link
+              to="/login"
+              className="block w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md transition-all text-center"
+            >
+              Go to Sign In
+            </Link>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                New Password
+              </label>
+              <input
+                type="password"
+                {...register('password')}
+                placeholder="••••••••"
+                disabled={!token}
+                className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm disabled:opacity-50"
+              />
+              {errors.password && (
+                <p className="text-red-400 text-xs mt-1">{errors.password.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                Confirm New Password
+              </label>
+              <input
+                type="password"
+                {...register('confirmPassword')}
+                placeholder="••••••••"
+                disabled={!token}
+                className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm disabled:opacity-50"
+              />
+              {errors.confirmPassword && (
+                <p className="text-red-400 text-xs mt-1">{errors.confirmPassword.message}</p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading || !token}
+              className="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md transition-all disabled:opacity-50"
+            >
+              {loading ? 'Updating password...' : 'Update Password'}
+            </button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default ResetPassword;
