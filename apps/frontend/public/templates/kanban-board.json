@@ -1,0 +1,112 @@
+{
+  "name": "Kanban Board",
+  "category": "Agile",
+  "description": "Standard Agile Kanban board with columns for To Do, In Progress, and Done to track task progression.",
+  "elements": [
+    {
+      "id": "kanban-col1",
+      "type": "rectangle",
+      "x": 100,
+      "y": 100,
+      "width": 240,
+      "height": 450,
+      "fill": "rgba(59, 130, 246, 0.03)",
+      "stroke": "#3b82f6",
+      "strokeWidth": 2
+    },
+    {
+      "id": "kanban-col1-hdr",
+      "type": "text",
+      "x": 120,
+      "y": 120,
+      "width": 150,
+      "height": 30,
+      "text": "TO DO",
+      "fill": "#3b82f6",
+      "stroke": "#3b82f6",
+      "strokeWidth": 1
+    },
+    {
+      "id": "kanban-col2",
+      "type": "rectangle",
+      "x": 380,
+      "y": 100,
+      "width": 240,
+      "height": 450,
+      "fill": "rgba(245, 158, 11, 0.03)",
+      "stroke": "#f59e0b",
+      "strokeWidth": 2
+    },
+    {
+      "id": "kanban-col2-hdr",
+      "type": "text",
+      "x": 400,
+      "y": 120,
+      "width": 150,
+      "height": 30,
+      "text": "IN PROGRESS",
+      "fill": "#f59e0b",
+      "stroke": "#f59e0b",
+      "strokeWidth": 1
+    },
+    {
+      "id": "kanban-col3",
+      "type": "rectangle",
+      "x": 660,
+      "y": 100,
+      "width": 240,
+      "height": 450,
+      "fill": "rgba(16, 185, 129, 0.03)",
+      "stroke": "#10b981",
+      "strokeWidth": 2
+    },
+    {
+      "id": "kanban-col3-hdr",
+      "type": "text",
+      "x": 680,
+      "y": 120,
+      "width": 150,
+      "height": 30,
+      "text": "DONE",
+      "fill": "#10b981",
+      "stroke": "#10b981",
+      "strokeWidth": 1
+    },
+    {
+      "id": "task-1",
+      "type": "sticky",
+      "x": 120,
+      "y": 170,
+      "width": 200,
+      "height": 100,
+      "fill": "#fef08a",
+      "stroke": "#ca8a04",
+      "strokeWidth": 1,
+      "text": "Create UI Figma wireframes"
+    },
+    {
+      "id": "task-2",
+      "type": "sticky",
+      "x": 120,
+      "y": 290,
+      "width": 200,
+      "height": 100,
+      "fill": "#bfdbfe",
+      "stroke": "#2563eb",
+      "strokeWidth": 1,
+      "text": "Write API endpoints for signup"
+    },
+    {
+      "id": "task-3",
+      "type": "sticky",
+      "x": 400,
+      "y": 170,
+      "width": 200,
+      "height": 100,
+      "fill": "#fbcfe8",
+      "stroke": "#db2777",
+      "strokeWidth": 1,
+      "text": "Set up database connection"
+    }
+  ]
+}

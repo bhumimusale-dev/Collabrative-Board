@@ -20,6 +20,8 @@ import { ResetPassword } from './components/ResetPassword';
 import { VerifyEmail } from './components/VerifyEmail';
 import { Profile } from './components/Profile';
 
+import { fetchAndApplyTemplate } from './utils/templateHelper';
+
 // Board Canvas Workspace Wrapper
 const BoardWorkspace: React.FC = () => {
   const { boardId } = useParams<{ boardId: string }>();
@@ -30,6 +32,16 @@ const BoardWorkspace: React.FC = () => {
       // Automatically generate a collaborative username
       const username = 'User-' + Math.random().toString(36).substr(2, 4);
       globalBoardStore.initRoom(boardId, username);
+
+      // Apply URL template parameter if present
+      const params = new URLSearchParams(window.location.search);
+      const templateId = params.get('template');
+      if (templateId) {
+        setTimeout(() => {
+          fetchAndApplyTemplate(templateId, globalBoardStore);
+        }, 800);
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
     }
     return () => {
       globalBoardStore.destroy();

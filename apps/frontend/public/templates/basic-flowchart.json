@@ -1,0 +1,99 @@
+{
+  "name": "Basic Flowchart",
+  "category": "Flowcharts",
+  "description": "Standard flowchart structure mapping steps, decision criteria, and endpoints.",
+  "elements": [
+    {
+      "id": "flow-start",
+      "type": "circle",
+      "x": 300,
+      "y": 100,
+      "width": 120,
+      "height": 120,
+      "fill": "rgba(16, 185, 129, 0.05)",
+      "stroke": "#10b981",
+      "strokeWidth": 2
+    },
+    {
+      "id": "flow-start-txt",
+      "type": "text",
+      "x": 330,
+      "y": 150,
+      "width": 60,
+      "height": 20,
+      "text": "Start",
+      "fill": "#10b981",
+      "stroke": "#10b981",
+      "strokeWidth": 1
+    },
+    {
+      "id": "flow-step1",
+      "type": "rectangle",
+      "x": 260,
+      "y": 280,
+      "width": 200,
+      "height": 80,
+      "fill": "rgba(99, 102, 241, 0.05)",
+      "stroke": "#6366f1",
+      "strokeWidth": 2
+    },
+    {
+      "id": "flow-step1-txt",
+      "type": "text",
+      "x": 280,
+      "y": 310,
+      "width": 160,
+      "height": 20,
+      "text": "Load User Data",
+      "fill": "#6366f1",
+      "stroke": "#6366f1",
+      "strokeWidth": 1
+    },
+    {
+      "id": "flow-decision",
+      "type": "rectangle",
+      "x": 280,
+      "y": 420,
+      "width": 160,
+      "height": 100,
+      "fill": "rgba(245, 158, 11, 0.05)",
+      "stroke": "#f59e0b",
+      "strokeWidth": 2
+    },
+    {
+      "id": "flow-decision-txt",
+      "type": "text",
+      "x": 300,
+      "y": 460,
+      "width": 120,
+      "height": 20,
+      "text": "Is Active?",
+      "fill": "#f59e0b",
+      "stroke": "#f59e0b",
+      "strokeWidth": 1
+    },
+    {
+      "id": "flow-end",
+      "type": "circle",
+      "x": 300,
+      "y": 580,
+      "width": 120,
+      "height": 120,
+      "fill": "rgba(239, 68, 68, 0.05)",
+      "stroke": "#ef4444",
+      "strokeWidth": 2
+    },
+    {
+      "id": "flow-end-txt",
+      "type": "text",
+      "x": 335,
+      "y": 630,
+      "width": 50,
+      "height": 20,
+      "text": "End",
+      "fill": "#ef4444",
+      "stroke": "#ef4444",
+      "strokeWidth": 1
+    }
+  ]
+}

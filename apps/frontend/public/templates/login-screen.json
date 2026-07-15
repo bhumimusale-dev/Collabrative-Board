@@ -1,0 +1,111 @@
+{
+  "name": "Login Screen",
+  "category": "Wireframes",
+  "description": "Wireframe mockup for a standard user login portal with username, password, and action buttons.",
+  "elements": [
+    {
+      "id": "login-container",
+      "type": "rectangle",
+      "x": 300,
+      "y": 100,
+      "width": 380,
+      "height": 440,
+      "fill": "rgba(255, 255, 255, 0.02)",
+      "stroke": "#6366f1",
+      "strokeWidth": 2
+    },
+    {
+      "id": "login-title",
+      "type": "text",
+      "x": 340,
+      "y": 140,
+      "width": 300,
+      "height": 40,
+      "text": "Welcome Back",
+      "fill": "#ffffff",
+      "stroke": "#ffffff",
+      "strokeWidth": 1
+    },
+    {
+      "id": "input-username",
+      "type": "rectangle",
+      "x": 340,
+      "y": 210,
+      "width": 300,
+      "height": 45,
+      "fill": "rgba(255, 255, 255, 0.05)",
+      "stroke": "#475569",
+      "strokeWidth": 1
+    },
+    {
+      "id": "text-username",
+      "type": "text",
+      "x": 355,
+      "y": 222,
+      "width": 200,
+      "height": 20,
+      "text": "Email Address",
+      "fill": "#94a3b8",
+      "stroke": "#94a3b8",
+      "strokeWidth": 1
+    },
+    {
+      "id": "input-password",
+      "type": "rectangle",
+      "x": 340,
+      "y": 280,
+      "width": 300,
+      "height": 45,
+      "fill": "rgba(255, 255, 255, 0.05)",
+      "stroke": "#475569",
+      "strokeWidth": 1
+    },
+    {
+      "id": "text-password",
+      "type": "text",
+      "x": 355,
+      "y": 292,
+      "width": 200,
+      "height": 20,
+      "text": "Password",
+      "fill": "#94a3b8",
+      "stroke": "#94a3b8",
+      "strokeWidth": 1
+    },
+    {
+      "id": "btn-signin",
+      "type": "rectangle",
+      "x": 340,
+      "y": 360,
+      "width": 300,
+      "height": 45,
+      "fill": "#6366f1",
+      "stroke": "#6366f1",
+      "strokeWidth": 1
+    },
+    {
+      "id": "text-signin",
+      "type": "text",
+      "x": 465,
+      "y": 372,
+      "width": 80,
+      "height": 20,
+      "text": "Sign In",
+      "fill": "#ffffff",
+      "stroke": "#ffffff",
+      "strokeWidth": 1
+    },
+    {
+      "id": "sticky-helper",
+      "type": "sticky",
+      "x": 720,
+      "y": 180,
+      "width": 180,
+      "height": 180,
+      "fill": "#fef08a",
+      "stroke": "#ca8a04",
+      "strokeWidth": 1,
+      "text": "TIP: Connect this wireframe screen to the signup page to map user registration flows!"
+    }
+  ]
+}

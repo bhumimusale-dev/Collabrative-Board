@@ -14,12 +14,14 @@ import {
   X,
   Users,
   UserPlus,
-  CreditCard
+  CreditCard,
+  Sparkles
 } from 'lucide-react';
 import { api } from '../services/api';
 import type { Workspace, Board, TeamInvitation, TeamMember } from '../services/api';
 import { useAuth } from './AuthContext';
 import { BillingPortal } from './BillingPortal';
+import { TemplatesModal } from './TemplatesModal';
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -44,6 +46,7 @@ export const Dashboard: React.FC = () => {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
   const [showBillingModal, setShowBillingModal] = useState(false);
+  const [showTemplates, setShowTemplates] = useState(false);
   const [newWorkspaceName, setNewWorkspaceName] = useState('');
   const [newWorkspaceType, setNewWorkspaceType] = useState('team');
   const [inviteEmail, setInviteEmail] = useState('');
@@ -408,6 +411,16 @@ export const Dashboard: React.FC = () => {
               <Trash2 className="w-4 h-4" />
               <span>Trash Bin</span>
             </button>
+            <button
+              onClick={() => {
+                setShowTemplates(true);
+                setIsSidebarOpen(false);
+              }}
+              className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-slate-200 transition-colors"
+            >
+              <Sparkles className="w-4 h-4 text-indigo-400" />
+              <span>Templates Gallery</span>
+            </button>
           </nav>
 
           {/* SaaS: Team Section in Sidebar */}
@@ -538,6 +551,15 @@ export const Dashboard: React.FC = () => {
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Create Board</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowTemplates(true)}
+                disabled={!canCreateBoard}
+                className="px-5 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs flex items-center gap-2 shadow-lg hover:-translate-y-0.5 transition-all disabled:opacity-40"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-indigo-450" />
+                <span>Templates</span>
               </button>
             </form>
           )}
@@ -776,6 +798,25 @@ export const Dashboard: React.FC = () => {
             if (activeWorkspace) {
               loadTeamDetails(activeWorkspace.team_id!);
               loadBoards(activeWorkspace.id);
+            }
+          }}
+        />
+      )}
+
+      {showTemplates && (
+        <TemplatesModal
+          onClose={() => setShowTemplates(false)}
+          onSelectTemplate={async (_, templateId) => {
+            if (!activeWorkspace) return;
+            const name = window.prompt("Enter board name:", `Template ${templateId.replace('-', ' ')}`);
+            if (!name) return;
+
+            try {
+              const b = await api.createBoard(activeWorkspace.id, name);
+              // Navigate directly with the ?template= query parameter
+              navigate(`/board/${b.id}?template=${templateId}`);
+            } catch (e) {
+              alert('Failed to create board with template');
             }
           }}
         />

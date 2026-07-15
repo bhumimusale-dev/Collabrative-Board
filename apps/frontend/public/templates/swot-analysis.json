@@ -1,0 +1,99 @@
+{
+  "name": "SWOT Analysis",
+  "category": "Business",
+  "description": "Standard business SWOT analysis board mapping Strengths, Weaknesses, Opportunities, and Threats.",
+  "elements": [
+    {
+      "id": "swot-s",
+      "type": "rectangle",
+      "x": 100,
+      "y": 100,
+      "width": 300,
+      "height": 300,
+      "fill": "rgba(16, 185, 129, 0.05)",
+      "stroke": "#10b981",
+      "strokeWidth": 2
+    },
+    {
+      "id": "swot-s-title",
+      "type": "text",
+      "x": 120,
+      "y": 120,
+      "width": 200,
+      "height": 30,
+      "text": "STRENGTHS (S)",
+      "fill": "#10b981",
+      "stroke": "#10b981",
+      "strokeWidth": 1
+    },
+    {
+      "id": "swot-w",
+      "type": "rectangle",
+      "x": 430,
+      "y": 100,
+      "width": 300,
+      "height": 300,
+      "fill": "rgba(239, 68, 68, 0.05)",
+      "stroke": "#ef4444",
+      "strokeWidth": 2
+    },
+    {
+      "id": "swot-w-title",
+      "type": "text",
+      "x": 450,
+      "y": 120,
+      "width": 200,
+      "height": 30,
+      "text": "WEAKNESSES (W)",
+      "fill": "#ef4444",
+      "stroke": "#ef4444",
+      "strokeWidth": 1
+    },
+    {
+      "id": "swot-o",
+      "type": "rectangle",
+      "x": 100,
+      "y": 430,
+      "width": 300,
+      "height": 300,
+      "fill": "rgba(59, 130, 246, 0.05)",
+      "stroke": "#3b82f6",
+      "strokeWidth": 2
+    },
+    {
+      "id": "swot-o-title",
+      "type": "text",
+      "x": 120,
+      "y": 450,
+      "width": 200,
+      "height": 30,
+      "text": "OPPORTUNITIES (O)",
+      "fill": "#3b82f6",
+      "stroke": "#3b82f6",
+      "strokeWidth": 1
+    },
+    {
+      "id": "swot-t",
+      "type": "rectangle",
+      "x": 430,
+      "y": 430,
+      "width": 300,
+      "height": 300,
+      "fill": "rgba(245, 158, 11, 0.05)",
+      "stroke": "#f59e0b",
+      "strokeWidth": 2
+    },
+    {
+      "id": "swot-t-title",
+      "type": "text",
+      "x": 450,
+      "y": 450,
+      "width": 200,
+      "height": 30,
+      "text": "THREATS (T)",
+      "fill": "#f59e0b",
+      "stroke": "#f59e0b",
+      "strokeWidth": 1
+    }
+  ]
+}
