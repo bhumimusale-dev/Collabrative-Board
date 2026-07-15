@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Search, Star, Clock, Sparkles, LayoutGrid, Heart } from 'lucide-react';
 import { useBoard } from '../hooks/useBoard';
 import type { BoardElement } from '../crdt/boardStore';
+import { centerElementsInViewport } from '../utils/templateHelper';
 
 interface TemplatesModalProps {
   onClose: () => void;
@@ -189,6 +190,9 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({ onClose, onSelec
         "Would you like to insert this template into your active board? Click OK to add, or Cancel to overwrite and replace current canvas objects."
       );
       
+      // Center elements in viewport before writing
+      centerElementsInViewport(elementsToInsert, store);
+
       store.doc.transact(() => {
         if (!append) {
           store.elementsMap.clear();

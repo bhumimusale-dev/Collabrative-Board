@@ -3,6 +3,30 @@ import { Sparkles, Search, HelpCircle, Shield, Play, Download, Trash } from 'luc
 import { useBoard } from '../hooks/useBoard';
 import type { BoardElement } from '../crdt/boardStore';
 
+// Returns the canvas center point accounting for pan and zoom
+const getViewportCenter = (store: any) => {
+  const pan = store.getPan();
+  const zoom = store.getZoom();
+  return {
+    cx: -pan.x / zoom + (window.innerWidth / 2) / zoom,
+    cy: -pan.y / zoom + (window.innerHeight / 2) / zoom,
+  };
+};
+
+// Creates a proxy around the real store that offsets addElement calls to the viewport center
+const makeCenteredProxy = (store: any) => ({
+  ...store,
+  addElement: (el: BoardElement) => {
+    const { cx, cy } = getViewportCenter(store);
+    const centeredEl = {
+      ...el,
+      x: cx - (el.width || 100) / 2,
+      y: cy - (el.height || 100) / 2,
+    };
+    store.addElement(centeredEl);
+  },
+});
+
 interface PluginDef {
   id: string;
   name: string;
@@ -362,20 +386,17 @@ export const PluginsModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
     }
 
     if (plugin.renderSettings) {
-      // If it requires config settings panel, show it
       setRunningPlugin(plugin);
     } else {
-      // Direct execute
-      plugin.run(store);
-      alert(`Executed plugin: ${plugin.name}`);
+      // Use centered proxy so shapes appear at viewport center
+      plugin.run(makeCenteredProxy(store));
       onClose();
     }
   };
 
   const handleRunConfiguredPlugin = (opts?: any) => {
     if (runningPlugin) {
-      runningPlugin.run(store, opts);
-      alert(`Executed plugin: ${runningPlugin.name}`);
+      runningPlugin.run(makeCenteredProxy(store), opts);
       setRunningPlugin(null);
       onClose();
     }

@@ -36,6 +36,34 @@ export const generateTemplateElements = (id: string, name: string): BoardElement
   return list;
 };
 
+export const centerElementsInViewport = (list: BoardElement[], store: BoardStore) => {
+  if (list.length === 0) return;
+  const pan = store.getPan();
+  const zoom = store.getZoom();
+
+  // 1. Calculate bounding box of the elements
+  const minX = Math.min(...list.map(el => el.x));
+  const maxX = Math.max(...list.map(el => el.x + (el.width || 0)));
+  const minY = Math.min(...list.map(el => el.y));
+  const maxY = Math.max(...list.map(el => el.y + (el.height || 0)));
+
+  const cx = minX + (maxX - minX) / 2;
+  const cy = minY + (maxY - minY) / 2;
+
+  // 2. Calculate viewport center
+  const viewportX = -pan.x / zoom + (window.innerWidth / 2) / zoom;
+  const viewportY = -pan.y / zoom + (window.innerHeight / 2) / zoom;
+
+  // 3. Translate all elements
+  const dx = viewportX - cx;
+  const dy = viewportY - cy;
+
+  list.forEach(el => {
+    el.x += dx;
+    el.y += dy;
+  });
+};
+
 export const fetchAndApplyTemplate = async (templateId: string, store: BoardStore): Promise<void> => {
   let list: BoardElement[] = [];
 
@@ -71,6 +99,9 @@ export const fetchAndApplyTemplate = async (templateId: string, store: BoardStor
     const name = templateId.replace('-', ' ').toUpperCase();
     list = generateTemplateElements(templateId, name);
   }
+
+  // Center elements in viewport before writing to the map
+  centerElementsInViewport(list, store);
 
   // Clear existing items and populate Yjs map
   store.doc.transact(() => {
