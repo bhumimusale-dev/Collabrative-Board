@@ -312,7 +312,7 @@ export const WhiteboardCanvas: React.FC = () => {
                   fill={el.fill}
                   stroke={el.stroke}
                   strokeWidth={el.strokeWidth}
-                  draggable={tool === 'select'}
+                  draggable={tool === 'select' && !el.isLocked}
                   onDragEnd={handleDragEnd}
                   onTransformEnd={handleTransformEnd}
                   onClick={() => tool === 'select' && store.selectElement(el.id)}
@@ -332,7 +332,7 @@ export const WhiteboardCanvas: React.FC = () => {
                   fill={el.fill}
                   stroke={el.stroke}
                   strokeWidth={el.strokeWidth}
-                  draggable={tool === 'select'}
+                  draggable={tool === 'select' && !el.isLocked}
                   onDragEnd={(e) => {
                     const node = e.target as any;
                     const r = node.radius();
@@ -369,7 +369,7 @@ export const WhiteboardCanvas: React.FC = () => {
                   fontSize={20}
                   fontFamily="'Outfit', sans-serif"
                   fill={store.isDarkMode() ? '#f8fafc' : '#0f172a'}
-                  draggable={tool === 'select'}
+                  draggable={tool === 'select' && !el.isLocked}
                   onDragEnd={handleDragEnd}
                   onClick={() => tool === 'select' && store.selectElement(el.id)}
                   onDblClick={() => handleDoubleClick(el)}
@@ -384,7 +384,7 @@ export const WhiteboardCanvas: React.FC = () => {
                   id={el.id}
                   x={el.x}
                   y={el.y}
-                  draggable={tool === 'select'}
+                  draggable={tool === 'select' && !el.isLocked}
                   onDragEnd={handleDragEnd}
                   onClick={() => tool === 'select' && store.selectElement(el.id)}
                   onDblClick={() => handleDoubleClick(el)}
@@ -424,7 +424,7 @@ export const WhiteboardCanvas: React.FC = () => {
                   tension={0.5}
                   lineCap="round"
                   lineJoin="round"
-                  draggable={tool === 'select'}
+                  draggable={tool === 'select' && !el.isLocked}
                   onDragEnd={handleDragEnd}
                   onClick={() => tool === 'select' && store.selectElement(el.id)}
                 />

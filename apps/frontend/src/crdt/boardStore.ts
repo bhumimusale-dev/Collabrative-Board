@@ -19,6 +19,7 @@ export interface BoardElement {
   pressure?: number[];
   zIndex: number;
   groupId?: string;
+  isLocked?: boolean;
 }
 
 export type ToolType = 'select' | 'rectangle' | 'circle' | 'text' | 'sticky' | 'freehand' | 'eraser';
@@ -33,6 +34,7 @@ export class BoardStore {
 
   // UI state
   private selectedIds: Set<string> = new Set();
+  private clipboard: BoardElement[] = [];
   private tool: ToolType = 'select';
   private pan = { x: 0, y: 0 };
   private zoom = 1;
@@ -390,6 +392,75 @@ export class BoardStore {
       }
     });
 
+    this.notify();
+  }
+
+  // Keyboard Edit Operations
+  public selectAll() {
+    this.selectedIds.clear();
+    this.getElements().forEach(el => {
+      this.selectedIds.add(el.id);
+    });
+    this.notify();
+  }
+
+  public copySelected() {
+    if (this.selectedIds.size === 0) return;
+    this.clipboard = this.getElements()
+      .filter(el => this.selectedIds.has(el.id))
+      .map(el => ({ ...el }));
+  }
+
+  public cutSelected() {
+    if (this.selectedIds.size === 0) return;
+    this.copySelected();
+    this.deleteSelected();
+  }
+
+  public paste() {
+    if (this.clipboard.length === 0) return;
+    const uid = Date.now();
+    this.doc.transact(() => {
+      this.selectedIds.clear();
+      this.clipboard.forEach((el, index) => {
+        const nextZIndex = this.getElements().length;
+        const pasted: BoardElement = {
+          ...el,
+          id: `${el.id}-pasted-${uid}-${index}`,
+          x: el.x + 30,
+          y: el.y + 30,
+          zIndex: nextZIndex + index
+        };
+        this.elementsMap.set(pasted.id, pasted);
+        this.selectedIds.add(pasted.id);
+      });
+    });
+    this.notify();
+  }
+
+  public duplicateSelected() {
+    if (this.selectedIds.size === 0) return;
+    this.copySelected();
+    this.paste();
+  }
+
+  public lockSelected() {
+    if (this.selectedIds.size === 0) return;
+    this.doc.transact(() => {
+      this.selectedIds.forEach((id) => {
+        this.updateElement(id, { isLocked: true });
+      });
+    });
+    this.notify();
+  }
+
+  public unlockSelected() {
+    if (this.selectedIds.size === 0) return;
+    this.doc.transact(() => {
+      this.selectedIds.forEach((id) => {
+        this.updateElement(id, { isLocked: false });
+      });
+    });
     this.notify();
   }
 }

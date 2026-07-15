@@ -21,6 +21,7 @@ import { VerifyEmail } from './components/VerifyEmail';
 import { Profile } from './components/Profile';
 
 import { fetchAndApplyTemplate } from './utils/templateHelper';
+import { ShortcutProvider } from './context/ShortcutContext';
 
 // Board Canvas Workspace Wrapper
 const BoardWorkspace: React.FC = () => {
@@ -64,66 +65,68 @@ const BoardWorkspace: React.FC = () => {
 export const App: React.FC = () => {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/verify-email" element={<VerifyEmail />} />
-          
-          {/* Protected Dashboard Route */}
-          <Route 
-            path="/dashboard" 
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } 
-          />
+      <ShortcutProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
+            
+            {/* Protected Dashboard Route */}
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
 
-          {/* Protected Profile Route */}
-          <Route 
-            path="/profile" 
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            } 
-          />
+            {/* Protected Profile Route */}
+            <Route 
+              path="/profile" 
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } 
+            />
 
-          {/* Protected Whiteboard Board Route */}
-          <Route 
-            path="/board/:boardId" 
-            element={
-              <ProtectedRoute>
-                <BoardWorkspace />
-              </ProtectedRoute>
-            } 
-          />
+            {/* Protected Whiteboard Board Route */}
+            <Route 
+              path="/board/:boardId" 
+              element={
+                <ProtectedRoute>
+                  <BoardWorkspace />
+                </ProtectedRoute>
+              } 
+            />
 
-          {/* Global Search Route */}
-          <Route 
-            path="/search" 
-            element={
-              <ProtectedRoute>
-                <SearchPage />
-              </ProtectedRoute>
-            } 
-          />
+            {/* Global Search Route */}
+            <Route 
+              path="/search" 
+              element={
+                <ProtectedRoute>
+                  <SearchPage />
+                </ProtectedRoute>
+              } 
+            />
 
-          {/* Community Marketplace Route */}
-          <Route 
-            path="/marketplace" 
-            element={
-              <ProtectedRoute>
-                <Marketplace />
-              </ProtectedRoute>
-            } 
-          />
-        </Routes>
-      </Router>
+            {/* Community Marketplace Route */}
+            <Route 
+              path="/marketplace" 
+              element={
+                <ProtectedRoute>
+                  <Marketplace />
+                </ProtectedRoute>
+              } 
+            />
+          </Routes>
+        </Router>
+      </ShortcutProvider>
     </AuthProvider>
   );
 };
