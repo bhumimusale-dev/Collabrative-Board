@@ -94,14 +94,14 @@ export const Dashboard: React.FC = () => {
     setLoading(true);
     try {
       const wsList = await api.getWorkspaces();
-      setWorkspaces(wsList);
-      if (wsList.length > 0) {
+      setWorkspaces(wsList || []);
+      if (wsList && wsList.length > 0) {
         setActiveWorkspace(wsList[0]);
       }
       
       // Load pending invitations
       const inviteList = await api.listInvitations();
-      setInvitations(inviteList);
+      setInvitations(inviteList || []);
     } catch (e) {
       console.error('Failed to load initial workspace data', e);
       navigate('/login');
@@ -112,7 +112,7 @@ export const Dashboard: React.FC = () => {
 
   const loadTeamDetails = async (teamId: string) => {
     try {
-      const members = await api.getTeamMembers(teamId);
+      const members = await api.getTeamMembers(teamId) || [];
       setTeamMembers(members);
       
       const currentMember = members.find(m => m.user_id === user?.id);
@@ -128,7 +128,7 @@ export const Dashboard: React.FC = () => {
     setLoading(true);
     try {
       const list = await api.getBoards(workspaceId);
-      setBoards(list);
+      setBoards(list || []);
     } catch (e) {
       console.error('Failed to load boards', e);
     } finally {
