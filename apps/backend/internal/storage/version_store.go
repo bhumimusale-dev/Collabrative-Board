@@ -71,10 +71,7 @@ func (s *Store) GetBoardVersions(boardID string) ([]*BoardVersion, error) {
 			return nil, err
 		}
 		v.Description = descNull.String
-		v.CreatedAt, _ = time.Parse("2006-01-02 15:04:05", createdAtStr)
-		if v.CreatedAt.IsZero() {
-			v.CreatedAt, _ = time.Parse(time.RFC3339, createdAtStr)
-		}
+		v.CreatedAt = parseSQLiteTime(createdAtStr)
 		list = append(list, &v)
 	}
 	return list, nil
@@ -97,9 +94,6 @@ func (s *Store) GetBoardVersionByID(id string) (*BoardVersion, error) {
 		return nil, err
 	}
 	v.Description = descNull.String
-	v.CreatedAt, _ = time.Parse("2006-01-02 15:04:05", createdAtStr)
-	if v.CreatedAt.IsZero() {
-		v.CreatedAt, _ = time.Parse(time.RFC3339, createdAtStr)
-	}
+	v.CreatedAt = parseSQLiteTime(createdAtStr)
 	return &v, nil
 }

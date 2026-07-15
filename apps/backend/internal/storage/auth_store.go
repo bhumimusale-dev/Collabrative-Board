@@ -106,6 +106,30 @@ func (s *Store) GetUserByID(id string) (*User, error) {
 	return scanUser(row)
 }
 
+func parseSQLiteTime(str string) time.Time {
+	if str == "" {
+		return time.Time{}
+	}
+	layouts := []string{
+		"2006-01-02 15:04:05.999999999-07:00",
+		"2006-01-02 15:04:05.999999999Z",
+		"2006-01-02 15:04:05.999999999",
+		"2006-01-02 15:04:05-07:00",
+		"2006-01-02 15:04:05Z",
+		"2006-01-02 15:04:05",
+		time.RFC3339,
+		"2006-01-02T15:04:05.999999999-07:00",
+		"2006-01-02T15:04:05",
+	}
+	for _, layout := range layouts {
+		t, err := time.Parse(layout, str)
+		if err == nil {
+			return t
+		}
+	}
+	return time.Time{}
+}
+
 func scanUser(row *sql.Row) (*User, error) {
 	var u User
 	var emailVerifiedVal int
@@ -123,15 +147,8 @@ func scanUser(row *sql.Row) (*User, error) {
 	u.Bio = bioNull.String
 	u.EmailVerified = emailVerifiedVal == 1
 
-	// Parse date strings returned by SQLite driver
-	u.CreatedAt, _ = time.Parse("2006-01-02 15:04:05", createdAtStr)
-	if u.CreatedAt.IsZero() {
-		u.CreatedAt, _ = time.Parse(time.RFC3339, createdAtStr)
-	}
-	u.UpdatedAt, _ = time.Parse("2006-01-02 15:04:05", updatedAtStr)
-	if u.UpdatedAt.IsZero() {
-		u.UpdatedAt, _ = time.Parse(time.RFC3339, updatedAtStr)
-	}
+	u.CreatedAt = parseSQLiteTime(createdAtStr)
+	u.UpdatedAt = parseSQLiteTime(updatedAtStr)
 
 	return &u, nil
 }
@@ -161,10 +178,7 @@ func (s *Store) GetSessionByTokenHash(hash string) (*Session, error) {
 
 	sess.IPAddress = ipNull.String
 	sess.UserAgent = uaNull.String
-	sess.ExpiresAt, _ = time.Parse("2006-01-02 15:04:05", expiresAtStr)
-	if sess.ExpiresAt.IsZero() {
-		sess.ExpiresAt, _ = time.Parse(time.RFC3339, expiresAtStr)
-	}
+	sess.ExpiresAt = parseSQLiteTime(expiresAtStr)
 
 	return &sess, nil
 }
@@ -341,10 +355,7 @@ func (s *Store) GetUserToken(tokenHash string, tokenType string) (*UserToken, er
 	} else if err != nil {
 		return nil, err
 	}
-	ut.ExpiresAt, _ = time.Parse("2006-01-02 15:04:05", expiresAtStr)
-	if ut.ExpiresAt.IsZero() {
-		ut.ExpiresAt, _ = time.Parse(time.RFC3339, expiresAtStr)
-	}
+	ut.ExpiresAt = parseSQLiteTime(expiresAtStr)
 	return &ut, nil
 }
 
