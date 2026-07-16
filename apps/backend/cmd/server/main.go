@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"sync"
 
 	"collabboard-backend/internal/api"
@@ -104,6 +105,13 @@ func main() {
 	if dbPath == "" {
 		dbPath = "./whiteboard.db"
 	}
+
+	// Ensure parent directory exists
+	dbDir := filepath.Dir(dbPath)
+	if err := os.MkdirAll(dbDir, 0755); err != nil {
+		log.Printf("Warning: Failed to create database directory: %v", err)
+	}
+
 	store, err := storage.NewStore(dbPath)
 	if err != nil {
 		log.Fatalf("Failed to initialize storage: %v", err)
