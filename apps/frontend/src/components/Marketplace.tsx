@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Layout, Download, Star, ArrowLeft, RefreshCw, MessageSquare, ChevronRight } from 'lucide-react';
 import { api } from '../services/api';
 import type { Template, Workspace } from '../services/api';
+import { API_BASE } from '../config';
 
 export const Marketplace: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -31,7 +32,7 @@ export const Marketplace: React.FC = () => {
   const loadTemplates = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:8080/api/templates`, {
+      const res = await fetch(`${API_BASE}/templates`, {
         headers: { 'Authorization': `Bearer ${api.getToken()}` }
       });
       if (res.ok) {
@@ -66,7 +67,7 @@ export const Marketplace: React.FC = () => {
     if (!selectedTemplate || !targetWorkspaceId) return;
     setInstalling(true);
     try {
-      const res = await fetch(`http://localhost:8080/api/templates/install`, {
+      const res = await fetch(`${API_BASE}/templates/install`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -95,7 +96,7 @@ export const Marketplace: React.FC = () => {
     e.preventDefault();
     if (!selectedTemplate) return;
     try {
-      const res = await fetch(`http://localhost:8080/api/templates/review`, {
+      const res = await fetch(`${API_BASE}/templates/review`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

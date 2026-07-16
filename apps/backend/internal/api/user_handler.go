@@ -163,7 +163,11 @@ func (h *UserHandler) UploadAvatar(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Store URL relative path
-	u.Avatar = fmt.Sprintf("http://localhost:8080/uploads/avatars/%s", filename)
+	backendURL := os.Getenv("BACKEND_URL")
+	if backendURL == "" {
+		backendURL = "http://localhost:8080"
+	}
+	u.Avatar = fmt.Sprintf("%s/uploads/avatars/%s", backendURL, filename)
 	if err := h.Store.UpdateUser(u); err != nil {
 		http.Error(w, "Failed to update avatar path", http.StatusInternalServerError)
 		return

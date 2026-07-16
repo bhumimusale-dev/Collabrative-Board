@@ -3,6 +3,7 @@ package websocket
 import (
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -19,7 +20,20 @@ var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 	CheckOrigin: func(r *http.Request) bool {
-		return true // Allow all origins for development
+		origin := r.Header.Get("Origin")
+		frontendURL := os.Getenv("FRONTEND_URL")
+		if frontendURL == "" {
+			return true // Allow all origins for development
+		}
+		if origin == frontendURL {
+			return true
+		}
+		// Allow local development origins
+		if origin == "http://localhost:5173" || origin == "http://127.0.0.1:5173" || 
+		   origin == "http://localhost:3000" || origin == "http://127.0.0.1:3000" {
+			return true
+		}
+		return false
 	},
 }
 

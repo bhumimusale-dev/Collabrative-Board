@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"collabboard-backend/internal/auth"
@@ -86,7 +87,11 @@ func (h *SaasHandler) SendInvitation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Log mock email invitation URL
-	log.Printf("[MOCK EMAIL] Team invitation link for %s: http://localhost:5173/dashboard?invite_token=%s", req.Email, inviteToken)
+	frontendURL := os.Getenv("FRONTEND_URL")
+	if frontendURL == "" {
+		frontendURL = "http://localhost:5173"
+	}
+	log.Printf("[MOCK EMAIL] Team invitation link for %s: %s/dashboard?invite_token=%s", req.Email, frontendURL, inviteToken)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)

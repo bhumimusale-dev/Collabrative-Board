@@ -1,11 +1,17 @@
 package api
 
 import (
+	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"log"
+	"math/big"
+	"net"
 	"net/http"
+	"os"
+	"sync"
 	"time"
 
 	"collabboard-backend/internal/auth"
@@ -118,7 +124,11 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		TokenHash: hashToken(emailToken),
 		ExpiresAt: time.Now().Add(24 * time.Hour),
 	})
-	log.Printf("[MOCK EMAIL] Verification link for %s: http://localhost:5173/verify-email?token=%s", u.Email, emailToken)
+	frontendURL := os.Getenv("FRONTEND_URL")
+	if frontendURL == "" {
+		frontendURL = "http://localhost:5173"
+	}
+	log.Printf("[MOCK EMAIL] Verification link for %s: %s/verify-email?token=%s", u.Email, frontendURL, emailToken)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
@@ -344,6 +354,49 @@ func (h *AuthHandler) VerifyEmail(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(map[string]string{"message": "Email verified successfully"})
 }
 
+type ipEmailRateLimiter struct {
+	mu       sync.Mutex
+	attempts map[string][]time.Time
+}
+
+func (l *ipEmailRateLimiter) isAllowed(key string, limit int, duration time.Duration) bool {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+
+	now := time.Now()
+	var validAttempts []time.Time
+	for _, t := range l.attempts[key] {
+		if now.Sub(t) < duration {
+			validAttempts = append(validAttempts, t)
+		}
+	}
+
+	if len(validAttempts) >= limit {
+		l.attempts[key] = validAttempts
+		return false
+	}
+
+	validAttempts = append(validAttempts, now)
+	l.attempts[key] = validAttempts
+	return true
+}
+
+var authRateLimiter = &ipEmailRateLimiter{
+	attempts: make(map[string][]time.Time),
+}
+
+func generateOTP() (string, error) {
+	var otp string
+	for i := 0; i < 6; i++ {
+		num, err := rand.Int(rand.Reader, big.NewInt(10))
+		if err != nil {
+			return "", err
+		}
+		otp += fmt.Sprintf("%d", num.Int64())
+	}
+	return otp, nil
+}
+
 type ForgotPasswordRequest struct {
 	Email string `json:"email"`
 }
@@ -353,38 +406,136 @@ func (h *AuthHandler) ForgotPassword(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+
 	var req ForgotPasswordRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Bad request", http.StatusBadRequest)
 		return
 	}
 
-	u, err := h.Store.GetUserByEmail(req.Email)
-	if err != nil || u == nil {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		_ = json.NewEncoder(w).Encode(map[string]string{"message": "If the email exists, a reset link has been sent"})
+	// Rate limiting by IP and Email
+	ip, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		ip = r.RemoteAddr
+	}
+
+	if !authRateLimiter.isAllowed("ip:"+ip, 5, 5*time.Minute) || !authRateLimiter.isAllowed("email:"+req.Email, 3, 5*time.Minute) {
+		http.Error(w, "Too many requests. Please try again later.", http.StatusTooManyRequests)
 		return
 	}
 
-	_ = h.Store.DeleteUserTokens(u.ID, "password_reset")
+	genericMsg := map[string]string{"message": "If an account with this email exists, a verification code has been sent."}
 
-	resetToken, _ := auth.GenerateRandomToken()
+	u, err := h.Store.GetUserByEmail(req.Email)
+	if err != nil || u == nil {
+		// Prevent user enumeration
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_ = json.NewEncoder(w).Encode(genericMsg)
+		return
+	}
+
+	otp, err := generateOTP()
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	// Invalidate any previous OTP tokens for this user
+	_ = h.Store.DeleteUserTokens(u.ID, "password_reset_otp")
+
 	err = h.Store.CreateUserToken(&storage.UserToken{
 		UserID:    u.ID,
-		TokenType: "password_reset",
-		TokenHash: hashToken(resetToken),
-		ExpiresAt: time.Now().Add(1 * time.Hour),
+		TokenType: "password_reset_otp",
+		TokenHash: hashToken(otp),
+		ExpiresAt: time.Now().Add(10 * time.Minute), // 10-minute expiration
 	})
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 
-	log.Printf("[MOCK EMAIL] Password reset link for %s: http://localhost:5173/reset-password?token=%s", u.Email, resetToken)
+	// Send OTP email (or log to terminal as fallback)
+	_ = SendOTP(u.Email, otp)
 
 	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(map[string]string{"message": "If the email exists, a reset link has been sent"})
+	w.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(w).Encode(genericMsg)
+}
+
+type VerifyOTPRequest struct {
+	Email string `json:"email"`
+	Code  string `json:"code"`
+}
+
+func (h *AuthHandler) VerifyOTP(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var req VerifyOTPRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
+	}
+
+	ip, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		ip = r.RemoteAddr
+	}
+
+	if !authRateLimiter.isAllowed("ip_verify:"+ip, 10, 5*time.Minute) {
+		http.Error(w, "Too many requests. Please try again later.", http.StatusTooManyRequests)
+		return
+	}
+
+	u, err := h.Store.GetUserByEmail(req.Email)
+	if err != nil || u == nil {
+		http.Error(w, "Invalid verification code or email", http.StatusBadRequest)
+		return
+	}
+
+	tokenHash := hashToken(req.Code)
+	ut, err := h.Store.GetUserToken(tokenHash, "password_reset_otp")
+	if err != nil || ut == nil || ut.UserID != u.ID {
+		http.Error(w, "Invalid verification code or email", http.StatusBadRequest)
+		return
+	}
+
+	if time.Now().After(ut.ExpiresAt) {
+		_ = h.Store.DeleteUserToken(tokenHash)
+		http.Error(w, "Verification code has expired", http.StatusBadRequest)
+		return
+	}
+
+	// OTP is valid! Delete it so it cannot be used again
+	_ = h.Store.DeleteUserToken(tokenHash)
+
+	// Generate a secure reset token for ResetPassword step
+	resetToken, err := auth.GenerateRandomToken()
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	_ = h.Store.DeleteUserTokens(u.ID, "password_reset")
+	err = h.Store.CreateUserToken(&storage.UserToken{
+		UserID:    u.ID,
+		TokenType: "password_reset",
+		TokenHash: hashToken(resetToken),
+		ExpiresAt: time.Now().Add(10 * time.Minute), // Valid for 10 minutes
+	})
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(w).Encode(map[string]string{
+		"reset_token": resetToken,
+	})
 }
 
 type ResetPasswordRequest struct {
@@ -417,7 +568,7 @@ func (h *AuthHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
 
 	if time.Now().After(ut.ExpiresAt) {
 		_ = h.Store.DeleteUserToken(tokenHash)
-		http.Error(w, "Reset token expired", http.StatusBadRequest)
+		http.Error(w, "Reset token has expired", http.StatusBadRequest)
 		return
 	}
 
@@ -432,10 +583,12 @@ func (h *AuthHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Immediately invalidate the reset token and all active sessions
 	_ = h.Store.DeleteUserToken(tokenHash)
 	_ = h.Store.DeleteAllSessionsForUser(ut.UserID)
 
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(map[string]string{"message": "Password reset successfully"})
 }
 

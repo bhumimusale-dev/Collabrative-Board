@@ -3,6 +3,7 @@ import { IndexeddbPersistence } from 'y-indexeddb';
 import { CollabProvider } from '../network/collabProvider';
 import type { UserPresence } from '../network/collabProvider';
 import { api } from '../services/api';
+import { WS_URL } from '../config';
 
 export interface BoardElement {
   id: string;
@@ -98,9 +99,7 @@ export class BoardStore {
     };
 
     // 2. Setup custom WebSockets CollabProvider
-    const wsProto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const host = window.location.hostname === 'localhost' ? 'localhost:8080' : window.location.host;
-    const wsUrl = `${wsProto}//${host}/ws/${roomName}`;
+    const wsUrl = `${WS_URL}/${roomName}`;
 
     this.provider = new CollabProvider(wsUrl, this.doc, localUser);
     

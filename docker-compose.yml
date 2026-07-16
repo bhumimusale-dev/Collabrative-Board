@@ -1,0 +1,43 @@
+
+
+services:
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
+    container_name: collabboard-backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - backend_data:/app/data
+      - backend_uploads:/app/uploads
+    environment:
+      - DB_PATH=/app/data/whiteboard.db
+      - FRONTEND_URL=http://localhost:3000
+      - BACKEND_URL=http://localhost:8080
+      # Configure SMTP settings here for Forgot Password emails
+      - SMTP_HOST=
+      - SMTP_PORT=
+      - SMTP_USER=
+      - SMTP_PASS=
+      - SMTP_FROM=
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile
+      args:
+        # Change this to your production backend domain / API URL if deploying publicly
+        - VITE_API_URL=http://localhost:8080
+        - VITE_WS_URL=ws://localhost:8080/ws
+    container_name: collabboard-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  backend_data:
+  backend_uploads:

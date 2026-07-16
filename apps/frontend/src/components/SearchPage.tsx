@@ -3,6 +3,7 @@ import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { Search, Folder, Layout, Star, ArrowLeft, RefreshCw } from 'lucide-react';
 import { api } from '../services/api';
 import type { Board, Template } from '../services/api';
+import { API_BASE } from '../config';
 
 export const SearchPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -24,7 +25,7 @@ export const SearchPage: React.FC = () => {
   const performSearch = async (q: string) => {
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:8080/api/search?q=${encodeURIComponent(q)}`, {
+      const res = await fetch(`${API_BASE}/search?q=${encodeURIComponent(q)}`, {
         headers: {
           'Authorization': `Bearer ${api.getToken()}`,
         }

@@ -18,6 +18,7 @@ import { AuthProvider } from './components/AuthContext';
 import { ForgotPassword } from './components/ForgotPassword';
 import { ResetPassword } from './components/ResetPassword';
 import { VerifyEmail } from './components/VerifyEmail';
+import { VerifyCode } from './components/VerifyCode';
 import { Profile } from './components/Profile';
 
 import { fetchAndApplyTemplate } from './utils/templateHelper';
@@ -74,6 +75,7 @@ export const App: React.FC = () => {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/verify-code" element={<VerifyCode />} />
             
             {/* Protected Dashboard Route */}
             <Route 

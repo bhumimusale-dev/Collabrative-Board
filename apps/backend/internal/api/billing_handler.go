@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"collabboard-backend/internal/auth"
@@ -106,7 +107,13 @@ func (h *BillingHandler) Subscribe(w http.ResponseWriter, r *http.Request) {
 			Amount:     price,
 			Currency:   "USD",
 			Status:     "succeeded",
-			InvoiceURL: fmt.Sprintf("http://localhost:8080/api/billing/invoice?id=%s", payID),
+			InvoiceURL: func() string {
+				backendURL := os.Getenv("BACKEND_URL")
+				if backendURL == "" {
+					backendURL = "http://localhost:8080"
+				}
+				return fmt.Sprintf("%s/api/billing/invoice?id=%s", backendURL, payID)
+			}(),
 		}
 		_ = h.Store.CreatePaymentRecord(pay)
 	}

@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8080/api';
+import { API_BASE } from '../config';
 
 export interface User {
   id: string;
@@ -123,31 +123,48 @@ class ApiService {
       headers.set('Content-Type', 'application/json');
     }
 
-    const response = await fetch(`${API_BASE}${path}`, {
-      ...options,
-      headers,
-      credentials: 'include',
-    });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
 
-    if (response.status === 401 && path !== '/auth/login' && path !== '/auth/register' && path !== '/auth/refresh') {
-      // Auto token refresh fallback
-      const refreshed = await this.refreshToken();
-      if (refreshed) {
-        return this.request(path, options);
+    try {
+      const response = await fetch(`${API_BASE}${path}`, {
+        ...options,
+        headers,
+        credentials: 'include',
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (response.status === 401 && path !== '/auth/login' && path !== '/auth/register' && path !== '/auth/refresh') {
+        // Auto token refresh fallback
+        const refreshed = await this.refreshToken();
+        if (refreshed) {
+          return this.request(path, options);
+        }
+        throw new Error('Session expired');
       }
-      throw new Error('Session expired');
-    }
 
-    if (response.status === 204) {
-      return null;
-    }
+      if (response.status === 204) {
+        return null;
+      }
 
-    if (!response.ok) {
-      const errText = await response.text();
-      throw new Error(errText || 'API request failed');
-    }
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(errText || 'API request failed');
+      }
 
-    return response.json();
+      return response.json();
+    } catch (e: any) {
+      clearTimeout(timeoutId);
+      if (e.name === 'AbortError') {
+        throw new Error('Request timed out. The backend server might be waking up from sleep. Please try again in a few seconds.');
+      }
+      if (e instanceof TypeError && e.message === 'Failed to fetch') {
+        throw new Error('Unable to connect to the server. The backend might be sleeping or offline. Please wait up to a minute for it to spin up.');
+      }
+      throw e;
+    }
   }
 
   public async refreshToken(): Promise<boolean> {
@@ -241,6 +258,13 @@ class ApiService {
     return this.request('/auth/forgot-password', {
       method: 'POST',
       body: JSON.stringify({ email }),
+    });
+  }
+
+  public async verifyOtp(email: string, code: string): Promise<{ reset_token: string }> {
+    return this.request('/auth/verify-otp', {
+      method: 'POST',
+      body: JSON.stringify({ email, code }),
     });
   }
 

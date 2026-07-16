@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"sync"
 
 	"collabboard-backend/internal/api"
@@ -16,13 +17,39 @@ type Server struct {
 	Mutex sync.Mutex
 }
 
+func isAllowedOrigin(origin string) bool {
+	frontendURL := os.Getenv("FRONTEND_URL")
+	if frontendURL == "" {
+		return true
+	}
+	if origin == frontendURL {
+		return true
+	}
+	if origin == "http://localhost:5173" || origin == "http://127.0.0.1:5173" || 
+	   origin == "http://localhost:3000" || origin == "http://127.0.0.1:3000" {
+		return true
+	}
+	return false
+}
+
 func CORS(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		origin := r.Header.Get("Origin")
+		frontendURL := os.Getenv("FRONTEND_URL")
 		if origin != "" {
-			w.Header().Set("Access-Control-Allow-Origin", origin)
+			if isAllowedOrigin(origin) {
+				w.Header().Set("Access-Control-Allow-Origin", origin)
+			} else if frontendURL != "" {
+				w.Header().Set("Access-Control-Allow-Origin", frontendURL)
+			} else {
+				w.Header().Set("Access-Control-Allow-Origin", "*")
+			}
 		} else {
-			w.Header().Set("Access-Control-Allow-Origin", "*")
+			if frontendURL != "" {
+				w.Header().Set("Access-Control-Allow-Origin", frontendURL)
+			} else {
+				w.Header().Set("Access-Control-Allow-Origin", "*")
+			}
 		}
 		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH")
 		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
@@ -40,10 +67,21 @@ func CORS(next http.HandlerFunc) http.HandlerFunc {
 func CORSHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		origin := r.Header.Get("Origin")
+		frontendURL := os.Getenv("FRONTEND_URL")
 		if origin != "" {
-			w.Header().Set("Access-Control-Allow-Origin", origin)
+			if isAllowedOrigin(origin) {
+				w.Header().Set("Access-Control-Allow-Origin", origin)
+			} else if frontendURL != "" {
+				w.Header().Set("Access-Control-Allow-Origin", frontendURL)
+			} else {
+				w.Header().Set("Access-Control-Allow-Origin", "*")
+			}
 		} else {
-			w.Header().Set("Access-Control-Allow-Origin", "*")
+			if frontendURL != "" {
+				w.Header().Set("Access-Control-Allow-Origin", frontendURL)
+			} else {
+				w.Header().Set("Access-Control-Allow-Origin", "*")
+			}
 		}
 		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH")
 		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
@@ -62,7 +100,11 @@ func main() {
 	log.Println("Starting CollabBoard Backend...")
 
 	// Initialize SQLite Database
-	store, err := storage.NewStore("./whiteboard.db")
+	dbPath := os.Getenv("DB_PATH")
+	if dbPath == "" {
+		dbPath = "./whiteboard.db"
+	}
+	store, err := storage.NewStore(dbPath)
 	if err != nil {
 		log.Fatalf("Failed to initialize storage: %v", err)
 	}
@@ -97,6 +139,7 @@ func main() {
 	http.HandleFunc("/api/auth/refresh", CORS(authHandler.Refresh))
 	http.HandleFunc("/api/auth/verify-email", CORS(authHandler.VerifyEmail))
 	http.HandleFunc("/api/auth/forgot-password", CORS(authHandler.ForgotPassword))
+	http.HandleFunc("/api/auth/verify-otp", CORS(authHandler.VerifyOTP))
 	http.HandleFunc("/api/auth/reset-password", CORS(authHandler.ResetPassword))
 
 	// User Routes (Protected)
