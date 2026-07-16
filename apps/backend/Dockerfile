@@ -22,7 +22,7 @@ WORKDIR /app
 RUN apk --no-cache add ca-certificates
 
 # Create directories for persistent DB storage and static uploads
-RUN mkdir -p /app/data /app/uploads
+RUN mkdir -p /app/data /app/uploads && chmod -R 777 /app
 
 # Copy server binary
 COPY --from=builder /app/server .
