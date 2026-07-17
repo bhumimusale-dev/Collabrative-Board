@@ -9,6 +9,7 @@ import { WhiteboardCanvas } from './canvas/WhiteboardCanvas';
 import { Toolbar } from './components/Toolbar';
 import { TopBar } from './components/TopBar';
 import { Minimap } from './components/Minimap';
+import { PropertiesPanel } from './components/PropertiesPanel';
 import { globalBoardStore } from './crdt/boardStore';
 
 import { SearchPage } from './components/SearchPage';
@@ -59,6 +60,7 @@ const BoardWorkspace: React.FC = () => {
       <TopBar />
       <Toolbar />
       <Minimap />
+      <PropertiesPanel />
     </div>
   );
 };

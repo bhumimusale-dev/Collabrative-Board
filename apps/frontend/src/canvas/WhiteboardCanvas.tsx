@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Stage, Layer, Rect, Circle, Text, Group, Line, Transformer } from 'react-konva';
+import { Stage, Layer, Rect, Circle, Text, Group, Line, Transformer, RegularPolygon, Star, Path, Arrow } from 'react-konva';
 import Konva from 'konva';
 import { useBoard } from '../hooks/useBoard';
 import { QuadTree } from '../../../../shared/canvas/spatialIndex';
@@ -183,17 +183,18 @@ export const WhiteboardCanvas: React.FC = () => {
     setIsDrawing(true);
     const id = `element-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-    if (tool === 'freehand') {
+    if (tool === 'freehand' || tool === 'highlighter') {
       setDraftElement({
         id,
-        type: 'freehand',
+        type: tool,
         x: 0,
         y: 0,
         width: 0,
         height: 0,
         fill: 'none',
         stroke: store.getStrokeColor(),
-        strokeWidth: 4,
+        strokeWidth: tool === 'highlighter' ? 12 : 4,
+        opacity: tool === 'highlighter' ? 0.4 : 1,
         points: [coords.x, coords.y],
       });
     } else {
@@ -208,6 +209,7 @@ export const WhiteboardCanvas: React.FC = () => {
         stroke: tool === 'sticky' ? '#eab308' : store.getStrokeColor(),
         strokeWidth: tool === 'sticky' ? 1 : 2,
         text: tool === 'sticky' ? 'Double click to edit' : tool === 'text' ? 'Text' : '',
+        opacity: 1,
       });
     }
   };
@@ -222,7 +224,7 @@ export const WhiteboardCanvas: React.FC = () => {
 
     if (!isDrawing || !draftElement) return;
 
-    if (draftElement.type === 'freehand') {
+    if (draftElement.type === 'freehand' || draftElement.type === 'highlighter') {
       const pts = draftElement.points ? [...draftElement.points, coords.x, coords.y] : [coords.x, coords.y];
       setDraftElement({ ...draftElement, points: pts });
     } else {
@@ -242,7 +244,7 @@ export const WhiteboardCanvas: React.FC = () => {
     if (isDrawing && draftElement) {
       store.addElement(draftElement as BoardElement);
       // Automatically switch to select tool after drawing shapes/sticky notes
-      if (draftElement.type !== 'freehand') {
+      if (draftElement.type !== 'freehand' && draftElement.type !== 'highlighter') {
         store.setTool('select');
         store.selectElement(draftElement.id!);
       }
@@ -323,6 +325,20 @@ export const WhiteboardCanvas: React.FC = () => {
     startEditing(el);
   };
 
+  const getBaseProps = (el: BoardElement) => {
+    const dash = el.borderStyle === 'dashed' ? [6, 4] : el.borderStyle === 'dotted' ? [2, 4] : undefined;
+    return {
+      opacity: el.opacity ?? 1,
+      dash: dash,
+      shadowColor: el.shadowColor,
+      shadowBlur: el.shadowBlur,
+      shadowOffset: el.shadowColor ? { x: el.shadowOffsetX || 3, y: el.shadowOffsetY || 5 } : undefined,
+      rotation: el.rotation || 0,
+      scaleX: el.flipX ? -1 : 1,
+      scaleY: el.flipY ? -1 : 1,
+    };
+  };
+
   return (
     <div className={`w-full h-full outline-none overflow-hidden ${store.isDarkMode() ? 'grid-bg-dark bg-[#121212]' : 'grid-bg-light bg-slate-50'}`}>
       <Stage
@@ -345,7 +361,7 @@ export const WhiteboardCanvas: React.FC = () => {
           {visibleElements.map((el) => {
 
             // Shape Rendering
-            if (el.type === 'rectangle') {
+            if (el.type === 'rectangle' || el.type === 'roundedRectangle') {
               return (
                 <Rect
                   key={el.id}
@@ -357,11 +373,12 @@ export const WhiteboardCanvas: React.FC = () => {
                   fill={el.fill}
                   stroke={el.stroke}
                   strokeWidth={el.strokeWidth}
+                  cornerRadius={el.type === 'roundedRectangle' ? (el.cornerRadius || 12) : (el.cornerRadius || 0)}
                   draggable={tool === 'select' && !el.isLocked}
                   onDragEnd={handleDragEnd}
                   onTransformEnd={handleTransformEnd}
                   onClick={() => tool === 'select' && store.selectElement(el.id)}
-                  cornerRadius={4}
+                  {...getBaseProps(el)}
                 />
               );
             }
@@ -386,19 +403,159 @@ export const WhiteboardCanvas: React.FC = () => {
                       y: node.y() - r,
                     });
                   }}
-                  onTransformEnd={(e) => {
+                  onClick={() => tool === 'select' && store.selectElement(el.id)}
+                  {...getBaseProps(el)}
+                />
+              );
+            }
+
+            if (el.type === 'triangle') {
+              return (
+                <RegularPolygon
+                  key={el.id}
+                  id={el.id}
+                  x={el.x + el.width / 2}
+                  y={el.y + el.height / 2}
+                  sides={3}
+                  radius={Math.max(el.width, el.height) / 2}
+                  fill={el.fill}
+                  stroke={el.stroke}
+                  strokeWidth={el.strokeWidth}
+                  draggable={tool === 'select' && !el.isLocked}
+                  onDragEnd={(e) => {
                     const node = e.target as any;
-                    const r = node.radius() * node.scaleX();
-                    node.scaleX(1);
-                    node.scaleY(1);
+                    const r = node.radius();
                     store.updateElement(el.id, {
                       x: node.x() - r,
                       y: node.y() - r,
-                      width: r * 2,
-                      height: r * 2,
                     });
                   }}
                   onClick={() => tool === 'select' && store.selectElement(el.id)}
+                  {...getBaseProps(el)}
+                />
+              );
+            }
+
+            if (el.type === 'diamond') {
+              return (
+                <RegularPolygon
+                  key={el.id}
+                  id={el.id}
+                  x={el.x + el.width / 2}
+                  y={el.y + el.height / 2}
+                  sides={4}
+                  radius={Math.max(el.width, el.height) / 2}
+                  fill={el.fill}
+                  stroke={el.stroke}
+                  strokeWidth={el.strokeWidth}
+                  draggable={tool === 'select' && !el.isLocked}
+                  onDragEnd={(e) => {
+                    const node = e.target as any;
+                    const r = node.radius();
+                    store.updateElement(el.id, {
+                      x: node.x() - r,
+                      y: node.y() - r,
+                    });
+                  }}
+                  onClick={() => tool === 'select' && store.selectElement(el.id)}
+                  {...getBaseProps(el)}
+                />
+              );
+            }
+
+            if (el.type === 'hexagon') {
+              return (
+                <RegularPolygon
+                  key={el.id}
+                  id={el.id}
+                  x={el.x + el.width / 2}
+                  y={el.y + el.height / 2}
+                  sides={6}
+                  radius={Math.max(el.width, el.height) / 2}
+                  fill={el.fill}
+                  stroke={el.stroke}
+                  strokeWidth={el.strokeWidth}
+                  draggable={tool === 'select' && !el.isLocked}
+                  onDragEnd={(e) => {
+                    const node = e.target as any;
+                    const r = node.radius();
+                    store.updateElement(el.id, {
+                      x: node.x() - r,
+                      y: node.y() - r,
+                    });
+                  }}
+                  onClick={() => tool === 'select' && store.selectElement(el.id)}
+                  {...getBaseProps(el)}
+                />
+              );
+            }
+
+            if (el.type === 'star') {
+              return (
+                <Star
+                  key={el.id}
+                  id={el.id}
+                  x={el.x + el.width / 2}
+                  y={el.y + el.height / 2}
+                  numPoints={5}
+                  innerRadius={Math.max(el.width, el.height) / 4}
+                  outerRadius={Math.max(el.width, el.height) / 2}
+                  fill={el.fill}
+                  stroke={el.stroke}
+                  strokeWidth={el.strokeWidth}
+                  draggable={tool === 'select' && !el.isLocked}
+                  onDragEnd={(e) => {
+                    const node = e.target as any;
+                    const r = node.outerRadius();
+                    store.updateElement(el.id, {
+                      x: node.x() - r,
+                      y: node.y() - r,
+                    });
+                  }}
+                  onClick={() => tool === 'select' && store.selectElement(el.id)}
+                  {...getBaseProps(el)}
+                />
+              );
+            }
+
+            if (el.type === 'cloud') {
+              const baseProps = getBaseProps(el);
+              return (
+                <Path
+                  key={el.id}
+                  id={el.id}
+                  x={el.x}
+                  y={el.y}
+                  data="M 20 50 a 15 15 0 0 1 20 -10 a 25 25 0 0 1 40 -10 a 20 20 0 0 1 25 15 a 15 15 0 0 1 15 15 a 15 15 0 0 1 -15 15 M 20 50 a 15 15 0 0 0 15 15 h 70 a 15 15 0 0 0 15 -15"
+                  fill={el.fill}
+                  stroke={el.stroke}
+                  strokeWidth={el.strokeWidth}
+                  draggable={tool === 'select' && !el.isLocked}
+                  onDragEnd={handleDragEnd}
+                  onTransformEnd={handleTransformEnd}
+                  onClick={() => tool === 'select' && store.selectElement(el.id)}
+                  {...baseProps}
+                  scaleX={(el.width / 130) * baseProps.scaleX}
+                  scaleY={(el.height / 80) * baseProps.scaleY}
+                />
+              );
+            }
+
+            if (el.type === 'arrow' || el.type === 'line') {
+              return (
+                <Arrow
+                  key={el.id}
+                  id={el.id}
+                  points={[el.x, el.y, el.x + el.width, el.y + el.height]}
+                  pointerLength={el.type === 'arrow' ? 10 : 0}
+                  pointerWidth={el.type === 'arrow' ? 10 : 0}
+                  fill={el.stroke}
+                  stroke={el.stroke}
+                  strokeWidth={el.strokeWidth}
+                  draggable={tool === 'select' && !el.isLocked}
+                  onDragEnd={handleDragEnd}
+                  onClick={() => tool === 'select' && store.selectElement(el.id)}
+                  {...getBaseProps(el)}
                 />
               );
             }
@@ -412,13 +569,17 @@ export const WhiteboardCanvas: React.FC = () => {
                   x={el.x}
                   y={el.y}
                   text={el.text || ''}
-                  fontSize={20}
-                  fontFamily="'Outfit', sans-serif"
-                  fill={store.isDarkMode() ? '#f8fafc' : '#0f172a'}
+                  fontSize={el.fontSize || 20}
+                  fontFamily={el.fontFamily || "'Outfit', sans-serif"}
+                  fontStyle={`${el.fontStyle || 'normal'} ${el.fontWeight || 'normal'}`}
+                  textDecoration={el.textDecoration || 'none'}
+                  align={el.textAlign || 'left'}
+                  fill={el.stroke || (store.isDarkMode() ? '#f8fafc' : '#0f172a')}
                   draggable={tool === 'select' && !el.isLocked}
                   onDragEnd={handleDragEnd}
                   onClick={() => tool === 'select' && store.selectElement(el.id)}
                   onDblClick={() => handleDoubleClick(el)}
+                  {...getBaseProps(el)}
                 />
               );
             }
@@ -434,6 +595,7 @@ export const WhiteboardCanvas: React.FC = () => {
                   onDragEnd={handleDragEnd}
                   onClick={() => tool === 'select' && store.selectElement(el.id)}
                   onDblClick={() => handleDoubleClick(el)}
+                  {...getBaseProps(el)}
                 >
                   <Rect
                     width={el.width}
@@ -441,10 +603,7 @@ export const WhiteboardCanvas: React.FC = () => {
                     fill={el.fill}
                     stroke={el.stroke}
                     strokeWidth={el.strokeWidth}
-                    shadowColor="rgba(0,0,0,0.15)"
-                    shadowBlur={10}
-                    shadowOffset={{ x: 3, y: 5 }}
-                    cornerRadius={8}
+                    cornerRadius={el.cornerRadius || 8}
                   />
                   {el.id !== editingId && (
                     <Text
@@ -452,8 +611,11 @@ export const WhiteboardCanvas: React.FC = () => {
                       width={el.width - 20}
                       x={10}
                       y={10}
-                      fontSize={16}
-                      fontFamily="'Outfit', sans-serif"
+                      fontSize={el.fontSize || 16}
+                      fontFamily={el.fontFamily || "'Outfit', sans-serif"}
+                      fontStyle={`${el.fontStyle || 'normal'} ${el.fontWeight || 'normal'}`}
+                      textDecoration={el.textDecoration || 'none'}
+                      align={el.textAlign || 'left'}
                       fill="#1e293b"
                     />
                   )}
@@ -461,7 +623,7 @@ export const WhiteboardCanvas: React.FC = () => {
               );
             }
 
-            if (el.type === 'freehand') {
+            if (el.type === 'freehand' || el.type === 'highlighter') {
               return (
                 <Line
                   key={el.id}
@@ -475,6 +637,7 @@ export const WhiteboardCanvas: React.FC = () => {
                   draggable={tool === 'select' && !el.isLocked}
                   onDragEnd={handleDragEnd}
                   onClick={() => tool === 'select' && store.selectElement(el.id)}
+                  {...getBaseProps(el)}
                 />
               );
             }
@@ -485,17 +648,18 @@ export const WhiteboardCanvas: React.FC = () => {
           {/* Render local drawing draft */}
           {draftElement && (
             <>
-              {draftElement.type === 'freehand' && (
+              {(draftElement.type === 'freehand' || draftElement.type === 'highlighter') && (
                 <Line
                   points={draftElement.points || []}
                   stroke={draftElement.stroke}
                   strokeWidth={draftElement.strokeWidth}
+                  opacity={draftElement.opacity ?? 1}
                   tension={0.5}
                   lineCap="round"
                   lineJoin="round"
                 />
               )}
-              {draftElement.type === 'rectangle' && (
+              {(draftElement.type === 'rectangle' || draftElement.type === 'roundedRectangle') && (
                 <Rect
                   x={draftElement.x}
                   y={draftElement.y}
@@ -504,6 +668,7 @@ export const WhiteboardCanvas: React.FC = () => {
                   fill={draftElement.fill}
                   stroke={draftElement.stroke}
                   strokeWidth={draftElement.strokeWidth}
+                  cornerRadius={draftElement.type === 'roundedRectangle' ? 12 : 0}
                 />
               )}
               {draftElement.type === 'circle' && (
@@ -512,6 +677,50 @@ export const WhiteboardCanvas: React.FC = () => {
                   y={(draftElement.y || 0) + (draftElement.height || 0) / 2}
                   radius={Math.max(draftElement.width || 0, draftElement.height || 0) / 2}
                   fill={draftElement.fill}
+                  stroke={draftElement.stroke}
+                  strokeWidth={draftElement.strokeWidth}
+                />
+              )}
+              {draftElement.type === 'triangle' && (
+                <RegularPolygon
+                  x={(draftElement.x || 0) + (draftElement.width || 0) / 2}
+                  y={(draftElement.y || 0) + (draftElement.height || 0) / 2}
+                  sides={3}
+                  radius={Math.max(draftElement.width || 0, draftElement.height || 0) / 2}
+                  fill={draftElement.fill}
+                  stroke={draftElement.stroke}
+                  strokeWidth={draftElement.strokeWidth}
+                />
+              )}
+              {draftElement.type === 'diamond' && (
+                <RegularPolygon
+                  x={(draftElement.x || 0) + (draftElement.width || 0) / 2}
+                  y={(draftElement.y || 0) + (draftElement.height || 0) / 2}
+                  sides={4}
+                  radius={Math.max(draftElement.width || 0, draftElement.height || 0) / 2}
+                  fill={draftElement.fill}
+                  stroke={draftElement.stroke}
+                  strokeWidth={draftElement.strokeWidth}
+                />
+              )}
+              {draftElement.type === 'star' && (
+                <Star
+                  x={(draftElement.x || 0) + (draftElement.width || 0) / 2}
+                  y={(draftElement.y || 0) + (draftElement.height || 0) / 2}
+                  numPoints={5}
+                  innerRadius={Math.max(draftElement.width || 0, draftElement.height || 0) / 4}
+                  outerRadius={Math.max(draftElement.width || 0, draftElement.height || 0) / 2}
+                  fill={draftElement.fill}
+                  stroke={draftElement.stroke}
+                  strokeWidth={draftElement.strokeWidth}
+                />
+              )}
+              {(draftElement.type === 'arrow' || draftElement.type === 'line') && (
+                <Arrow
+                  points={[draftElement.x || 0, draftElement.y || 0, (draftElement.x || 0) + (draftElement.width || 0), (draftElement.y || 0) + (draftElement.height || 0)]}
+                  pointerLength={draftElement.type === 'arrow' ? 10 : 0}
+                  pointerWidth={draftElement.type === 'arrow' ? 10 : 0}
+                  fill={draftElement.stroke}
                   stroke={draftElement.stroke}
                   strokeWidth={draftElement.strokeWidth}
                 />

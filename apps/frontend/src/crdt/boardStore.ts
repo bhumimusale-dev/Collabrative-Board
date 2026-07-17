@@ -7,7 +7,7 @@ import { WS_URL } from '../config';
 
 export interface BoardElement {
   id: string;
-  type: 'rectangle' | 'circle' | 'text' | 'sticky' | 'freehand';
+  type: string;
   x: number;
   y: number;
   width: number;
@@ -21,9 +21,29 @@ export interface BoardElement {
   zIndex: number;
   groupId?: string;
   isLocked?: boolean;
+
+  // Extra rich styles
+  opacity?: number;
+  cornerRadius?: number;
+  borderStyle?: 'solid' | 'dashed' | 'dotted';
+  shadowColor?: string;
+  shadowBlur?: number;
+  shadowOffsetX?: number;
+  shadowOffsetY?: number;
+  fontSize?: number;
+  fontFamily?: string;
+  fontWeight?: string;
+  fontStyle?: string;
+  textDecoration?: string;
+  textAlign?: 'left' | 'center' | 'right';
+  rotation?: number;
+  imageUrl?: string;
+  emojiCode?: string;
+  flipX?: boolean;
+  flipY?: boolean;
 }
 
-export type ToolType = 'select' | 'rectangle' | 'circle' | 'text' | 'sticky' | 'freehand' | 'eraser';
+export type ToolType = 'select' | 'rectangle' | 'circle' | 'text' | 'sticky' | 'freehand' | 'eraser' | 'arrow' | 'line' | 'diamond' | 'triangle' | 'star' | 'hexagon' | 'roundedRectangle' | 'cloud' | 'highlighter';
 
 export class BoardStore {
   public doc: Y.Doc;
@@ -460,6 +480,136 @@ export class BoardStore {
         this.updateElement(id, { isLocked: false });
       });
     });
+    this.notify();
+  }
+
+  // Layers zIndex management helpers
+  public bringToFront() {
+    if (this.selectedIds.size === 0) return;
+    const all = this.getElements();
+    if (all.length === 0) return;
+    const maxZ = all[all.length - 1].zIndex;
+    this.doc.transact(() => {
+      let index = 1;
+      this.selectedIds.forEach((id) => {
+        this.updateElement(id, { zIndex: maxZ + index });
+        index++;
+      });
+    });
+    this.notify();
+  }
+
+  public sendToBack() {
+    if (this.selectedIds.size === 0) return;
+    const all = this.getElements();
+    if (all.length === 0) return;
+    const minZ = all[0].zIndex;
+    this.doc.transact(() => {
+      let index = 1;
+      this.selectedIds.forEach((id) => {
+        this.updateElement(id, { zIndex: minZ - index });
+        index++;
+      });
+    });
+    this.notify();
+  }
+
+  public bringForward() {
+    if (this.selectedIds.size === 0) return;
+    const all = this.getElements();
+    this.doc.transact(() => {
+      this.selectedIds.forEach((id) => {
+        const idx = all.findIndex(el => el.id === id);
+        if (idx !== -1 && idx < all.length - 1) {
+          const currentEl = all[idx];
+          const nextEl = all[idx + 1];
+          const currentZ = currentEl.zIndex;
+          this.updateElement(currentEl.id, { zIndex: nextEl.zIndex });
+          this.updateElement(nextEl.id, { zIndex: currentZ });
+        }
+      });
+    });
+    this.notify();
+  }
+
+  public sendBackward() {
+    if (this.selectedIds.size === 0) return;
+    const all = this.getElements();
+    this.doc.transact(() => {
+      this.selectedIds.forEach((id) => {
+        const idx = all.findIndex(el => el.id === id);
+        if (idx > 0) {
+          const currentEl = all[idx];
+          const prevEl = all[idx - 1];
+          const currentZ = currentEl.zIndex;
+          this.updateElement(currentEl.id, { zIndex: prevEl.zIndex });
+          this.updateElement(prevEl.id, { zIndex: currentZ });
+        }
+      });
+    });
+    this.notify();
+  }
+
+  // Flip & Rotation helpers
+  public flipSelected(axis: 'h' | 'v') {
+    this.doc.transact(() => {
+      this.selectedIds.forEach((id) => {
+        const el = this.elementsMap.get(id);
+        if (el) {
+          if (axis === 'h') {
+            this.updateElement(id, { flipX: !el.flipX });
+          } else {
+            this.updateElement(id, { flipY: !el.flipY });
+          }
+        }
+      });
+    });
+    this.notify();
+  }
+
+  public rotateSelected(degrees: number) {
+    this.doc.transact(() => {
+      this.selectedIds.forEach((id) => {
+        const el = this.elementsMap.get(id);
+        if (el) {
+          const currentRotation = el.rotation || 0;
+          this.updateElement(id, { rotation: (currentRotation + degrees) % 360 });
+        }
+      });
+    });
+    this.notify();
+  }
+
+  // Distribute selected elements evenly
+  public distributeSelected(direction: 'horizontal' | 'vertical') {
+    if (this.selectedIds.size < 3) return;
+    const selected = Array.from(this.selectedIds)
+      .map(id => this.elementsMap.get(id))
+      .filter((el): el is BoardElement => !!el);
+
+    if (direction === 'horizontal') {
+      selected.sort((a, b) => a.x - b.x);
+      const minX = selected[0].x;
+      const maxX = selected[selected.length - 1].x;
+      const span = maxX - minX;
+      const step = span / (selected.length - 1);
+      this.doc.transact(() => {
+        selected.forEach((el, idx) => {
+          this.updateElement(el.id, { x: minX + idx * step });
+        });
+      });
+    } else {
+      selected.sort((a, b) => a.y - b.y);
+      const minY = selected[0].y;
+      const maxY = selected[selected.length - 1].y;
+      const span = maxY - minY;
+      const step = span / (selected.length - 1);
+      this.doc.transact(() => {
+        selected.forEach((el, idx) => {
+          this.updateElement(el.id, { y: minY + idx * step });
+        });
+      });
+    }
     this.notify();
   }
 }
