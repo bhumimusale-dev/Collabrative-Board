@@ -316,7 +316,7 @@ func (h *BillingHandler) CreateRazorpayOrder(w http.ResponseWriter, r *http.Requ
 		"order_id": orderID,
 		"amount":   price * 83, // Convert USD cents to INR roughly (* 83)
 		"currency": "INR",
-		"key":      "rzp_test_CollabBoardMockKey123",
+		"key":      "rzp_test_8d9g8h7j6k5l4m",
 	})
 }
 

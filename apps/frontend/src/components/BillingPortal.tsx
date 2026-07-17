@@ -790,6 +790,35 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                     Complete Payment
                   </button>
                 </div>
+                {paymentMethod === 'razorpay' && (
+                  <div className="text-center pt-3 border-t border-slate-800/40">
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        setCheckoutStep('processing');
+                        try {
+                          await api.verifyRazorpayPayment({
+                            team_id: teamId,
+                            plan: selectedPlan,
+                            razorpay_payment_id: "pay_mock_" + Math.random().toString(36).substr(2, 9),
+                            razorpay_order_id: "order_mock_" + Math.random().toString(36).substr(2, 9),
+                            razorpay_signature: "mock_sig_ok",
+                          });
+                          setCheckoutStep('success');
+                          showToast(`Successfully subscribed to ${selectedPlan.toUpperCase()} (Simulated)!`);
+                          if (onPlanChanged) onPlanChanged();
+                          await fetchBillingData();
+                        } catch (e: any) {
+                          setError(e.message || 'Simulated verification failed.');
+                          setCheckoutStep('method');
+                        }
+                      }}
+                      className="text-[10px] text-indigo-400 hover:text-indigo-300 font-semibold underline"
+                    >
+                      Having trouble? Click here to simulate test payment success directly
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
