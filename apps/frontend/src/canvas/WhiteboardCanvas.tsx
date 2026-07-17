@@ -22,11 +22,31 @@ export const WhiteboardCanvas: React.FC = () => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [draftElement, setDraftElement] = useState<Partial<BoardElement> | null>(null);
 
+  // Inline Editing state
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingValue, setEditingValue] = useState<string>('');
+
+  const startEditing = (el: BoardElement) => {
+    setEditingId(el.id);
+    setEditingValue(el.text || '');
+  };
+
+  const saveEditing = () => {
+    if (editingId) {
+      store.updateElement(editingId, { text: editingValue });
+      setEditingId(null);
+    }
+  };
+
+  const cancelEditing = () => {
+    setEditingId(null);
+  };
+
   // QuadTree states
   const [qtree, setQtree] = useState<QuadTree | null>(null);
   const [visibleElements, setVisibleElements] = useState<BoardElement[]>(elements);
 
-  // Keyboard and resize hooks
+  // Keyboard, resize and inline edit activation hooks
   useEffect(() => {
     const handleResize = () => {
       setDimensions({ width: window.innerWidth, height: window.innerHeight });
@@ -34,6 +54,25 @@ export const WhiteboardCanvas: React.FC = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        const selected = store.getSelectedIds();
+        if (selected.size === 1 && !editingId) {
+          const firstId = Array.from(selected)[0];
+          const el = elements.find(item => item.id === firstId);
+          if (el && (el.type === 'text' || el.type === 'sticky')) {
+            // Prevent default to avoid inserting a newline immediately when entering edit mode
+            e.preventDefault();
+            startEditing(el);
+          }
+        }
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [selectedIds, elements, editingId]);
 
   // Rebuild QuadTree when canvas elements count updates
   useEffect(() => {
@@ -93,6 +132,12 @@ export const WhiteboardCanvas: React.FC = () => {
     const stage = stageRef.current;
     const transformer = transformerRef.current;
 
+    if (editingId) {
+      transformer.nodes([]);
+      transformer.getLayer()?.batchDraw();
+      return;
+    }
+
     const selectedNodes: Konva.Node[] = [];
     selectedIds.forEach((id) => {
       const node = stage.findOne(`#${id}`);
@@ -103,7 +148,7 @@ export const WhiteboardCanvas: React.FC = () => {
 
     transformer.nodes(selectedNodes);
     transformer.getLayer()?.batchDraw();
-  }, [selectedIds, elements]);
+  }, [selectedIds, elements, editingId]);
 
   // Convert client cursor space to absolute canvas coordinates
   const getCanvasCoords = (_e?: any): { x: number; y: number } => {
@@ -120,6 +165,8 @@ export const WhiteboardCanvas: React.FC = () => {
 
   // Canvas Mouse Events
   const handleMouseDown = (e: any) => {
+    if (editingId) return;
+
     // If clicked on stage empty space, clear selection
     const clickedOnStage = e.target === e.target.getStage();
     const coords = getCanvasCoords(e);
@@ -205,6 +252,7 @@ export const WhiteboardCanvas: React.FC = () => {
   };
 
   const handleStageDrag = (e: any) => {
+    if (editingId) return;
     // Stage drag is used for panning the board
     if (tool !== 'select') return;
     const stage = e.target;
@@ -272,10 +320,7 @@ export const WhiteboardCanvas: React.FC = () => {
   // double click to edit text/sticky contents
   const handleDoubleClick = (el: BoardElement) => {
     if (el.type !== 'text' && el.type !== 'sticky') return;
-    const newText = window.prompt('Edit text:', el.text || '');
-    if (newText !== null) {
-      store.updateElement(el.id, { text: newText });
-    }
+    startEditing(el);
   };
 
   return (
@@ -359,6 +404,7 @@ export const WhiteboardCanvas: React.FC = () => {
             }
 
             if (el.type === 'text') {
+              if (el.id === editingId) return null;
               return (
                 <Text
                   key={el.id}
@@ -400,15 +446,17 @@ export const WhiteboardCanvas: React.FC = () => {
                     shadowOffset={{ x: 3, y: 5 }}
                     cornerRadius={8}
                   />
-                  <Text
-                    text={el.text || ''}
-                    width={el.width - 20}
-                    x={10}
-                    y={10}
-                    fontSize={16}
-                    fontFamily="'Outfit', sans-serif"
-                    fill="#1e293b"
-                  />
+                  {el.id !== editingId && (
+                    <Text
+                      text={el.text || ''}
+                      width={el.width - 20}
+                      x={10}
+                      y={10}
+                      fontSize={16}
+                      fontFamily="'Outfit', sans-serif"
+                      fill="#1e293b"
+                    />
+                  )}
                 </Group>
               );
             }
@@ -527,6 +575,78 @@ export const WhiteboardCanvas: React.FC = () => {
           })}
         </Layer>
       </Stage>
+
+      {/* Floating Editable Text Input Overlay */}
+      {editingId && (() => {
+        const el = elements.find(item => item.id === editingId);
+        if (!el) return null;
+
+        const isSticky = el.type === 'sticky';
+        const offsetX = isSticky ? 10 : 0;
+        const offsetY = isSticky ? 10 : 0;
+        const left = (el.x + offsetX) * zoom + pan.x;
+        const top = (el.y + offsetY) * zoom + pan.y;
+        const fontSize = (isSticky ? 16 : 20) * zoom;
+        const width = isSticky ? (el.width - 20) * zoom : 'auto';
+        const minWidth = isSticky ? '0' : '180px';
+        const height = isSticky ? (el.height - 20) * zoom : 'auto';
+
+        return (
+          <textarea
+            ref={(ref) => {
+              if (ref) {
+                ref.focus();
+                // Place cursor at the end
+                ref.selectionStart = ref.value.length;
+                ref.selectionEnd = ref.value.length;
+              }
+            }}
+            value={editingValue}
+            onChange={(e) => setEditingValue(e.target.value)}
+            onBlur={saveEditing}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                e.preventDefault();
+                cancelEditing();
+              } else if (e.key === 'Enter') {
+                if (!isSticky && !e.shiftKey) {
+                  // Single line saves on Enter
+                  e.preventDefault();
+                  saveEditing();
+                } else if (isSticky && (e.ctrlKey || e.metaKey)) {
+                  // Sticky note (multi-line) saves on Ctrl+Enter
+                  e.preventDefault();
+                  saveEditing();
+                }
+              }
+            }}
+            style={{
+              position: 'absolute',
+              left: `${left}px`,
+              top: `${top}px`,
+              width: typeof width === 'number' ? `${width}px` : width,
+              minWidth: minWidth,
+              height: typeof height === 'number' ? `${height}px` : height,
+              fontSize: `${fontSize}px`,
+              fontFamily: "'Outfit', sans-serif",
+              color: isSticky ? '#1e293b' : (store.isDarkMode() ? '#f8fafc' : '#0f172a'),
+              background: 'transparent',
+              border: 'none',
+              outline: 'none',
+              resize: 'none',
+              padding: '0',
+              margin: '0',
+              overflow: 'hidden',
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+              zIndex: 100,
+              lineHeight: '1.2',
+              transform: `rotate(${(el as any).rotation || 0}deg)`,
+              transformOrigin: 'top left',
+            }}
+          />
+        );
+      })()}
     </div>
   );
 };
