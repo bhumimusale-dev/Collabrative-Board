@@ -249,18 +249,18 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({ onClose, onSelec
 
   // Dynamic template thumbnail mockup drawing
   const renderThumbnail = (id: string, category: string) => {
-    let colors = ['bg-indigo-500/10', 'border-indigo-500/20'];
+    let colors = ['bg-teal-500/10', 'border-teal-500/20'];
     if (category === 'Wireframes') colors = ['bg-slate-500/10', 'border-slate-500/20'];
     if (category === 'Flowcharts') colors = ['bg-emerald-500/10', 'border-emerald-500/20'];
-    if (category === 'Mind Maps') colors = ['bg-pink-500/10', 'border-pink-500/20'];
+    if (category === 'Mind Maps') colors = ['bg-cyan-500/10', 'border-cyan-500/30'];
     if (category === 'Agile') colors = ['bg-amber-500/10', 'border-amber-500/20'];
-    if (category === 'Business') colors = ['bg-purple-500/10', 'border-purple-500/20'];
+    if (category === 'Business') colors = ['bg-teal-500/10', 'border-teal-500/30'];
 
     return (
       <div className={`w-full h-24 rounded-t-2xl border-b flex items-center justify-center relative overflow-hidden transition-all ${colors[0]} ${colors[1]}`}>
         {id.includes('kanban') || id.includes('scrum') ? (
           <div className="flex gap-1.5 opacity-60">
-            <div className="w-8 h-12 bg-indigo-500/20 rounded border border-indigo-500/30" />
+            <div className="w-8 h-12 bg-teal-500/20 rounded border border-teal-500/30" />
             <div className="w-8 h-12 bg-amber-500/20 rounded border border-amber-500/30" />
             <div className="w-8 h-12 bg-emerald-500/20 rounded border border-emerald-500/30" />
           </div>
@@ -272,14 +272,14 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({ onClose, onSelec
             <div className="bg-amber-500/20 border border-amber-500/30 rounded" />
           </div>
         ) : id.includes('mindmap') ? (
-          <div className="w-10 h-10 rounded-full border border-indigo-500/40 bg-indigo-500/20 flex items-center justify-center opacity-60">
-            <div className="w-3 h-3 rounded-full bg-pink-500/60 absolute left-4 top-8" />
+          <div className="w-10 h-10 rounded-full border border-teal-500/40 bg-teal-500/20 flex items-center justify-center opacity-60">
+            <div className="w-3 h-3 rounded-full bg-cyan-500/10 absolute left-4 top-8" />
             <div className="w-3 h-3 rounded-full bg-emerald-500/60 absolute right-4 top-6" />
           </div>
         ) : (
           <LayoutGrid className="w-8 h-8 text-slate-700 dark:text-zinc-600 opacity-40" />
         )}
-        <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-slate-950/40 text-[8px] font-bold text-slate-400 capitalize">
+        <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-[#0D0F12]/95 text-[8px] font-bold text-slate-400 capitalize">
           {category}
         </div>
       </div>
@@ -311,7 +311,7 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({ onClose, onSelec
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-slate-950/80 backdrop-blur-md"
+        className="absolute inset-0 bg-[#0D0F12]/95"
         onClick={onClose}
       />
 
@@ -328,10 +328,10 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({ onClose, onSelec
       >
         
         {/* Header Block */}
-        <header className="px-6 py-5 border-b border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-950/30">
+        <header className="px-6 py-5 border-b border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0D0F12]/95">
           <div>
             <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-indigo-400" />
+              <Sparkles className="w-5 h-5 text-teal-400" />
               <span>Templates Gallery</span>
             </h2>
             <p className="text-xs text-slate-400">Instantly populate canvases with pre-designed objects</p>
@@ -344,7 +344,7 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({ onClose, onSelec
               placeholder="Search templates by name, tags, description..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-2xl border border-slate-800 bg-slate-950/80 text-slate-200 placeholder-slate-650 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full pl-10 pr-4 py-2 rounded-2xl border border-slate-800 bg-[#0D0F12]/95 text-slate-200 placeholder-slate-650 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
             />
           </div>
         </header>
@@ -357,8 +357,8 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({ onClose, onSelec
             className="
               hidden md:flex flex-col
               w-48 shrink-0
-              border-r border-slate-800/80
-              bg-slate-950/10
+              border-r border-[#2A2F35]
+              bg-[#0D0F12]/95
               overflow-y-auto
               scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent
             "
@@ -373,7 +373,7 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({ onClose, onSelec
                 }}
                 className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
                   activeCategory === cat 
-                    ? 'bg-indigo-600 text-white font-bold' 
+                    ? 'bg-teal-600 text-white font-bold' 
                     : 'text-slate-400 hover:bg-slate-850 hover:text-slate-200'
                 }`}
               >
@@ -405,12 +405,12 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({ onClose, onSelec
                     <div
                       key={`recent-${t.id}`}
                       onClick={() => handleUseTemplate(t)}
-                      className="group flex flex-col justify-between rounded-2xl bg-slate-950/20 border border-slate-850/80 hover:border-indigo-500/40 cursor-pointer overflow-hidden transition-all duration-300"
+                      className="group flex flex-col justify-between rounded-2xl bg-[#0D0F12]/95 border border-[#2A2F35] hover:border-teal-500/40 cursor-pointer overflow-hidden transition-all duration-300"
                     >
                       {renderThumbnail(t.id, t.category)}
                       <div className="p-4 space-y-1.5">
                         <div className="flex justify-between items-start gap-2">
-                          <h4 className="font-bold text-xs truncate group-hover:text-indigo-400 transition-colors">{t.name}</h4>
+                          <h4 className="font-bold text-xs truncate group-hover:text-teal-400 transition-colors">{t.name}</h4>
                           <button
                             onClick={(e) => toggleFavorite(t.id, e)}
                             className="text-slate-500 hover:text-amber-400"
@@ -433,12 +433,12 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({ onClose, onSelec
               </span>
               
               {filteredTemplates.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-20 border border-dashed border-slate-800 rounded-3xl bg-slate-950/10">
+                <div className="flex flex-col items-center justify-center py-20 border border-dashed border-slate-800 rounded-3xl bg-[#0D0F12]/95">
                   <LayoutGrid className="w-8 h-8 text-slate-600 mb-2 opacity-50" />
                   <p className="text-slate-400 text-xs font-semibold">No templates found matching your filter.</p>
                   <button 
                     onClick={() => { setActiveCategory('All'); setSearchQuery(''); }}
-                    className="text-[10px] text-indigo-400 mt-2 font-bold hover:underline"
+                    className="text-[10px] text-teal-400 mt-2 font-bold hover:underline"
                   >
                     Reset Filters
                   </button>
@@ -449,13 +449,13 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({ onClose, onSelec
                     <div
                       key={t.id}
                       onClick={() => handleUseTemplate(t)}
-                      className="group flex flex-col justify-between rounded-2xl bg-slate-950/20 border border-slate-850/80 hover:border-indigo-500/40 cursor-pointer overflow-hidden transition-all duration-300 relative"
+                      className="group flex flex-col justify-between rounded-2xl bg-[#0D0F12]/95 border border-[#2A2F35] hover:border-teal-500/40 cursor-pointer overflow-hidden transition-all duration-300 relative"
                     >
                       {renderThumbnail(t.id, t.category)}
                       <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
                         <div className="space-y-1">
                           <div className="flex justify-between items-start gap-2">
-                            <h4 className="font-bold text-xs truncate group-hover:text-indigo-400 transition-colors">{t.name}</h4>
+                            <h4 className="font-bold text-xs truncate group-hover:text-teal-400 transition-colors">{t.name}</h4>
                             <button
                               onClick={(e) => toggleFavorite(t.id, e)}
                               className="text-slate-500 hover:text-amber-400"
@@ -483,7 +483,7 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({ onClose, onSelec
         </div>
 
         {/* Footer actions */}
-        <footer className="px-6 py-4 border-t border-slate-800 bg-slate-950/40 flex justify-end gap-3">
+        <footer className="px-6 py-4 border-t border-slate-800 bg-[#0D0F12]/95 flex justify-end gap-3">
           <button
             onClick={onClose}
             className="px-4 py-2 bg-slate-800 hover:bg-slate-705 text-slate-300 font-semibold text-xs rounded-xl transition-all"

@@ -57,7 +57,7 @@ export const Minimap: React.FC = () => {
   };
 
   return (
-    <div className="absolute bottom-6 right-6 pointer-events-auto glass-panel p-2 rounded-2xl border border-slate-200/50 dark:border-zinc-800/50 select-none">
+    <div className="absolute bottom-6 right-6 pointer-events-auto flat-card p-2 rounded-2xl border border-[#2A2F35] dark:border-[#2A2F35] select-none">
       <div 
         className="relative bg-slate-100/60 dark:bg-zinc-950/60 rounded-lg overflow-hidden border border-slate-200/20 dark:border-zinc-800/20"
         style={{ width: mapW, height: mapH }}
@@ -71,7 +71,7 @@ export const Minimap: React.FC = () => {
           return (
             <div
               key={el.id}
-              className="absolute bg-indigo-500/40 dark:bg-indigo-400/30 rounded-[1px]"
+              className="absolute bg-teal-500/40 dark:bg-teal-400/30 rounded-[1px]"
               style={{
                 left: pt.x,
                 top: pt.y,
@@ -84,7 +84,7 @@ export const Minimap: React.FC = () => {
 
         {/* Render viewport frame box overlay */}
         <div
-          className="absolute border border-indigo-600 dark:border-indigo-400 bg-indigo-500/10 rounded"
+          className="absolute border border-teal-600 dark:border-teal-400 bg-teal-500/10 rounded"
           style={{
             left: Math.max(0, Math.min(viewportMap.x, mapW - 10)),
             top: Math.max(0, Math.min(viewportMap.y, mapH - 10)),

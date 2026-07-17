@@ -225,7 +225,7 @@ export const ShortcutProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 const ShortcutDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-md" onClick={onClose} />
+      <div className="absolute inset-0 bg-[#0D0F12]/95" onClick={onClose} />
       <div className="relative bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-xl w-full shadow-2xl space-y-6 text-left text-slate-100 max-h-[80vh] overflow-y-auto">
         <div className="flex justify-between items-center border-b border-slate-800 pb-3">
           <div>

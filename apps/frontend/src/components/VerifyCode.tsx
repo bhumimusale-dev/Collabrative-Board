@@ -120,11 +120,11 @@ export const VerifyCode: React.FC = () => {
     <div className="w-full min-h-screen bg-slate-950 flex items-center justify-center font-sans px-4">
       <div className="w-full max-w-md p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl relative overflow-hidden">
         {/* Glow decoration */}
-        <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
-        <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl pointer-events-none" />
 
         <div className="flex flex-col items-center mb-8 relative z-10">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 mb-4">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-teal-500 to-purple-600 flex items-center justify-center shadow-lg shadow-teal-500/10 mb-4">
             <span className="text-xl font-bold text-white">CX</span>
           </div>
           <h2 className="text-2xl font-bold text-slate-100">Verify Code</h2>
@@ -134,7 +134,7 @@ export const VerifyCode: React.FC = () => {
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl relative z-10">
+          <div className="mb-4 p-3 bg-red-500/10 border border-red-600 text-red-400 text-sm rounded-xl relative z-10">
             {error}
           </div>
         )}
@@ -159,7 +159,7 @@ export const VerifyCode: React.FC = () => {
                 onChange={(e) => handleChange(e.target, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
                 onPaste={index === 0 ? handlePaste : undefined}
-                className="w-12 h-12 text-center text-xl font-bold rounded-xl border border-slate-800 bg-slate-950 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                className="w-12 h-12 text-center text-xl font-bold rounded-xl border border-slate-800 bg-slate-950 text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
               />
             ))}
           </div>
@@ -167,7 +167,7 @@ export const VerifyCode: React.FC = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold text-sm shadow-md hover:shadow-indigo-500/10 transition-all disabled:opacity-50 cursor-pointer"
+            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-purple-600 hover:from-teal-500 hover:to-purple-500 text-white font-semibold text-sm shadow-md hover:shadow-teal-500/10 transition-all disabled:opacity-50 cursor-pointer"
           >
             {loading ? 'Verifying Code...' : 'Verify Code'}
           </button>
@@ -178,7 +178,7 @@ export const VerifyCode: React.FC = () => {
             type="button"
             onClick={handleResend}
             disabled={resendCooldown > 0 || resendLoading}
-            className="text-sm font-semibold text-indigo-400 hover:text-indigo-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="text-sm font-semibold text-teal-400 hover:text-teal-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {resendLoading
               ? 'Sending...'

@@ -147,13 +147,13 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({ boardI
   return (
     <div className="fixed inset-0 z-50 overflow-hidden font-sans">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-[#0D0F12]/95" onClick={onClose} />
 
       {/* Main Drawer */}
       <div className="absolute inset-y-0 right-0 w-full max-w-md bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col h-full text-slate-100">
         
         {/* Header */}
-        <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
+        <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-[#0D0F12]/95">
           <div>
             <h2 className="text-lg font-bold text-slate-100">Version History</h2>
             <p className="text-xs text-slate-400">View and restore snapshots of this board</p>
@@ -168,7 +168,7 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({ boardI
 
         {/* Errors */}
         {error && (
-          <div className="m-4 p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl">
+          <div className="m-4 p-3 bg-red-500/10 border border-red-600 text-red-400 text-xs rounded-xl">
             {error}
           </div>
         )}
@@ -177,7 +177,7 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({ boardI
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           
           {/* Form to Manual Save */}
-          <form onSubmit={handleManualSave} className="p-4 bg-slate-950/40 rounded-2xl border border-slate-800/80 space-y-4">
+          <form onSubmit={handleManualSave} className="p-4 bg-[#0D0F12]/95 rounded-2xl border border-[#2A2F35] space-y-4">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Save Current State</h3>
             <div>
               <input
@@ -186,7 +186,7 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({ boardI
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="w-full px-3 py-2 rounded-lg border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full px-3 py-2 rounded-lg border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
               />
             </div>
             <div>
@@ -195,13 +195,13 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({ boardI
                 placeholder="Description (optional)"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full px-3 py-2 rounded-lg border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
               />
             </div>
             <button
               type="submit"
               disabled={saving || !name.trim()}
-              className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-md transition-all disabled:opacity-50"
+              className="w-full py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-semibold shadow-md transition-all disabled:opacity-50"
             >
               {saving ? 'Saving snapshot...' : 'Save Snapshot'}
             </button>
@@ -209,9 +209,9 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({ boardI
 
           {/* Compare Section Overlay/Panel */}
           {showCompare && selectedVersion && (
-            <div className="p-4 bg-indigo-950/20 border border-indigo-500/20 rounded-2xl space-y-3">
+            <div className="p-4 bg-teal-950/20 border border-teal-500/20 rounded-2xl space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-xs font-bold text-indigo-400">Comparing with V{selectedVersion.version_number}</span>
+                <span className="text-xs font-bold text-teal-400">Comparing with V{selectedVersion.version_number}</span>
                 <button
                   onClick={() => setShowCompare(false)}
                   className="text-[10px] uppercase font-bold text-slate-400 hover:text-slate-200"
@@ -220,15 +220,15 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({ boardI
                 </button>
               </div>
               <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                <div className="p-2 bg-slate-950/60 rounded-lg">
+                <div className="p-2 bg-[#0D0F12]/95 rounded-lg">
                   <div className="font-bold text-emerald-400">+{diffAdded.length}</div>
                   <div className="text-[10px] text-slate-400">Added</div>
                 </div>
-                <div className="p-2 bg-slate-950/60 rounded-lg">
+                <div className="p-2 bg-[#0D0F12]/95 rounded-lg">
                   <div className="font-bold text-red-400">-{diffRemoved.length}</div>
                   <div className="text-[10px] text-slate-400">Deleted</div>
                 </div>
-                <div className="p-2 bg-slate-950/60 rounded-lg">
+                <div className="p-2 bg-[#0D0F12]/95 rounded-lg">
                   <div className="font-bold text-amber-400">~{diffModified.length}</div>
                   <div className="text-[10px] text-slate-400">Modified</div>
                 </div>
@@ -241,7 +241,7 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({ boardI
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Version History Timeline</h3>
             {loading ? (
               <div className="text-center py-8">
-                <div className="w-8 h-8 border-2 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto mb-2"></div>
+                <div className="w-8 h-8 border-2 border-teal-500/20 border-t-teal-500 rounded-full animate-spin mx-auto mb-2"></div>
                 <span className="text-xs text-slate-500">Loading timeline...</span>
               </div>
             ) : versions.length === 0 ? (
@@ -255,17 +255,17 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({ boardI
                       
                       {/* Timeline dot */}
                       <span className={`absolute -left-[31px] top-1.5 w-3 h-3 rounded-full border-2 border-slate-900 ${
-                        isAuto ? 'bg-slate-700' : 'bg-indigo-500'
+                        isAuto ? 'bg-slate-700' : 'bg-teal-500'
                       }`} />
 
-                      <div className="p-3.5 bg-slate-950/30 border border-slate-800/60 rounded-xl group-hover:border-slate-700/80 transition-all space-y-2">
+                      <div className="p-3.5 bg-[#0D0F12]/95 border border-[#2A2F35] rounded-xl group-hover:border-slate-700/80 transition-all space-y-2">
                         <div className="flex justify-between items-start">
                           <div>
                             <h4 className="text-xs font-bold text-slate-100">{v.name}</h4>
                             {v.description && <p className="text-[10px] text-slate-400 mt-0.5">{v.description}</p>}
                           </div>
                           <span className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-full ${
-                            isAuto ? 'bg-slate-800 text-slate-400' : 'bg-indigo-500/10 text-indigo-400'
+                            isAuto ? 'bg-slate-800 text-slate-400' : 'bg-teal-500/10 text-teal-400'
                           }`}>
                             V{v.version_number}
                           </span>
@@ -293,7 +293,7 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({ boardI
                           </button>
                           <button
                             onClick={() => setShowRestoreConfirm(v)}
-                            className="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-[10px] font-semibold transition-all"
+                            className="px-2.5 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded text-[10px] font-semibold transition-all"
                           >
                             Restore
                           </button>
@@ -311,9 +311,9 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({ boardI
       {/* Restore Confirmation Overlay */}
       {showRestoreConfirm && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-md" onClick={() => setShowRestoreConfirm(null)} />
+          <div className="absolute inset-0 bg-[#0D0F12]/95" onClick={() => setShowRestoreConfirm(null)} />
           <div className="relative bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-6 text-center">
-            <div className="w-12 h-12 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto text-xl">
+            <div className="w-12 h-12 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mx-auto text-xl">
               ⏳
             </div>
             <div>
@@ -331,7 +331,7 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({ boardI
               </button>
               <button
                 onClick={() => handleRestore(showRestoreConfirm)}
-                className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-xs transition-all"
+                className="flex-1 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold text-xs transition-all"
               >
                 Confirm Restore
               </button>

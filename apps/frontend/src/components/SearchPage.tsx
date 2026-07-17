@@ -68,7 +68,7 @@ export const SearchPage: React.FC = () => {
             placeholder="Search boards, templates, shapes, comments..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-4 rounded-2xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base shadow-xl"
+            className="w-full pl-12 pr-4 py-4 rounded-2xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 text-base shadow-xl"
           />
           <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-500" />
         </form>
@@ -78,7 +78,7 @@ export const SearchPage: React.FC = () => {
           <button
             onClick={() => setTab('all')}
             className={`px-4 py-2 border-b-2 font-medium transition-colors ${
-              tab === 'all' ? 'border-indigo-500 text-slate-100' : 'border-transparent text-slate-400 hover:text-slate-250'
+              tab === 'all' ? 'border-teal-500 text-slate-100' : 'border-transparent text-slate-400 hover:text-slate-250'
             }`}
           >
             All Results ({boards.length + templates.length})
@@ -86,7 +86,7 @@ export const SearchPage: React.FC = () => {
           <button
             onClick={() => setTab('boards')}
             className={`px-4 py-2 border-b-2 font-medium transition-colors ${
-              tab === 'boards' ? 'border-indigo-500 text-slate-100' : 'border-transparent text-slate-400 hover:text-slate-250'
+              tab === 'boards' ? 'border-teal-500 text-slate-100' : 'border-transparent text-slate-400 hover:text-slate-250'
             }`}
           >
             Boards ({boards.length})
@@ -94,7 +94,7 @@ export const SearchPage: React.FC = () => {
           <button
             onClick={() => setTab('templates')}
             className={`px-4 py-2 border-b-2 font-medium transition-colors ${
-              tab === 'templates' ? 'border-indigo-500 text-slate-100' : 'border-transparent text-slate-400 hover:text-slate-250'
+              tab === 'templates' ? 'border-teal-500 text-slate-100' : 'border-transparent text-slate-400 hover:text-slate-250'
             }`}
           >
             Community Templates ({templates.length})
@@ -119,7 +119,7 @@ export const SearchPage: React.FC = () => {
                       to={`/board/${b.id}`}
                       className="p-4 rounded-xl bg-slate-850 border border-slate-800 hover:border-slate-700 transition-colors flex items-center gap-3"
                     >
-                      <div className="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center">
                         <Folder className="w-5 h-5" />
                       </div>
                       <div className="truncate">
@@ -143,13 +143,13 @@ export const SearchPage: React.FC = () => {
                       to={`/marketplace?template_id=${t.id}`}
                       className="p-4 rounded-xl bg-slate-850 border border-slate-800 hover:border-slate-700 transition-colors flex items-center gap-3"
                     >
-                      <div className="w-10 h-10 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center">
                         <Layout className="w-5 h-5" />
                       </div>
                       <div className="truncate">
                         <h4 className="font-semibold text-sm truncate">{t.name}</h4>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-[10px] text-purple-400 font-bold bg-purple-500/10 px-1.5 py-0.5 rounded">
+                          <span className="text-[10px] text-teal-400 font-bold bg-teal-500/10 px-1.5 py-0.5 rounded">
                             {t.category}
                           </span>
                           <span className="text-xs text-slate-400 flex items-center gap-1">

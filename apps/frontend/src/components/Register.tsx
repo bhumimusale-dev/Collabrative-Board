@@ -41,7 +41,7 @@ export const Register: React.FC = () => {
     <div className="w-full min-h-screen bg-slate-950 flex items-center justify-center font-sans px-4">
       <div className="w-full max-w-md p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 mb-4">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-teal-500 to-purple-600 flex items-center justify-center shadow-lg shadow-teal-500/10 mb-4">
             <span className="text-xl font-bold text-white">CX</span>
           </div>
           <h2 className="text-2xl font-bold text-slate-100">Create your account</h2>
@@ -49,7 +49,7 @@ export const Register: React.FC = () => {
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl">
+          <div className="mb-4 p-3 bg-red-500/10 border border-red-600 text-red-400 text-sm rounded-xl">
             {error}
           </div>
         )}
@@ -63,7 +63,7 @@ export const Register: React.FC = () => {
               type="text"
               {...register('name')}
               placeholder="John Doe"
-              className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm"
+              className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm"
             />
             {errors.name && (
               <p className="text-red-400 text-xs mt-1">{errors.name.message}</p>
@@ -78,7 +78,7 @@ export const Register: React.FC = () => {
               type="text"
               {...register('username')}
               placeholder="johndoe"
-              className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm"
+              className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm"
             />
             {errors.username && (
               <p className="text-red-400 text-xs mt-1">{errors.username.message}</p>
@@ -93,7 +93,7 @@ export const Register: React.FC = () => {
               type="email"
               {...register('email')}
               placeholder="you@example.com"
-              className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm"
+              className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm"
             />
             {errors.email && (
               <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>
@@ -108,7 +108,7 @@ export const Register: React.FC = () => {
               type="password"
               {...register('password')}
               placeholder="••••••••"
-              className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm"
+              className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm"
             />
             {errors.password && (
               <p className="text-red-400 text-xs mt-1">{errors.password.message}</p>
@@ -118,7 +118,7 @@ export const Register: React.FC = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md transition-all disabled:opacity-50"
+            className="w-full py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-semibold text-sm shadow-md transition-all disabled:opacity-50"
           >
             {loading ? 'Creating account...' : 'Sign Up'}
           </button>
@@ -126,7 +126,7 @@ export const Register: React.FC = () => {
 
         <p className="text-center text-xs text-slate-400 mt-6">
           Already have an account?{' '}
-          <Link to="/login" className="text-indigo-400 hover:text-indigo-300 font-semibold">
+          <Link to="/login" className="text-teal-400 hover:text-teal-300 font-semibold">
             Log in
           </Link>
         </p>

@@ -33,7 +33,7 @@ export const VerifyEmail: React.FC = () => {
     <div className="w-full min-h-screen bg-slate-950 flex items-center justify-center font-sans px-4">
       <div className="w-full max-w-md p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl text-center">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 mb-4">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-teal-500 to-purple-600 flex items-center justify-center shadow-lg shadow-teal-500/10 mb-4">
             <span className="text-xl font-bold text-white">CX</span>
           </div>
           <h2 className="text-2xl font-bold text-slate-100">Email Verification</h2>
@@ -42,14 +42,14 @@ export const VerifyEmail: React.FC = () => {
 
         {verifying && (
           <div className="flex flex-col items-center space-y-4 py-8">
-            <div className="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-teal-500/20 border-t-teal-500 rounded-full animate-spin"></div>
             <p className="text-slate-400 text-sm font-medium">Verifying your email address...</p>
           </div>
         )}
 
         {!verifying && error && (
           <div className="space-y-6">
-            <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-2xl">
+            <div className="p-4 bg-red-500/10 border border-red-600 text-red-400 text-sm rounded-2xl">
               {error}
             </div>
             <Link
@@ -68,7 +68,7 @@ export const VerifyEmail: React.FC = () => {
             </div>
             <Link
               to="/login"
-              className="block w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md transition-all"
+              className="block w-full py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-semibold text-sm shadow-md transition-all"
             >
               Go to Dashboard
             </Link>

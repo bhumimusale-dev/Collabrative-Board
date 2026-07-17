@@ -554,13 +554,13 @@ export const Dashboard: React.FC = () => {
   if (errorMessage) {
     return (
       <div className="w-full min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-6">
-        <div className="max-w-md w-full p-8 border border-red-500/20 bg-slate-900 rounded-3xl text-center space-y-4 shadow-2xl">
+        <div className="max-w-md w-full p-8 border border-red-600 bg-slate-900 rounded-3xl text-center space-y-4 shadow-2xl">
           <AlertCircle className="w-12 h-12 text-red-500 mx-auto" />
           <h2 className="text-xl font-bold text-white">Oops! Something went wrong</h2>
           <p className="text-slate-400 text-sm leading-relaxed">{errorMessage}</p>
           <button 
             onClick={() => window.location.reload()} 
-            className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/10 transition-all"
+            className="px-6 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-teal-600/10 transition-all"
           >
             Try Again
           </button>
@@ -570,25 +570,25 @@ export const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="w-full min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row font-sans relative overflow-hidden selection:bg-indigo-500 selection:text-white">
+    <div className="w-full min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row font-sans relative overflow-hidden selection:bg-teal-500 selection:text-white">
       
       {/* Background Ornaments / Ambient Lights */}
-      <div className="absolute top-0 right-0 w-[45rem] h-[45rem] bg-indigo-600/5 rounded-full blur-[12rem] pointer-events-none" />
-      <div className="absolute bottom-10 left-1/3 w-[35rem] h-[35rem] bg-purple-500/5 rounded-full blur-[10rem] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[45rem] h-[45rem] bg-teal-600/5 rounded-full blur-[12rem] pointer-events-none" />
+      <div className="absolute bottom-10 left-1/3 w-[35rem] h-[35rem] bg-teal-500/10 rounded-full blur-[10rem] pointer-events-none" />
 
       {/* Toast Notification */}
       {toast && (
         <div className="fixed top-6 right-6 z-[100] flex items-center gap-3 px-4 py-3.5 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl animate-in slide-in-from-top-4 duration-300">
           {toast.type === 'success' && <CheckCircle className="w-4 h-4 text-emerald-400" />}
           {toast.type === 'error' && <AlertCircle className="w-4 h-4 text-red-400" />}
-          {toast.type === 'info' && <Bell className="w-4 h-4 text-indigo-400" />}
+          {toast.type === 'info' && <Bell className="w-4 h-4 text-teal-400" />}
           <span className="text-xs font-medium text-slate-200">{toast.message}</span>
         </div>
       )}
 
       {/* Responsive Left Sidebar */}
       <aside 
-        className={`fixed md:sticky top-0 left-0 h-screen z-30 bg-slate-900/60 backdrop-blur-xl border-r border-slate-800/80 flex flex-col justify-between transition-all duration-300 ${
+        className={`fixed md:sticky top-0 left-0 h-screen z-30 bg-[#171B1F] border-r border-[#2A2F35] flex flex-col justify-between transition-all duration-300 ${
           isSidebarOpen ? 'w-64 translate-x-0' : 'w-0 -translate-x-full md:w-20 md:translate-x-0'
         }`}
       >
@@ -597,10 +597,10 @@ export const Dashboard: React.FC = () => {
           <div className="relative">
             <button 
               onClick={() => setShowOrgDropdown(!showOrgDropdown)}
-              className="w-full flex items-center justify-between p-2 rounded-2xl bg-slate-950/40 border border-slate-800/60 hover:border-indigo-500/30 transition-all text-left"
+              className="w-full flex items-center justify-between p-2 rounded-2xl bg-[#0D0F12]/95 border border-[#2A2F35] hover:border-teal-500/30 transition-all text-left"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-sm font-bold text-white shadow-md shadow-indigo-600/10">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-teal-600 to-purple-600 flex items-center justify-center text-sm font-bold text-white shadow-md shadow-teal-600/10">
                   {activeOrg?.name?.charAt(0) || 'W'}
                 </div>
                 {isSidebarOpen && (
@@ -615,7 +615,7 @@ export const Dashboard: React.FC = () => {
 
             {/* Org Switcher Dropdown */}
             {showOrgDropdown && (
-              <div className="absolute left-0 right-0 mt-2 bg-slate-900 border border-slate-800/80 rounded-2xl p-2.5 shadow-2xl z-50 space-y-1">
+              <div className="absolute left-0 right-0 mt-2 bg-slate-900 border border-[#2A2F35] rounded-2xl p-2.5 shadow-2xl z-50 space-y-1">
                 <span className="text-[9px] uppercase font-bold tracking-wider text-slate-500 px-2 block mb-1">Organizations</span>
                 {organizations.map(o => (
                   <button
@@ -625,20 +625,20 @@ export const Dashboard: React.FC = () => {
                       setShowOrgDropdown(false);
                     }}
                     className={`w-full flex items-center justify-between p-2 rounded-xl text-left text-xs transition-colors ${
-                      activeOrg?.id === o.id ? 'bg-indigo-600/10 text-indigo-400 font-semibold' : 'hover:bg-slate-850/60 text-slate-300'
+                      activeOrg?.id === o.id ? 'bg-teal-600/10 text-teal-400 font-semibold' : 'hover:bg-slate-850/60 text-slate-300'
                     }`}
                   >
                     <span className="truncate">{o.name}</span>
-                    {o.id === activeOrg?.id && <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />}
+                    {o.id === activeOrg?.id && <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />}
                   </button>
                 ))}
-                <div className="border-t border-slate-800/80 mt-2 pt-2">
+                <div className="border-t border-[#2A2F35] mt-2 pt-2">
                   <button 
                     onClick={() => {
                       setShowOrgDropdown(false);
                       setShowOrgModal(true);
                     }}
-                    className="w-full flex items-center gap-2 p-2 hover:bg-slate-850/60 text-xs font-semibold text-indigo-400 rounded-xl transition-all"
+                    className="w-full flex items-center gap-2 p-2 hover:bg-slate-850/60 text-xs font-semibold text-teal-400 rounded-xl transition-all"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>New Organization</span>
@@ -657,7 +657,7 @@ export const Dashboard: React.FC = () => {
                 className="w-full flex items-center justify-between p-2 rounded-xl hover:bg-slate-850/60 transition-all text-left"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-5 h-5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-[10px] font-bold text-indigo-400">
+                  <div className="w-5 h-5 rounded-lg bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-[10px] font-bold text-teal-400">
                     {activeTeam?.name?.charAt(0) || 'T'}
                   </div>
                   {isSidebarOpen && (
@@ -680,7 +680,7 @@ export const Dashboard: React.FC = () => {
                         setShowTeamDropdown(false);
                       }}
                       className={`w-full p-2 rounded-lg text-left text-xs transition-colors ${
-                        activeTeam?.id === t.id ? 'bg-indigo-600/10 text-indigo-400 font-semibold' : 'hover:bg-slate-850 text-slate-300'
+                        activeTeam?.id === t.id ? 'bg-teal-600/10 text-teal-400 font-semibold' : 'hover:bg-slate-850 text-slate-300'
                       }`}
                     >
                       {t.name}
@@ -692,7 +692,7 @@ export const Dashboard: React.FC = () => {
                         setShowTeamDropdown(false);
                         setShowTeamModal(true);
                       }}
-                      className="w-full flex items-center gap-2 p-1.5 hover:bg-slate-850 text-xs font-semibold text-indigo-400 rounded-lg"
+                      className="w-full flex items-center gap-2 p-1.5 hover:bg-slate-850 text-xs font-semibold text-teal-400 rounded-lg"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Create Team</span>
@@ -709,7 +709,7 @@ export const Dashboard: React.FC = () => {
             <button
               onClick={() => setCurrentTab('dashboard')}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                currentTab === 'dashboard' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/15' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
+                currentTab === 'dashboard' ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/10' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
               }`}
             >
               <LayoutDashboard className="w-4 h-4" />
@@ -718,7 +718,7 @@ export const Dashboard: React.FC = () => {
             <button
               onClick={() => setCurrentTab('boards')}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                currentTab === 'boards' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/15' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
+                currentTab === 'boards' ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/10' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
               }`}
             >
               <Layers className="w-4 h-4" />
@@ -727,7 +727,7 @@ export const Dashboard: React.FC = () => {
             <button
               onClick={() => setCurrentTab('members')}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                currentTab === 'members' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/15' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
+                currentTab === 'members' ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/10' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
               }`}
             >
               <Users className="w-4 h-4" />
@@ -736,7 +736,7 @@ export const Dashboard: React.FC = () => {
             <button
               onClick={() => setCurrentTab('activities')}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                currentTab === 'activities' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/15' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
+                currentTab === 'activities' ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/10' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
               }`}
             >
               <Activity className="w-4 h-4" />
@@ -745,7 +745,7 @@ export const Dashboard: React.FC = () => {
             <button
               onClick={() => setCurrentTab('settings')}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                currentTab === 'settings' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/15' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
+                currentTab === 'settings' ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/10' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
               }`}
             >
               <Settings className="w-4 h-4" />
@@ -756,7 +756,7 @@ export const Dashboard: React.FC = () => {
 
         {/* User profile and logout */}
         {isSidebarOpen && (
-          <div className="p-4 border-t border-slate-800/80 bg-slate-900/40">
+          <div className="p-4 border-t border-[#2A2F35] bg-[#171B1F]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-white shadow-inner">
@@ -783,7 +783,7 @@ export const Dashboard: React.FC = () => {
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto h-screen pb-16">
         
         {/* Sticky Topbar */}
-        <header className="sticky top-0 bg-slate-955/60 backdrop-blur-md border-b border-slate-800/60 z-20 px-6 py-4 flex items-center justify-between">
+        <header className="sticky top-0 bg-[#0D0F12]/95 border-b border-[#2A2F35] z-20 px-6 py-4 flex items-center justify-between">
           {/* Breadcrumb Navigation */}
           <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
             <button className="hover:text-slate-200" onClick={() => setCurrentTab('dashboard')}>
@@ -802,7 +802,7 @@ export const Dashboard: React.FC = () => {
                 placeholder="Search boards..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2 w-56 rounded-full bg-slate-905 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                className="pl-10 pr-4 py-2 w-56 rounded-full bg-slate-905 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-all"
               />
             </div>
 
@@ -817,7 +817,7 @@ export const Dashboard: React.FC = () => {
               >
                 <Bell className="w-4 h-4 text-slate-300" />
                 {notifications.some(n => !n.is_read) && (
-                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
                 )}
               </button>
 
@@ -832,7 +832,7 @@ export const Dashboard: React.FC = () => {
                       <p className="text-center text-[10px] text-slate-500 py-6">No notifications found.</p>
                     ) : (
                       notifications.map(n => (
-                        <div key={n.id} className="p-2.5 rounded-xl bg-slate-950/40 border border-slate-855/60 text-left text-xs">
+                        <div key={n.id} className="p-2.5 rounded-xl bg-[#0D0F12]/95 border border-slate-855/60 text-left text-xs">
                           <h5 className="font-bold text-slate-200">{n.title}</h5>
                           <p className="text-slate-400 mt-1 text-[11px] leading-relaxed">{n.content}</p>
                           <span className="text-[9px] text-slate-500 block mt-2">{new Date(n.created_at).toLocaleDateString()}</span>
@@ -854,7 +854,7 @@ export const Dashboard: React.FC = () => {
                   if (el) el.focus();
                 }, 100);
               }}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/10 flex items-center gap-2 transition-all"
+              className="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-teal-600/10 flex items-center gap-2 transition-all"
             >
               <Plus className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">New Board</span>
@@ -868,7 +868,7 @@ export const Dashboard: React.FC = () => {
             <div className="space-y-8 animate-in fade-in duration-300">
               {/* Quick Actions Header */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800/80 shadow-xl flex items-center justify-between group hover:border-indigo-500/30 transition-all duration-300">
+                <div className="p-6 rounded-3xl bg-slate-900 border border-[#2A2F35] shadow-xl flex items-center justify-between group hover:border-teal-500/30 transition-all duration-300">
                   <div className="space-y-1">
                     <span className="text-[10px] uppercase font-extrabold tracking-widest text-slate-500">Collaborate</span>
                     <h3 className="text-sm font-bold text-white">Create Board</h3>
@@ -879,12 +879,12 @@ export const Dashboard: React.FC = () => {
                       setCurrentTab('boards');
                       setBoardSubView('all');
                     }}
-                    className="p-3 bg-indigo-600/10 hover:bg-indigo-600 text-indigo-400 hover:text-white rounded-2xl transition-all"
+                    className="p-3 bg-teal-600/10 hover:bg-teal-600 text-teal-400 hover:text-white rounded-2xl transition-all"
                   >
                     <Plus className="w-5 h-5" />
                   </button>
                 </div>
-                <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800/80 shadow-xl flex items-center justify-between group hover:border-indigo-500/30 transition-all duration-300">
+                <div className="p-6 rounded-3xl bg-slate-900 border border-[#2A2F35] shadow-xl flex items-center justify-between group hover:border-teal-500/30 transition-all duration-300">
                   <div className="space-y-1">
                     <span className="text-[10px] uppercase font-extrabold tracking-widest text-slate-500">Scale</span>
                     <h3 className="text-sm font-bold text-white">Invite Member</h3>
@@ -892,12 +892,12 @@ export const Dashboard: React.FC = () => {
                   </div>
                   <button 
                     onClick={() => setShowInviteModal(true)}
-                    className="p-3 bg-indigo-600/10 hover:bg-indigo-600 text-indigo-400 hover:text-white rounded-2xl transition-all"
+                    className="p-3 bg-teal-600/10 hover:bg-teal-600 text-teal-400 hover:text-white rounded-2xl transition-all"
                   >
                     <UserPlus className="w-5 h-5" />
                   </button>
                 </div>
-                <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800/80 shadow-xl flex items-center justify-between group hover:border-indigo-500/30 transition-all duration-300">
+                <div className="p-6 rounded-3xl bg-slate-900 border border-[#2A2F35] shadow-xl flex items-center justify-between group hover:border-teal-500/30 transition-all duration-300">
                   <div className="space-y-1">
                     <span className="text-[10px] uppercase font-extrabold tracking-widest text-slate-500">Coordinate</span>
                     <h3 className="text-sm font-bold text-white">Create Team</h3>
@@ -905,7 +905,7 @@ export const Dashboard: React.FC = () => {
                   </div>
                   <button 
                     onClick={() => setShowTeamModal(true)}
-                    className="p-3 bg-indigo-600/10 hover:bg-indigo-600 text-indigo-400 hover:text-white rounded-2xl transition-all"
+                    className="p-3 bg-teal-600/10 hover:bg-teal-600 text-teal-400 hover:text-white rounded-2xl transition-all"
                   >
                     <Users className="w-5 h-5" />
                   </button>
@@ -922,7 +922,7 @@ export const Dashboard: React.FC = () => {
                   </div>
                   <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-3">
                     <div 
-                      className="bg-indigo-500 h-full rounded-full transition-all duration-550" 
+                      className="bg-teal-500 h-full rounded-full transition-all duration-550" 
                       style={{ width: `${Math.min(100, (boards.length / (billingDetails?.board_limit || 3)) * 100)}%` }} 
                     />
                   </div>
@@ -935,7 +935,7 @@ export const Dashboard: React.FC = () => {
                   </div>
                   <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-3">
                     <div 
-                      className="bg-indigo-500 h-full rounded-full transition-all duration-550" 
+                      className="bg-teal-500 h-full rounded-full transition-all duration-550" 
                       style={{ width: `${Math.min(100, (orgMembers.length / (billingDetails?.member_limit || 3)) * 100)}%` }} 
                     />
                   </div>
@@ -943,12 +943,12 @@ export const Dashboard: React.FC = () => {
                 <div className="p-6 rounded-3xl bg-slate-905 border border-slate-850 flex flex-col justify-between h-36">
                   <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500">Active Tier Plan</span>
                   <div className="flex items-center justify-between mt-2">
-                    <span className="text-xl font-black uppercase text-white bg-indigo-600/10 px-3 py-1 rounded-xl border border-indigo-500/20 text-indigo-400">
+                    <span className="text-xl font-black uppercase text-white bg-teal-600/10 px-3 py-1 rounded-xl border border-teal-500/20 text-teal-400">
                       {billingDetails?.plan || 'Free'}
                     </span>
                     <button 
                       onClick={() => setShowBillingModal(true)}
-                      className="text-[10px] font-extrabold text-indigo-500 hover:underline"
+                      className="text-[10px] font-extrabold text-teal-500 hover:underline"
                     >
                       Manage Plan
                     </button>
@@ -962,7 +962,7 @@ export const Dashboard: React.FC = () => {
                     <span className="text-xs text-slate-500">/ {billingDetails?.storage_limit || '50 MB'}</span>
                   </div>
                   <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-3">
-                    <div className="bg-indigo-500 h-full rounded-full" style={{ width: '4%' }} />
+                    <div className="bg-teal-500 h-full rounded-full" style={{ width: '4%' }} />
                   </div>
                 </div>
               </div>
@@ -970,10 +970,10 @@ export const Dashboard: React.FC = () => {
               {/* Recent Activity Logs list and Boards list side-by-side */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Recent activity */}
-                <div className="lg:col-span-1 p-6 rounded-3xl bg-slate-900 border border-slate-800/80 shadow-xl space-y-4">
+                <div className="lg:col-span-1 p-6 rounded-3xl bg-slate-900 border border-[#2A2F35] shadow-xl space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold text-white">Team Activity</h3>
-                    <button onClick={() => setCurrentTab('activities')} className="text-[10px] font-extrabold text-indigo-400 hover:underline">View All</button>
+                    <button onClick={() => setCurrentTab('activities')} className="text-[10px] font-extrabold text-teal-400 hover:underline">View All</button>
                   </div>
                   <div className="space-y-4 max-h-72 overflow-y-auto">
                     {activityLogs.length === 0 ? (
@@ -981,7 +981,7 @@ export const Dashboard: React.FC = () => {
                     ) : (
                       activityLogs.slice(0, 5).map(l => (
                         <div key={l.id} className="flex gap-3 text-xs leading-normal">
-                          <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 shrink-0" />
+                          <div className="w-1.5 h-1.5 rounded-full bg-teal-500 mt-1.5 shrink-0" />
                           <div>
                             <span className="font-semibold text-slate-300">{l.user_name || 'Collaborator'}</span>{' '}
                             <span className="text-slate-400 font-normal">{l.details || l.action}</span>
@@ -994,17 +994,17 @@ export const Dashboard: React.FC = () => {
                 </div>
 
                 {/* Recent boards */}
-                <div className="lg:col-span-2 p-6 rounded-3xl bg-slate-900 border border-slate-800/80 shadow-xl space-y-4">
+                <div className="lg:col-span-2 p-6 rounded-3xl bg-slate-900 border border-[#2A2F35] shadow-xl space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold text-white">Recent Boards</h3>
-                    <button onClick={() => setCurrentTab('boards')} className="text-[10px] font-extrabold text-indigo-400 hover:underline">All Boards</button>
+                    <button onClick={() => setCurrentTab('boards')} className="text-[10px] font-extrabold text-teal-400 hover:underline">All Boards</button>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {boards.slice(0, 4).map(b => (
                       <div
                         key={b.id}
                         onClick={() => navigate(`/board/${b.id}`)}
-                        className="p-4 rounded-2xl bg-slate-950/40 border border-slate-850 hover:border-indigo-500/35 transition-all text-left cursor-pointer flex flex-col justify-between h-28 group"
+                        className="p-4 rounded-2xl bg-[#0D0F12]/95 border border-slate-850 hover:border-teal-500/35 transition-all text-left cursor-pointer flex flex-col justify-between h-28 group"
                       >
                         <div>
                           <h4 className="font-bold text-slate-200 group-hover:text-white text-xs truncate">{b.name}</h4>
@@ -1040,7 +1040,7 @@ export const Dashboard: React.FC = () => {
                       placeholder="e.g. Brainstorming Session"
                       value={newBoardName}
                       onChange={(e) => setNewBoardName(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                     />
                   </div>
                   <div className="flex-1 w-full space-y-1 text-left">
@@ -1050,7 +1050,7 @@ export const Dashboard: React.FC = () => {
                       placeholder="e.g. Design critique & spatial mapping"
                       value={newBoardDesc}
                       onChange={(e) => setNewBoardDesc(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                     />
                   </div>
                   <div className="flex gap-2 w-full sm:w-auto">
@@ -1059,12 +1059,12 @@ export const Dashboard: React.FC = () => {
                       onClick={() => setShowTemplates(true)}
                       className="flex-1 sm:flex-none px-4 py-2.5 bg-slate-850 hover:bg-slate-800 border border-slate-800 text-slate-300 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all"
                     >
-                      <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                      <Sparkles className="w-3.5 h-3.5 text-teal-400" />
                       <span>Templates</span>
                     </button>
                     <button
                       type="submit"
-                      className="flex-1 sm:flex-none px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/10 transition-all"
+                      className="flex-1 sm:flex-none px-5 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-teal-600/10 transition-all"
                     >
                       Create Canvas
                     </button>
@@ -1087,7 +1087,7 @@ export const Dashboard: React.FC = () => {
                     key={item.key}
                     onClick={() => setBoardSubView(item.key as any)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                      boardSubView === item.key ? 'bg-indigo-600/15 text-indigo-400 border border-indigo-500/20' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                      boardSubView === item.key ? 'bg-teal-600/15 text-teal-400 border border-teal-500/20' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
                     }`}
                   >
                     {item.label}
@@ -1097,7 +1097,7 @@ export const Dashboard: React.FC = () => {
 
               {/* Boards Grid */}
               {getFilteredBoards().length === 0 ? (
-                <div className="p-12 text-center rounded-3xl border border-dashed border-slate-800/80 bg-slate-900/10">
+                <div className="p-12 text-center rounded-3xl border border-dashed border-[#2A2F35] bg-slate-900/10">
                   <Folder className="w-8 h-8 text-slate-600 mx-auto mb-3" />
                   <p className="text-slate-400 text-xs font-semibold">No boards found in this view.</p>
                   <p className="text-[10px] text-slate-600 mt-1">Get started by creating a new collaborative board above.</p>
@@ -1107,7 +1107,7 @@ export const Dashboard: React.FC = () => {
                   {getFilteredBoards().map((b) => (
                     <div 
                       key={b.id}
-                      className="p-6 rounded-3xl bg-slate-900 border border-slate-850/80 hover:border-indigo-500/40 hover:shadow-xl hover:shadow-indigo-500/5 hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between h-44 shadow-lg backdrop-blur-md cursor-pointer group"
+                      className="p-6 rounded-3xl bg-slate-900 border border-[#2A2F35] hover:border-teal-500/40 hover:shadow-xl hover:shadow-teal-500/10 hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between h-44 shadow-lg cursor-pointer group"
                       onClick={() => !b.is_deleted && navigate(`/board/${b.id}`)}
                     >
                       <div>
@@ -1128,7 +1128,7 @@ export const Dashboard: React.FC = () => {
                             <button 
                               onClick={() => toggleArchive(b)}
                               className={`p-1.5 rounded-lg hover:bg-slate-850 transition-colors ${
-                                b.is_archived ? 'text-indigo-400 bg-indigo-500/5 border border-indigo-500/10' : 'text-slate-500 hover:text-slate-300'
+                                b.is_archived ? 'text-teal-400 bg-teal-500/5 border border-teal-500/10' : 'text-slate-500 hover:text-slate-300'
                               }`}
                               title={b.is_archived ? 'Unarchive Board' : 'Archive Board'}
                             >
@@ -1142,14 +1142,14 @@ export const Dashboard: React.FC = () => {
                       </div>
 
                       <div className="flex items-center justify-between mt-4 pt-3.5 border-t border-slate-850" onClick={(e) => e.stopPropagation()}>
-                        <span className="text-[9px] uppercase font-extrabold tracking-widest text-slate-500 bg-slate-955 px-2.5 py-0.5 rounded-full border border-slate-800/60">
+                        <span className="text-[9px] uppercase font-extrabold tracking-widest text-slate-500 bg-slate-955 px-2.5 py-0.5 rounded-full border border-[#2A2F35]">
                           {b.visibility}
                         </span>
                         
                         {b.is_deleted ? (
                           <button 
                             onClick={() => moveBoardToTrash(b, false)}
-                            className="text-xs font-bold text-indigo-400 hover:text-indigo-300 transition-colors"
+                            className="text-xs font-bold text-teal-400 hover:text-teal-300 transition-colors"
                           >
                             Restore
                           </button>
@@ -1183,7 +1183,7 @@ export const Dashboard: React.FC = () => {
                       placeholder="collaborator@example.com"
                       value={inviteEmail}
                       onChange={(e) => setInviteEmail(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                     />
                   </div>
                   <div className="w-full sm:w-48 space-y-1 text-left">
@@ -1191,7 +1191,7 @@ export const Dashboard: React.FC = () => {
                     <select
                       value={inviteRole}
                       onChange={(e) => setInviteRole(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                     >
                       <option value="admin">Admin</option>
                       <option value="editor">Editor</option>
@@ -1201,7 +1201,7 @@ export const Dashboard: React.FC = () => {
                   <button
                     type="submit"
                     disabled={isInviting}
-                    className="w-full sm:w-auto px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-indigo-600/10 flex items-center justify-center gap-2"
+                    className="w-full sm:w-auto px-5 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-teal-600/10 flex items-center justify-center gap-2"
                   >
                     <UserPlus className="w-3.5 h-3.5" />
                     <span>{isInviting ? 'Inviting...' : 'Invite'}</span>
@@ -1210,7 +1210,7 @@ export const Dashboard: React.FC = () => {
               </div>
 
               {/* Members Table Filter controls */}
-              <div className="flex flex-col sm:flex-row gap-3 justify-between items-center bg-slate-900/40 p-4 border border-slate-800 rounded-2xl">
+              <div className="flex flex-col sm:flex-row gap-3 justify-between items-center bg-[#171B1F] p-4 border border-slate-800 rounded-2xl">
                 <div className="relative w-full sm:w-72">
                   <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                   <input
@@ -1218,13 +1218,13 @@ export const Dashboard: React.FC = () => {
                     placeholder="Search by name or email..."
                     value={memberFilter}
                     onChange={(e) => setMemberFilter(e.target.value)}
-                    className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-955 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                    className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-955 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
                   />
                 </div>
                 <select
                   value={roleFilter}
                   onChange={(e) => setRoleFilter(e.target.value)}
-                  className="px-3 py-2 rounded-xl bg-slate-955 border border-slate-800 text-xs text-slate-300 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="px-3 py-2 rounded-xl bg-slate-955 border border-slate-800 text-xs text-slate-300 focus:outline-none focus:ring-1 focus:ring-teal-500"
                 >
                   <option value="all">All Roles</option>
                   <option value="owner">Owner</option>
@@ -1239,7 +1239,7 @@ export const Dashboard: React.FC = () => {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse text-xs">
                     <thead>
-                      <tr className="bg-slate-955/50 border-b border-slate-800 text-slate-400 font-bold">
+                      <tr className="bg-[#0D0F12]/95 border-b border-slate-800 text-slate-400 font-bold">
                         <th className="p-4">Name / Username</th>
                         <th className="p-4">Email</th>
                         <th className="p-4">Role</th>
@@ -1311,7 +1311,7 @@ export const Dashboard: React.FC = () => {
               <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-800">
                 {activityLogs.map((l) => (
                   <div key={l.id} className="relative text-xs text-left leading-relaxed">
-                    <div className="absolute -left-[22px] top-1 w-3.5 h-3.5 rounded-full border-2 border-slate-950 bg-indigo-500 flex items-center justify-center shrink-0" />
+                    <div className="absolute -left-[22px] top-1 w-3.5 h-3.5 rounded-full border-2 border-slate-950 bg-teal-500 flex items-center justify-center shrink-0" />
                     <div>
                       <span className="font-bold text-slate-100">{l.user_name || 'Collaborator'}</span>{' '}
                       <span className="text-slate-400">{l.details || l.action}</span>
@@ -1342,7 +1342,7 @@ export const Dashboard: React.FC = () => {
                       required
                       value={editOrgName}
                       onChange={(e) => setEditOrgName(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                     />
                   </div>
                   <div className="space-y-1">
@@ -1351,7 +1351,7 @@ export const Dashboard: React.FC = () => {
                       type="text"
                       value={editOrgDomain}
                       onChange={(e) => setEditOrgDomain(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                     />
                   </div>
                   <div className="space-y-1">
@@ -1359,12 +1359,12 @@ export const Dashboard: React.FC = () => {
                     <textarea
                       value={editOrgDesc}
                       onChange={(e) => setEditOrgDesc(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 h-20"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500 h-20"
                     />
                   </div>
                   <button
                     type="submit"
-                    className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-indigo-600/10"
+                    className="px-5 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-teal-600/10"
                   >
                     Save Changes
                   </button>
@@ -1386,7 +1386,7 @@ export const Dashboard: React.FC = () => {
                         required
                         value={editTeamName}
                         onChange={(e) => setEditTeamName(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                       />
                     </div>
                     <div className="space-y-1">
@@ -1395,13 +1395,13 @@ export const Dashboard: React.FC = () => {
                         type="text"
                         value={editTeamDesc}
                         onChange={(e) => setEditTeamDesc(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                       />
                     </div>
                     <div className="flex gap-2">
                       <button
                         type="submit"
-                        className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-indigo-600/10"
+                        className="px-5 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-teal-600/10"
                       >
                         Update Team
                       </button>
@@ -1439,7 +1439,7 @@ export const Dashboard: React.FC = () => {
       {/* Invite Member Modal */}
       {showInviteModal && activeTeam && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-md" onClick={() => setShowInviteModal(false)} />
+          <div className="absolute inset-0 bg-[#0D0F12]/95" onClick={() => setShowInviteModal(false)} />
           <form onSubmit={handleSendInvite} className="relative bg-slate-900 border border-slate-850 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 text-left text-slate-100">
             <div>
               <h3 className="text-base font-bold text-white">Invite to Team Workspace</h3>
@@ -1461,7 +1461,7 @@ export const Dashboard: React.FC = () => {
                   placeholder="collaborator@example.com"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                 />
               </div>
 
@@ -1470,7 +1470,7 @@ export const Dashboard: React.FC = () => {
                 <select
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                 >
                   <option value="admin">Admin</option>
                   <option value="editor">Editor</option>
@@ -1493,7 +1493,7 @@ export const Dashboard: React.FC = () => {
               <button
                 type="submit"
                 disabled={isInviting}
-                className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs transition-all shadow-lg shadow-indigo-600/10"
+                className="flex-1 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl font-semibold text-xs transition-all shadow-lg shadow-teal-600/10"
               >
                 {isInviting ? 'Inviting...' : 'Send'}
               </button>
@@ -1505,7 +1505,7 @@ export const Dashboard: React.FC = () => {
       {/* Create Org Modal */}
       {showOrgModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-md" onClick={() => setShowOrgModal(false)} />
+          <div className="absolute inset-0 bg-[#0D0F12]/95" onClick={() => setShowOrgModal(false)} />
           <form onSubmit={handleCreateOrg} className="relative bg-slate-900 border border-slate-850 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 text-left text-slate-100">
             <div>
               <h3 className="text-base font-bold text-white">New Organization</h3>
@@ -1521,7 +1521,7 @@ export const Dashboard: React.FC = () => {
                   placeholder="e.g. Acme Corp"
                   value={newOrgName}
                   onChange={(e) => setNewOrgName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                 />
               </div>
               <div>
@@ -1531,14 +1531,14 @@ export const Dashboard: React.FC = () => {
                   placeholder="e.g. acme"
                   value={newOrgDomain}
                   onChange={(e) => setNewOrgDomain(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                 />
               </div>
             </div>
 
             <div className="flex gap-3 pt-2">
               <button type="button" onClick={() => setShowOrgModal(false)} className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-300 rounded-xl font-semibold text-xs transition-all">Cancel</button>
-              <button type="submit" className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs transition-all shadow-lg shadow-indigo-600/10">Create</button>
+              <button type="submit" className="flex-1 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl font-semibold text-xs transition-all shadow-lg shadow-teal-600/10">Create</button>
             </div>
           </form>
         </div>
@@ -1547,7 +1547,7 @@ export const Dashboard: React.FC = () => {
       {/* Create Team Modal */}
       {showTeamModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-slate-955/80 backdrop-blur-md" onClick={() => setShowTeamModal(false)} />
+          <div className="absolute inset-0 bg-[#0D0F12]/95" onClick={() => setShowTeamModal(false)} />
           <form onSubmit={handleCreateTeam} className="relative bg-slate-900 border border-slate-855 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 text-left text-slate-100">
             <div>
               <h3 className="text-base font-bold text-white">Create New Team</h3>
@@ -1563,7 +1563,7 @@ export const Dashboard: React.FC = () => {
                   placeholder="e.g. Frontend Engineering"
                   value={newTeamName}
                   onChange={(e) => setNewTeamName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                 />
               </div>
               <div>
@@ -1573,14 +1573,14 @@ export const Dashboard: React.FC = () => {
                   placeholder="e.g. Design systems and UI specs"
                   value={newTeamDesc}
                   onChange={(e) => setNewTeamDesc(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                 />
               </div>
             </div>
 
             <div className="flex gap-3 pt-2">
               <button type="button" onClick={() => setShowTeamModal(false)} className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-300 rounded-xl font-semibold text-xs transition-all">Cancel</button>
-              <button type="submit" className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs transition-all shadow-lg shadow-indigo-600/10">Create</button>
+              <button type="submit" className="flex-1 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl font-semibold text-xs transition-all shadow-lg shadow-teal-600/10">Create</button>
             </div>
           </form>
         </div>

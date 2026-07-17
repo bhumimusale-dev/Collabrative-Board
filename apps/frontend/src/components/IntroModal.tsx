@@ -15,10 +15,10 @@ export const IntroModal: React.FC<IntroModalProps> = ({ onJoin }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 dark:bg-black/80 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#171B1F] dark:bg-[#0D0F12]/95">
       <div className="w-full max-w-md p-8 rounded-3xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800/80 shadow-2xl transition-all duration-300">
         <div className="flex flex-col items-center mb-6">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 mb-4">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-teal-500 to-purple-600 flex items-center justify-center shadow-lg shadow-teal-500/10 mb-4">
             <span className="text-2xl font-bold text-white">CB</span>
           </div>
           <h2 className="text-2xl font-bold text-slate-800 dark:text-zinc-100">Welcome to CollabBoard</h2>
@@ -38,7 +38,7 @@ export const IntroModal: React.FC<IntroModalProps> = ({ onJoin }) => {
               placeholder="e.g. John Doe"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-950 text-slate-800 dark:text-zinc-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-950 text-slate-800 dark:text-zinc-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all"
             />
           </div>
 
@@ -52,13 +52,13 @@ export const IntroModal: React.FC<IntroModalProps> = ({ onJoin }) => {
               placeholder="e.g. design-room-1"
               value={room}
               onChange={(e) => setRoom(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-950 text-slate-800 dark:text-zinc-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-950 text-slate-800 dark:text-zinc-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold text-sm shadow-md shadow-indigo-500/10 hover:shadow-indigo-500/20 active:scale-98 transition-all"
+            className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-teal-500 to-purple-600 hover:from-teal-600 hover:to-purple-700 text-white font-semibold text-sm shadow-md shadow-teal-500/10 hover:shadow-teal-500/10 active:scale-98 transition-all"
           >
             Start Collaborating
           </button>

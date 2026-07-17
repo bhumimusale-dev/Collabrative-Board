@@ -59,7 +59,7 @@ export const PropertiesPanel: React.FC = () => {
   ];
 
   return (
-    <div className="absolute top-20 right-6 w-72 max-h-[80vh] overflow-y-auto glass-panel p-5 rounded-3xl border border-slate-200/50 dark:border-zinc-800/50 text-slate-800 dark:text-zinc-200 z-40 space-y-6 shadow-2xl animate-in slide-in-from-right-4 duration-300">
+    <div className="absolute top-20 right-6 w-72 max-h-[80vh] overflow-y-auto flat-card p-5 rounded-3xl border border-[#2A2F35] dark:border-[#2A2F35] text-slate-800 dark:text-zinc-200 z-40 space-y-6 shadow-2xl animate-in slide-in-from-right-4 duration-300">
       <div>
         <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 dark:text-zinc-500">
           Properties ({selectedIds.size} selected)
@@ -132,7 +132,7 @@ export const PropertiesPanel: React.FC = () => {
               onClick={() => updateSelectedStyle({ fill: col.value === 'transparent' ? 'transparent' : `${col.value}26` })}
               style={{ backgroundColor: col.value === 'transparent' ? 'transparent' : col.value }}
               className={`w-6 h-6 rounded-full border transition-all ${
-                firstEl?.fill?.startsWith(col.value) ? 'ring-2 ring-indigo-500 scale-110 border-white' : 'border-slate-300 dark:border-zinc-700'
+                firstEl?.fill?.startsWith(col.value) ? 'ring-2 ring-teal-500 scale-110 border-white' : 'border-slate-300 dark:border-zinc-700'
               } flex items-center justify-center`}
               title={col.name}
             >
@@ -153,7 +153,7 @@ export const PropertiesPanel: React.FC = () => {
               onClick={() => updateSelectedStyle({ stroke: col.value })}
               style={{ backgroundColor: col.value }}
               className={`w-6 h-6 rounded-full border transition-all ${
-                firstEl?.stroke === col.value ? 'ring-2 ring-indigo-500 scale-110 border-white' : 'border-slate-300 dark:border-zinc-700'
+                firstEl?.stroke === col.value ? 'ring-2 ring-teal-500 scale-110 border-white' : 'border-slate-300 dark:border-zinc-700'
               }`}
               title={col.name}
             />
@@ -168,7 +168,7 @@ export const PropertiesPanel: React.FC = () => {
             max={12} 
             value={firstEl?.strokeWidth || 2}
             onChange={(e) => updateSelectedStyle({ strokeWidth: parseInt(e.target.value) })}
-            className="w-full h-1 bg-slate-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+            className="w-full h-1 bg-slate-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-teal-600"
           />
         </div>
         {/* Border Style */}
@@ -178,7 +178,7 @@ export const PropertiesPanel: React.FC = () => {
               key={st}
               onClick={() => updateSelectedStyle({ borderStyle: st as any })}
               className={`py-1.5 rounded-lg text-[10px] font-bold capitalize transition-all border ${
-                (firstEl?.borderStyle || 'solid') === st ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-transparent border-slate-200 dark:border-zinc-850 hover:bg-slate-50 dark:hover:bg-zinc-900'
+                (firstEl?.borderStyle || 'solid') === st ? 'bg-teal-600 border-teal-600 text-white' : 'bg-transparent border-slate-200 dark:border-zinc-850 hover:bg-slate-50 dark:hover:bg-zinc-900'
               }`}
             >
               {st}
@@ -189,7 +189,7 @@ export const PropertiesPanel: React.FC = () => {
 
       {/* Typography settings (If type is text or sticky note) */}
       {(firstEl?.type === 'text' || firstEl?.type === 'sticky') && (
-        <div className="space-y-4 pt-4 border-t border-slate-200/50 dark:border-zinc-850">
+        <div className="space-y-4 pt-4 border-t border-[#2A2F35] dark:border-zinc-850">
           <label className="text-[10px] uppercase font-bold text-slate-400 dark:text-zinc-500 block">Typography</label>
           {/* Font Sizes */}
           <div className="grid grid-cols-4 gap-1.5">
@@ -198,7 +198,7 @@ export const PropertiesPanel: React.FC = () => {
                 key={sz}
                 onClick={() => updateSelectedStyle({ fontSize: sz })}
                 className={`py-1 rounded-lg text-xs font-semibold transition-all border ${
-                  (firstEl?.fontSize || 20) === sz ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-transparent border-slate-200 dark:border-zinc-850'
+                  (firstEl?.fontSize || 20) === sz ? 'bg-teal-600 border-teal-600 text-white' : 'bg-transparent border-slate-200 dark:border-zinc-850'
                 }`}
               >
                 {sz}px
@@ -209,28 +209,28 @@ export const PropertiesPanel: React.FC = () => {
           <div className="grid grid-cols-4 gap-1.5">
             <button 
               onClick={() => updateSelectedStyle({ fontWeight: firstEl.fontWeight === 'bold' ? 'normal' : 'bold' })}
-              className={`p-2 rounded-xl transition-all border ${firstEl.fontWeight === 'bold' ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-transparent border-slate-200 dark:border-zinc-850'}`}
+              className={`p-2 rounded-xl transition-all border ${firstEl.fontWeight === 'bold' ? 'bg-teal-600 border-teal-600 text-white' : 'bg-transparent border-slate-200 dark:border-zinc-850'}`}
               title="Bold"
             >
               <Bold className="w-4 h-4 mx-auto" />
             </button>
             <button 
               onClick={() => updateSelectedStyle({ fontStyle: firstEl.fontStyle === 'italic' ? 'normal' : 'italic' })}
-              className={`p-2 rounded-xl transition-all border ${firstEl.fontStyle === 'italic' ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-transparent border-slate-200 dark:border-zinc-850'}`}
+              className={`p-2 rounded-xl transition-all border ${firstEl.fontStyle === 'italic' ? 'bg-teal-600 border-teal-600 text-white' : 'bg-transparent border-slate-200 dark:border-zinc-850'}`}
               title="Italic"
             >
               <Italic className="w-4 h-4 mx-auto" />
             </button>
             <button 
               onClick={() => updateSelectedStyle({ textDecoration: firstEl.textDecoration === 'underline' ? 'none' : 'underline' })}
-              className={`p-2 rounded-xl transition-all border ${firstEl.textDecoration === 'underline' ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-transparent border-slate-200 dark:border-zinc-850'}`}
+              className={`p-2 rounded-xl transition-all border ${firstEl.textDecoration === 'underline' ? 'bg-teal-600 border-teal-600 text-white' : 'bg-transparent border-slate-200 dark:border-zinc-850'}`}
               title="Underline"
             >
               <Underline className="w-4 h-4 mx-auto" />
             </button>
             <button 
               onClick={() => updateSelectedStyle({ textDecoration: firstEl.textDecoration === 'line-through' ? 'none' : 'line-through' })}
-              className={`p-2 rounded-xl transition-all border ${firstEl.textDecoration === 'line-through' ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-transparent border-slate-200 dark:border-zinc-850'}`}
+              className={`p-2 rounded-xl transition-all border ${firstEl.textDecoration === 'line-through' ? 'bg-teal-600 border-teal-600 text-white' : 'bg-transparent border-slate-200 dark:border-zinc-850'}`}
               title="Strikethrough"
             >
               <Strikethrough className="w-4 h-4 mx-auto" />
@@ -240,7 +240,7 @@ export const PropertiesPanel: React.FC = () => {
       )}
 
       {/* Opacity & Shadow */}
-      <div className="space-y-4 pt-4 border-t border-slate-200/50 dark:border-zinc-850">
+      <div className="space-y-4 pt-4 border-t border-[#2A2F35] dark:border-zinc-850">
         <div className="space-y-1.5">
           <span className="text-[10px] uppercase font-bold text-slate-400 dark:text-zinc-500 block">Opacity ({Math.round((firstEl?.opacity ?? 1) * 100)}%)</span>
           <input 
@@ -249,7 +249,7 @@ export const PropertiesPanel: React.FC = () => {
             max={100} 
             value={Math.round((firstEl?.opacity ?? 1) * 100)}
             onChange={(e) => updateSelectedStyle({ opacity: parseInt(e.target.value) / 100 })}
-            className="w-full h-1 bg-slate-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+            className="w-full h-1 bg-slate-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-teal-600"
           />
         </div>
         <div className="space-y-1.5">
@@ -260,7 +260,7 @@ export const PropertiesPanel: React.FC = () => {
             max={50} 
             value={firstEl?.cornerRadius ?? 4}
             onChange={(e) => updateSelectedStyle({ cornerRadius: parseInt(e.target.value) })}
-            className="w-full h-1 bg-slate-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+            className="w-full h-1 bg-slate-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-teal-600"
           />
         </div>
       </div>

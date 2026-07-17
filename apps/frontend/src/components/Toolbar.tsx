@@ -87,7 +87,7 @@ export const Toolbar: React.FC = () => {
     <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-3 pointer-events-auto z-40">
       {/* Alignment Panel (Visible when elements are selected) */}
       {store.getSelectedIds().size >= 2 && (
-        <div className="glass-panel px-3 py-1.5 rounded-full flex items-center gap-2 text-slate-600 dark:text-zinc-300">
+        <div className="flat-card px-3 py-1.5 rounded-full flex items-center gap-2 text-slate-600 dark:text-zinc-300">
           <button 
             onClick={() => store.alignSelected('left')} 
             className="p-1.5 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
@@ -115,7 +115,7 @@ export const Toolbar: React.FC = () => {
       )}
 
       {/* Main Action Bar */}
-      <div className="glass-panel px-4 py-2 rounded-2xl flex items-center gap-2 border border-slate-200/50 dark:border-zinc-800/50 relative">
+      <div className="flat-card px-4 py-2 rounded-2xl flex items-center gap-2 border border-[#2A2F35] dark:border-[#2A2F35] relative">
         {/* Tool Selectors */}
         <div className="flex items-center gap-1.5">
           {primaryTools.map((t) => (
@@ -129,7 +129,7 @@ export const Toolbar: React.FC = () => {
               }}
               className={`p-2 rounded-xl transition-all duration-200 ${
                 currentTool === t.type
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+                  ? 'bg-teal-600 text-white shadow-md shadow-teal-500/10'
                   : 'hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300'
               }`}
               title={t.label}
@@ -148,7 +148,7 @@ export const Toolbar: React.FC = () => {
               }}
               className={`p-2 rounded-xl transition-all duration-200 ${
                 extraShapes.some(x => x.type === currentTool)
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+                  ? 'bg-teal-600 text-white shadow-md shadow-teal-500/10'
                   : 'hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300'
               }`}
               title="More Shapes"
@@ -156,7 +156,7 @@ export const Toolbar: React.FC = () => {
               <Triangle className="w-5 h-5" />
             </button>
             {showShapesDropdown && (
-              <div className="absolute bottom-14 left-1/2 transform -translate-x-1/2 glass-panel p-2 rounded-xl grid grid-cols-3 gap-1 border border-slate-200/50 dark:border-zinc-800/50 z-50 min-w-[140px]">
+              <div className="absolute bottom-14 left-1/2 transform -translate-x-1/2 flat-card p-2 rounded-xl grid grid-cols-3 gap-1 border border-[#2A2F35] dark:border-[#2A2F35] z-50 min-w-[140px]">
                 {extraShapes.map(sh => (
                   <button
                     key={sh.type}
@@ -164,7 +164,7 @@ export const Toolbar: React.FC = () => {
                       store.setTool(sh.type);
                       setShowShapesDropdown(false);
                     }}
-                    className={`p-2 rounded-lg text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 flex items-center justify-center ${currentTool === sh.type ? 'bg-indigo-600/10 text-indigo-500 font-semibold' : ''}`}
+                    className={`p-2 rounded-lg text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 flex items-center justify-center ${currentTool === sh.type ? 'bg-teal-600/10 text-teal-500 font-semibold' : ''}`}
                     title={sh.label}
                   >
                     {sh.icon}
@@ -184,7 +184,7 @@ export const Toolbar: React.FC = () => {
               }}
               className={`p-2 rounded-xl transition-all duration-200 ${
                 lineTools.some(x => x.type === currentTool)
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+                  ? 'bg-teal-600 text-white shadow-md shadow-teal-500/10'
                   : 'hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300'
               }`}
               title="Lines & Connectors"
@@ -192,7 +192,7 @@ export const Toolbar: React.FC = () => {
               <Minus className="w-5 h-5" />
             </button>
             {showLinesDropdown && (
-              <div className="absolute bottom-14 left-1/2 transform -translate-x-1/2 glass-panel p-2 rounded-xl flex flex-col gap-1 border border-slate-200/50 dark:border-zinc-800/50 z-50 min-w-[100px]">
+              <div className="absolute bottom-14 left-1/2 transform -translate-x-1/2 flat-card p-2 rounded-xl flex flex-col gap-1 border border-[#2A2F35] dark:border-[#2A2F35] z-50 min-w-[100px]">
                 {lineTools.map(lt => (
                   <button
                     key={lt.type}
@@ -200,7 +200,7 @@ export const Toolbar: React.FC = () => {
                       store.setTool(lt.type);
                       setShowLinesDropdown(false);
                     }}
-                    className={`p-2 rounded-lg text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 flex items-center gap-2 ${currentTool === lt.type ? 'bg-indigo-600/10 text-indigo-500 font-semibold' : ''}`}
+                    className={`p-2 rounded-lg text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 flex items-center gap-2 ${currentTool === lt.type ? 'bg-teal-600/10 text-teal-500 font-semibold' : ''}`}
                     title={lt.label}
                   >
                     {lt.icon}
@@ -221,7 +221,7 @@ export const Toolbar: React.FC = () => {
               }}
               className={`p-2 rounded-xl transition-all duration-200 ${
                 drawTools.some(x => x.type === currentTool)
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+                  ? 'bg-teal-600 text-white shadow-md shadow-teal-500/10'
                   : 'hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300'
               }`}
               title="Draw Tools"
@@ -229,7 +229,7 @@ export const Toolbar: React.FC = () => {
               <Brush className="w-5 h-5" />
             </button>
             {showDrawDropdown && (
-              <div className="absolute bottom-14 left-1/2 transform -translate-x-1/2 glass-panel p-2 rounded-xl flex flex-col gap-1 border border-slate-200/50 dark:border-zinc-800/50 z-50 min-w-[110px]">
+              <div className="absolute bottom-14 left-1/2 transform -translate-x-1/2 flat-card p-2 rounded-xl flex flex-col gap-1 border border-[#2A2F35] dark:border-[#2A2F35] z-50 min-w-[110px]">
                 {drawTools.map(dt => (
                   <button
                     key={dt.type}
@@ -237,7 +237,7 @@ export const Toolbar: React.FC = () => {
                       store.setTool(dt.type);
                       setShowDrawDropdown(false);
                     }}
-                    className={`p-2 rounded-lg text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 flex items-center gap-2 ${currentTool === dt.type ? 'bg-indigo-600/10 text-indigo-500 font-semibold' : ''}`}
+                    className={`p-2 rounded-lg text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 flex items-center gap-2 ${currentTool === dt.type ? 'bg-teal-600/10 text-teal-500 font-semibold' : ''}`}
                     title={dt.label}
                   >
                     {dt.icon}

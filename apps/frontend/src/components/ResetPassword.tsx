@@ -49,11 +49,11 @@ export const ResetPassword: React.FC = () => {
     <div className="w-full min-h-screen bg-slate-950 flex items-center justify-center font-sans px-4">
       <div className="w-full max-w-md p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl relative overflow-hidden">
         {/* Glow decoration */}
-        <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
-        <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl pointer-events-none" />
 
         <div className="flex flex-col items-center mb-8 relative z-10">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 mb-4">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-teal-500 to-purple-600 flex items-center justify-center shadow-lg shadow-teal-500/10 mb-4">
             <span className="text-xl font-bold text-white">CX</span>
           </div>
           <h2 className="text-2xl font-bold text-slate-100">Set New Password</h2>
@@ -63,13 +63,13 @@ export const ResetPassword: React.FC = () => {
         </div>
 
         {!token && (
-          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl relative z-10">
+          <div className="mb-4 p-3 bg-red-500/10 border border-red-600 text-red-400 text-sm rounded-xl relative z-10">
             No reset token found in the URL. Please request a new password reset link.
           </div>
         )}
 
         {error && (
-          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl relative z-10">
+          <div className="mb-4 p-3 bg-red-500/10 border border-red-600 text-red-400 text-sm rounded-xl relative z-10">
             {error}
           </div>
         )}
@@ -81,7 +81,7 @@ export const ResetPassword: React.FC = () => {
             </div>
             <Link
               to="/login"
-              className="block w-full py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold text-sm shadow-md hover:shadow-indigo-500/10 transition-all text-center cursor-pointer"
+              className="block w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-purple-600 hover:from-teal-500 hover:to-purple-500 text-white font-semibold text-sm shadow-md hover:shadow-teal-500/10 transition-all text-center cursor-pointer"
             >
               Go to Sign In
             </Link>
@@ -97,7 +97,7 @@ export const ResetPassword: React.FC = () => {
                 {...register('password')}
                 placeholder="••••••••"
                 disabled={!token}
-                className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm disabled:opacity-50"
+                className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm disabled:opacity-50"
               />
               {errors.password && (
                 <p className="text-red-400 text-xs mt-1">{errors.password.message}</p>
@@ -113,7 +113,7 @@ export const ResetPassword: React.FC = () => {
                 {...register('confirmPassword')}
                 placeholder="••••••••"
                 disabled={!token}
-                className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm disabled:opacity-50"
+                className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm disabled:opacity-50"
               />
               {errors.confirmPassword && (
                 <p className="text-red-400 text-xs mt-1">{errors.confirmPassword.message}</p>
@@ -123,7 +123,7 @@ export const ResetPassword: React.FC = () => {
             <button
               type="submit"
               disabled={loading || !token}
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold text-sm shadow-md hover:shadow-indigo-500/10 transition-all disabled:opacity-50 cursor-pointer"
+              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-purple-600 hover:from-teal-500 hover:to-purple-500 text-white font-semibold text-sm shadow-md hover:shadow-teal-500/10 transition-all disabled:opacity-50 cursor-pointer"
             >
               {loading ? 'Updating password...' : 'Update Password'}
             </button>

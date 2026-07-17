@@ -1,5 +1,24 @@
 @import "tailwindcss";
 
+:root {
+  --bg-page: #0D0F12;
+  --bg-card: #171B1F;
+  --bg-card-hover: #1E2328;
+  --border-default: #2A2F35;
+  --border-strong: #3A4148;
+
+  --text-primary: #F2F4F5;
+  --text-secondary: #9AA4AB;
+  --text-muted: #6B7480;
+
+  --accent-primary: #14B8A6;
+  --accent-primary-hover: #0D9488;
+  --accent-secondary: #22D3EE;
+
+  --success: #22C55E;
+  --danger: #EF4444;
+}
+
 html, body, #root {
   margin: 0;
   padding: 0;
@@ -10,11 +29,15 @@ html, body, #root {
 }
 
 body {
-  @apply bg-slate-50 text-slate-900 transition-colors duration-200 select-none;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  transition: background-color 0.2s, color 0.2s;
+  user-select: none;
 }
 
 body.dark {
-  @apply bg-[#121212] text-slate-100;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
 }
 
 /* Custom scrollbars */
@@ -26,24 +49,26 @@ body.dark {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(156, 163, 175, 0.4);
+  background: var(--border-strong);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(156, 163, 175, 0.6);
+  background: var(--text-muted);
 }
 
-/* Glassmorphism utility */
-.glass-panel {
-  @apply bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border border-slate-200/50 dark:border-zinc-800/50 shadow-xl shadow-slate-100/10 dark:shadow-black/20;
+/* Flat solid card utility */
+.flat-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-default);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 /* Grid background pattern */
 .grid-bg-light {
   background-size: 40px 40px;
   background-image: 
-    linear-gradient(to right, rgba(99, 102, 241, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(20, 184, 166, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(20, 184, 166, 0.03) 1px, transparent 1px);
 }
 
 .grid-bg-dark {
@@ -67,16 +92,16 @@ body.dark {
   background: transparent;
 }
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background: rgba(100, 116, 139, 0.4);
+  background: var(--border-strong);
   border-radius: 4px;
 }
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.7);
+  background: var(--text-muted);
 }
 /* Firefox */
 .scrollbar-thin {
   scrollbar-width: thin;
-  scrollbar-color: rgba(100, 116, 139, 0.4) transparent;
+  scrollbar-color: var(--border-strong) transparent;
   scroll-behavior: smooth;
 }
 
@@ -84,3 +109,4 @@ body.dark {
 body.modal-open {
   overflow: hidden !important;
 }
+

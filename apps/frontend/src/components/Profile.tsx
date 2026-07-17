@@ -103,16 +103,16 @@ export const Profile: React.FC = () => {
       <div className="max-w-3xl mx-auto bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
         
         {/* Header Banner */}
-        <div className="h-32 bg-gradient-to-r from-indigo-600 to-purple-600 relative">
+        <div className="h-32 bg-gradient-to-r from-teal-600 to-purple-600 relative">
           <Link
             to="/dashboard"
-            className="absolute top-4 left-4 px-4 py-2 bg-black/30 hover:bg-black/40 backdrop-blur-md text-xs font-semibold text-white rounded-full transition-all flex items-center gap-1"
+            className="absolute top-4 left-4 px-4 py-2 bg-[#171B1F] hover:bg-[#1E2328] text-xs font-semibold text-white rounded-full transition-all flex items-center gap-1"
           >
             ← Back to Dashboard
           </Link>
           <button
             onClick={handleLogout}
-            className="absolute top-4 right-4 px-4 py-2 bg-red-600/30 hover:bg-red-600/40 border border-red-500/20 backdrop-blur-md text-xs font-semibold text-red-200 rounded-full transition-all"
+            className="absolute top-4 right-4 px-4 py-2 bg-red-600 hover:bg-red-700 border border-red-600 text-xs font-semibold text-red-200 rounded-full transition-all"
           >
             Sign Out
           </button>
@@ -131,7 +131,7 @@ export const Profile: React.FC = () => {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-indigo-600 flex items-center justify-center text-3xl font-bold text-white uppercase">
+                <div className="w-full h-full bg-teal-600 flex items-center justify-center text-3xl font-bold text-white uppercase">
                   {user?.name.charAt(0)}
                 </div>
               )}
@@ -178,7 +178,7 @@ export const Profile: React.FC = () => {
           )}
 
           {error && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-2xl">
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-600 text-red-400 text-sm rounded-2xl">
               {error}
             </div>
           )}
@@ -193,7 +193,7 @@ export const Profile: React.FC = () => {
                 <input
                   type="text"
                   {...register('name')}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm"
                 />
                 {errors.name && (
                   <p className="text-red-400 text-xs mt-1">{errors.name.message}</p>
@@ -207,7 +207,7 @@ export const Profile: React.FC = () => {
                 <input
                   type="text"
                   {...register('username')}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm"
                 />
                 {errors.username && (
                   <p className="text-red-400 text-xs mt-1">{errors.username.message}</p>
@@ -223,7 +223,7 @@ export const Profile: React.FC = () => {
                 {...register('bio')}
                 rows={3}
                 placeholder="Write a brief bio about yourself..."
-                className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm resize-none"
+                className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm resize-none"
               />
               {errors.bio && (
                 <p className="text-red-400 text-xs mt-1">{errors.bio.message}</p>
@@ -237,7 +237,7 @@ export const Profile: React.FC = () => {
                 </label>
                 <select
                   {...register('theme')}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm"
                 >
                   <option value="light">Light Mode</option>
                   <option value="dark">Dark Mode</option>
@@ -250,7 +250,7 @@ export const Profile: React.FC = () => {
                 </label>
                 <select
                   {...register('language')}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm"
                 >
                   <option value="en">English (US)</option>
                   <option value="es">Español</option>
@@ -265,7 +265,7 @@ export const Profile: React.FC = () => {
                 </label>
                 <select
                   {...register('timezone')}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm"
                 >
                   <option value="UTC">UTC</option>
                   <option value="America/New_York">EST (New York)</option>
@@ -280,7 +280,7 @@ export const Profile: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md transition-all disabled:opacity-50 flex items-center gap-2"
+                className="px-6 py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-semibold text-sm shadow-md transition-all disabled:opacity-50 flex items-center gap-2"
               >
                 {loading ? 'Saving Changes...' : 'Save Settings'}
               </button>

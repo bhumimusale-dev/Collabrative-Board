@@ -88,8 +88,8 @@ export const TopBar: React.FC = () => {
   return (
     <div className="absolute top-6 left-6 right-6 flex items-center justify-between pointer-events-auto select-none">
       {/* Room Name & Sync Status */}
-      <div className="glass-panel px-4 py-2.5 rounded-2xl flex items-center gap-3 border border-slate-200/50 dark:border-zinc-800/50">
-        <span className="text-sm font-semibold tracking-wide bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">
+      <div className="flat-card px-4 py-2.5 rounded-2xl flex items-center gap-3 border border-[#2A2F35] dark:border-[#2A2F35]">
+        <span className="text-sm font-semibold tracking-wide bg-gradient-to-r from-teal-500 to-purple-600 bg-clip-text text-transparent">
           CollabBoard
         </span>
         <div className="w-[1px] h-4 bg-slate-200 dark:bg-zinc-800" />
@@ -121,7 +121,7 @@ export const TopBar: React.FC = () => {
       <div className="flex items-center gap-4">
         {/* Active Collaborators */}
         {users.length > 0 && (
-          <div className="glass-panel px-3 py-1.5 rounded-2xl flex items-center -space-x-2 border border-slate-200/50 dark:border-zinc-800/50">
+          <div className="flat-card px-3 py-1.5 rounded-2xl flex items-center -space-x-2 border border-[#2A2F35] dark:border-[#2A2F35]">
             {users.map((user) => (
               <img
                 key={user.id}
@@ -136,7 +136,7 @@ export const TopBar: React.FC = () => {
         )}
 
         {/* Board Operations */}
-        <div className="glass-panel px-3 py-2 rounded-2xl flex items-center gap-1.5 border border-slate-200/50 dark:border-zinc-800/50">
+        <div className="flat-card px-3 py-2 rounded-2xl flex items-center gap-1.5 border border-[#2A2F35] dark:border-[#2A2F35]">
           <label className="p-1.5 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-xl text-slate-600 dark:text-zinc-300 transition-colors cursor-pointer" title="Import JSON">
             <Upload className="w-4 h-4" />
             <input 
@@ -165,7 +165,7 @@ export const TopBar: React.FC = () => {
           
           <button 
             onClick={handleAISuggestion} 
-            className="p-1.5 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 rounded-xl text-indigo-600 dark:text-indigo-400 transition-colors flex items-center gap-1 text-xs font-semibold" 
+            className="p-1.5 hover:bg-teal-50 dark:hover:bg-teal-950/20 rounded-xl text-teal-500 dark:text-teal-400 transition-colors flex items-center gap-1 text-xs font-semibold" 
             title="Simulate AI Sticky Note"
           >
             <Sparkles className="w-4 h-4" />
