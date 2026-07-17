@@ -35,18 +35,18 @@ export const ForgotPassword: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-slate-950 flex items-center justify-center font-sans px-4">
-      <div className="w-full max-w-md p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl relative overflow-hidden">
+    <div className="w-full min-h-screen bg-white flex items-center justify-center font-sans px-4">
+      <div className="w-full max-w-md p-8 rounded-3xl bg-[#F8FAFB] border border-[#E2E5E9] shadow-2xl relative overflow-hidden">
         {/* Glow decoration */}
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl pointer-events-none" />
         <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl pointer-events-none" />
 
         <div className="flex flex-col items-center mb-8 relative z-10">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-teal-500 to-purple-600 flex items-center justify-center shadow-lg shadow-teal-500/10 mb-4">
-            <span className="text-xl font-bold text-white">CX</span>
+            <span className="text-xl font-bold text-[#1A1D21]">CX</span>
           </div>
-          <h2 className="text-2xl font-bold text-slate-100">Forgot Password?</h2>
-          <p className="text-sm text-slate-400 mt-1 text-center">
+          <h2 className="text-2xl font-bold text-[#1A1D21]">Forgot Password?</h2>
+          <p className="text-sm text-[#5F6B7A] mt-1 text-center">
             Enter your email address and we'll send you a 6-digit OTP code to reset your password.
           </p>
         </div>
@@ -59,14 +59,14 @@ export const ForgotPassword: React.FC = () => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 relative z-10">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#5F6B7A] mb-1">
               Email Address
             </label>
             <input
               type="email"
               {...register('email')}
               placeholder="you@example.com"
-              className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm"
+              className="w-full px-4 py-3 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm"
             />
             {errors.email && (
               <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>
@@ -76,13 +76,13 @@ export const ForgotPassword: React.FC = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-purple-600 hover:from-teal-500 hover:to-purple-500 text-white font-semibold text-sm shadow-md hover:shadow-teal-500/10 transition-all disabled:opacity-50 cursor-pointer"
+            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-purple-600 hover:from-teal-500 hover:to-purple-500 text-[#1A1D21] font-semibold text-sm shadow-md hover:shadow-teal-500/10 transition-all disabled:opacity-50 cursor-pointer"
           >
             {loading ? 'Sending Request...' : 'Send Verification Code'}
           </button>
         </form>
 
-        <p className="text-center text-xs text-slate-400 mt-6 relative z-10">
+        <p className="text-center text-xs text-[#5F6B7A] mt-6 relative z-10">
           Remembered your password?{' '}
           <Link to="/login" className="text-teal-400 hover:text-teal-300 font-semibold transition-colors">
             Log in

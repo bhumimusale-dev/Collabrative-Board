@@ -46,18 +46,18 @@ export const ResetPassword: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-slate-950 flex items-center justify-center font-sans px-4">
-      <div className="w-full max-w-md p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl relative overflow-hidden">
+    <div className="w-full min-h-screen bg-white flex items-center justify-center font-sans px-4">
+      <div className="w-full max-w-md p-8 rounded-3xl bg-[#F8FAFB] border border-[#E2E5E9] shadow-2xl relative overflow-hidden">
         {/* Glow decoration */}
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl pointer-events-none" />
         <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl pointer-events-none" />
 
         <div className="flex flex-col items-center mb-8 relative z-10">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-teal-500 to-purple-600 flex items-center justify-center shadow-lg shadow-teal-500/10 mb-4">
-            <span className="text-xl font-bold text-white">CX</span>
+            <span className="text-xl font-bold text-[#1A1D21]">CX</span>
           </div>
-          <h2 className="text-2xl font-bold text-slate-100">Set New Password</h2>
-          <p className="text-sm text-slate-400 mt-1 text-center">
+          <h2 className="text-2xl font-bold text-[#1A1D21]">Set New Password</h2>
+          <p className="text-sm text-[#5F6B7A] mt-1 text-center">
             Set your new secure password below. All other active sessions will be logged out.
           </p>
         </div>
@@ -81,7 +81,7 @@ export const ResetPassword: React.FC = () => {
             </div>
             <Link
               to="/login"
-              className="block w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-purple-600 hover:from-teal-500 hover:to-purple-500 text-white font-semibold text-sm shadow-md hover:shadow-teal-500/10 transition-all text-center cursor-pointer"
+              className="block w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-purple-600 hover:from-teal-500 hover:to-purple-500 text-[#1A1D21] font-semibold text-sm shadow-md hover:shadow-teal-500/10 transition-all text-center cursor-pointer"
             >
               Go to Sign In
             </Link>
@@ -89,7 +89,7 @@ export const ResetPassword: React.FC = () => {
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 relative z-10">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-[#5F6B7A] mb-1">
                 New Password
               </label>
               <input
@@ -97,7 +97,7 @@ export const ResetPassword: React.FC = () => {
                 {...register('password')}
                 placeholder="••••••••"
                 disabled={!token}
-                className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm disabled:opacity-50"
+                className="w-full px-4 py-3 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm disabled:opacity-50"
               />
               {errors.password && (
                 <p className="text-red-400 text-xs mt-1">{errors.password.message}</p>
@@ -105,7 +105,7 @@ export const ResetPassword: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-[#5F6B7A] mb-1">
                 Confirm New Password
               </label>
               <input
@@ -113,7 +113,7 @@ export const ResetPassword: React.FC = () => {
                 {...register('confirmPassword')}
                 placeholder="••••••••"
                 disabled={!token}
-                className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm disabled:opacity-50"
+                className="w-full px-4 py-3 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm disabled:opacity-50"
               />
               {errors.confirmPassword && (
                 <p className="text-red-400 text-xs mt-1">{errors.confirmPassword.message}</p>
@@ -123,7 +123,7 @@ export const ResetPassword: React.FC = () => {
             <button
               type="submit"
               disabled={loading || !token}
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-purple-600 hover:from-teal-500 hover:to-purple-500 text-white font-semibold text-sm shadow-md hover:shadow-teal-500/10 transition-all disabled:opacity-50 cursor-pointer"
+              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-purple-600 hover:from-teal-500 hover:to-purple-500 text-[#1A1D21] font-semibold text-sm shadow-md hover:shadow-teal-500/10 transition-all disabled:opacity-50 cursor-pointer"
             >
               {loading ? 'Updating password...' : 'Update Password'}
             </button>

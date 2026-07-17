@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --bg-page: #0D0F12;
-  --bg-card: #171B1F;
-  --bg-card-hover: #1E2328;
-  --border-default: #2A2F35;
-  --border-strong: #3A4148;
+  --bg-page: #FFFFFF;
+  --bg-card: #F8FAFB;
+  --bg-card-hover: #F0F2F4;
+  --border-default: #E2E5E9;
+  --border-strong: #CDD2D8;
 
-  --text-primary: #F2F4F5;
-  --text-secondary: #9AA4AB;
-  --text-muted: #6B7480;
+  --text-primary: #1A1D21;
+  --text-secondary: #5F6B7A;
+  --text-muted: #9AA4AB;
 
   --accent-primary: #14B8A6;
   --accent-primary-hover: #0D9488;
@@ -60,7 +60,7 @@ body.dark {
 .flat-card {
   background-color: var(--bg-card);
   border: 1px solid var(--border-default);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
 /* Grid background pattern */

@@ -30,20 +30,20 @@ export const VerifyEmail: React.FC = () => {
   }, [token]);
 
   return (
-    <div className="w-full min-h-screen bg-slate-950 flex items-center justify-center font-sans px-4">
-      <div className="w-full max-w-md p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl text-center">
+    <div className="w-full min-h-screen bg-white flex items-center justify-center font-sans px-4">
+      <div className="w-full max-w-md p-8 rounded-3xl bg-[#F8FAFB] border border-[#E2E5E9] shadow-2xl text-center">
         <div className="flex flex-col items-center mb-8">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-teal-500 to-purple-600 flex items-center justify-center shadow-lg shadow-teal-500/10 mb-4">
-            <span className="text-xl font-bold text-white">CX</span>
+            <span className="text-xl font-bold text-[#1A1D21]">CX</span>
           </div>
-          <h2 className="text-2xl font-bold text-slate-100">Email Verification</h2>
-          <p className="text-sm text-slate-400 mt-1">CollabBoard X security check</p>
+          <h2 className="text-2xl font-bold text-[#1A1D21]">Email Verification</h2>
+          <p className="text-sm text-[#5F6B7A] mt-1">CollabBoard X security check</p>
         </div>
 
         {verifying && (
           <div className="flex flex-col items-center space-y-4 py-8">
             <div className="w-12 h-12 border-4 border-teal-500/20 border-t-teal-500 rounded-full animate-spin"></div>
-            <p className="text-slate-400 text-sm font-medium">Verifying your email address...</p>
+            <p className="text-[#5F6B7A] text-sm font-medium">Verifying your email address...</p>
           </div>
         )}
 
@@ -54,7 +54,7 @@ export const VerifyEmail: React.FC = () => {
             </div>
             <Link
               to="/login"
-              className="block w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-sm transition-all"
+              className="block w-full py-3 px-4 rounded-xl bg-[#E2E5E9] hover:bg-slate-700 text-[#1A1D21] font-semibold text-sm transition-all"
             >
               Go to Login
             </Link>
@@ -68,7 +68,7 @@ export const VerifyEmail: React.FC = () => {
             </div>
             <Link
               to="/login"
-              className="block w-full py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-semibold text-sm shadow-md transition-all"
+              className="block w-full py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-[#1A1D21] font-semibold text-sm shadow-md transition-all"
             >
               Go to Dashboard
             </Link>

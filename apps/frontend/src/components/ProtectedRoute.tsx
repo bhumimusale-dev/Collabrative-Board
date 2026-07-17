@@ -11,9 +11,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="w-full min-h-screen bg-slate-950 flex flex-col items-center justify-center font-sans">
+      <div className="w-full min-h-screen bg-white flex flex-col items-center justify-center font-sans">
         <div className="w-16 h-16 border-4 border-teal-500/20 border-t-teal-600 rounded-full animate-spin mb-4"></div>
-        <p className="text-sm text-slate-400 font-medium">Securing session...</p>
+        <p className="text-sm text-[#5F6B7A] font-medium">Securing session...</p>
       </div>
     );
   }

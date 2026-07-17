@@ -87,7 +87,7 @@ export const Toolbar: React.FC = () => {
     <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-3 pointer-events-auto z-40">
       {/* Alignment Panel (Visible when elements are selected) */}
       {store.getSelectedIds().size >= 2 && (
-        <div className="flat-card px-3 py-1.5 rounded-full flex items-center gap-2 text-slate-600 dark:text-zinc-300">
+        <div className="flat-card px-3 py-1.5 rounded-full flex items-center gap-2 text-[#5F6B7A] dark:text-zinc-300">
           <button 
             onClick={() => store.alignSelected('left')} 
             className="p-1.5 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
@@ -115,7 +115,7 @@ export const Toolbar: React.FC = () => {
       )}
 
       {/* Main Action Bar */}
-      <div className="flat-card px-4 py-2 rounded-2xl flex items-center gap-2 border border-[#2A2F35] dark:border-[#2A2F35] relative">
+      <div className="flat-card px-4 py-2 rounded-2xl flex items-center gap-2 border border-[#E2E5E9] dark:border-[#2A2F35] relative">
         {/* Tool Selectors */}
         <div className="flex items-center gap-1.5">
           {primaryTools.map((t) => (
@@ -129,8 +129,8 @@ export const Toolbar: React.FC = () => {
               }}
               className={`p-2 rounded-xl transition-all duration-200 ${
                 currentTool === t.type
-                  ? 'bg-teal-600 text-white shadow-md shadow-teal-500/10'
-                  : 'hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300'
+                  ? 'bg-teal-600 text-[#1A1D21] shadow-md shadow-teal-500/10'
+                  : 'hover:bg-slate-100 dark:hover:bg-zinc-800 text-[#5F6B7A] dark:text-zinc-300'
               }`}
               title={t.label}
             >
@@ -148,15 +148,15 @@ export const Toolbar: React.FC = () => {
               }}
               className={`p-2 rounded-xl transition-all duration-200 ${
                 extraShapes.some(x => x.type === currentTool)
-                  ? 'bg-teal-600 text-white shadow-md shadow-teal-500/10'
-                  : 'hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300'
+                  ? 'bg-teal-600 text-[#1A1D21] shadow-md shadow-teal-500/10'
+                  : 'hover:bg-slate-100 dark:hover:bg-zinc-800 text-[#5F6B7A] dark:text-zinc-300'
               }`}
               title="More Shapes"
             >
               <Triangle className="w-5 h-5" />
             </button>
             {showShapesDropdown && (
-              <div className="absolute bottom-14 left-1/2 transform -translate-x-1/2 flat-card p-2 rounded-xl grid grid-cols-3 gap-1 border border-[#2A2F35] dark:border-[#2A2F35] z-50 min-w-[140px]">
+              <div className="absolute bottom-14 left-1/2 transform -translate-x-1/2 flat-card p-2 rounded-xl grid grid-cols-3 gap-1 border border-[#E2E5E9] dark:border-[#2A2F35] z-50 min-w-[140px]">
                 {extraShapes.map(sh => (
                   <button
                     key={sh.type}
@@ -184,15 +184,15 @@ export const Toolbar: React.FC = () => {
               }}
               className={`p-2 rounded-xl transition-all duration-200 ${
                 lineTools.some(x => x.type === currentTool)
-                  ? 'bg-teal-600 text-white shadow-md shadow-teal-500/10'
-                  : 'hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300'
+                  ? 'bg-teal-600 text-[#1A1D21] shadow-md shadow-teal-500/10'
+                  : 'hover:bg-slate-100 dark:hover:bg-zinc-800 text-[#5F6B7A] dark:text-zinc-300'
               }`}
               title="Lines & Connectors"
             >
               <Minus className="w-5 h-5" />
             </button>
             {showLinesDropdown && (
-              <div className="absolute bottom-14 left-1/2 transform -translate-x-1/2 flat-card p-2 rounded-xl flex flex-col gap-1 border border-[#2A2F35] dark:border-[#2A2F35] z-50 min-w-[100px]">
+              <div className="absolute bottom-14 left-1/2 transform -translate-x-1/2 flat-card p-2 rounded-xl flex flex-col gap-1 border border-[#E2E5E9] dark:border-[#2A2F35] z-50 min-w-[100px]">
                 {lineTools.map(lt => (
                   <button
                     key={lt.type}
@@ -221,15 +221,15 @@ export const Toolbar: React.FC = () => {
               }}
               className={`p-2 rounded-xl transition-all duration-200 ${
                 drawTools.some(x => x.type === currentTool)
-                  ? 'bg-teal-600 text-white shadow-md shadow-teal-500/10'
-                  : 'hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300'
+                  ? 'bg-teal-600 text-[#1A1D21] shadow-md shadow-teal-500/10'
+                  : 'hover:bg-slate-100 dark:hover:bg-zinc-800 text-[#5F6B7A] dark:text-zinc-300'
               }`}
               title="Draw Tools"
             >
               <Brush className="w-5 h-5" />
             </button>
             {showDrawDropdown && (
-              <div className="absolute bottom-14 left-1/2 transform -translate-x-1/2 flat-card p-2 rounded-xl flex flex-col gap-1 border border-[#2A2F35] dark:border-[#2A2F35] z-50 min-w-[110px]">
+              <div className="absolute bottom-14 left-1/2 transform -translate-x-1/2 flat-card p-2 rounded-xl flex flex-col gap-1 border border-[#E2E5E9] dark:border-[#2A2F35] z-50 min-w-[110px]">
                 {drawTools.map(dt => (
                   <button
                     key={dt.type}
@@ -274,14 +274,14 @@ export const Toolbar: React.FC = () => {
         <div className="flex items-center gap-1">
           <button
             onClick={() => store.undo()}
-            className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300 transition-colors"
+            className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 text-[#5F6B7A] dark:text-zinc-300 transition-colors"
             title="Undo"
           >
             <Undo2 className="w-5 h-5" />
           </button>
           <button
             onClick={() => store.redo()}
-            className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300 transition-colors"
+            className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 text-[#5F6B7A] dark:text-zinc-300 transition-colors"
             title="Redo"
           >
             <Redo2 className="w-5 h-5" />
@@ -292,7 +292,7 @@ export const Toolbar: React.FC = () => {
             className={`p-2 rounded-xl transition-colors ${
               store.getSelectedIds().size > 0
                 ? 'hover:bg-red-50 dark:hover:bg-red-950/30 text-red-500'
-                : 'text-slate-300 dark:text-zinc-700 cursor-not-allowed'
+                : 'text-[#5F6B7A] dark:text-zinc-700 cursor-not-allowed'
             }`}
             title="Delete Selected"
           >
@@ -306,14 +306,14 @@ export const Toolbar: React.FC = () => {
         <div className="flex items-center gap-1">
           <button
             onClick={() => setShowTemplates(true)}
-            className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300 transition-colors"
+            className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 text-[#5F6B7A] dark:text-zinc-300 transition-colors"
             title="Insert Template"
           >
             <LayoutTemplate className="w-5 h-5" />
           </button>
           <button
             onClick={() => setShowPlugins(true)}
-            className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300 transition-colors"
+            className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 text-[#5F6B7A] dark:text-zinc-300 transition-colors"
             title="Run Plugin Script"
           >
             <Sparkles className="w-5 h-5" />
@@ -325,7 +325,7 @@ export const Toolbar: React.FC = () => {
         {/* Dark Mode Toggle */}
         <button
           onClick={() => store.setDarkMode(!darkMode)}
-          className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300 transition-colors"
+          className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 text-[#5F6B7A] dark:text-zinc-300 transition-colors"
           title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
         >
           {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}

@@ -273,31 +273,31 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto font-sans">
-      <div className="absolute inset-0 bg-[#0D0F12]/95" onClick={onClose} />
+      <div className="absolute inset-0 bg-white/95" onClick={onClose} />
       
       {/* Toast Notification */}
       {toast && (
-        <div className="fixed top-6 right-6 z-[100] flex items-center gap-3 px-4 py-3.5 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl animate-in slide-in-from-top-4 duration-300">
+        <div className="fixed top-6 right-6 z-[100] flex items-center gap-3 px-4 py-3.5 bg-[#F8FAFB] border border-[#E2E5E9] rounded-2xl shadow-2xl animate-in slide-in-from-top-4 duration-300">
           <CheckCircle className={`w-4 h-4 ${toast.type === 'success' ? 'text-emerald-400' : 'text-rose-500'}`} />
-          <span className="text-xs font-semibold text-slate-200">{toast.message}</span>
+          <span className="text-xs font-semibold text-[#1A1D21]">{toast.message}</span>
         </div>
       )}
 
       <div className="relative min-h-screen flex items-center justify-center p-4 md:p-8">
-        <div className="relative w-full max-w-5xl bg-slate-900 border border-[#2A2F35] rounded-3xl p-6 md:p-8 shadow-2xl space-y-8 text-slate-100 max-h-[92vh] overflow-y-auto">
+        <div className="relative w-full max-w-5xl bg-[#F8FAFB] border border-[#E2E5E9] rounded-3xl p-6 md:p-8 shadow-2xl space-y-8 text-[#1A1D21] max-h-[92vh] overflow-y-auto">
           
           {/* Header */}
-          <div className="flex justify-between items-center border-b border-[#2A2F35] pb-4">
+          <div className="flex justify-between items-center border-b border-[#E2E5E9] pb-4">
             <div>
-              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+              <h2 className="text-xl font-bold text-[#1A1D21] flex items-center gap-2">
                 <CreditCard className="w-5 h-5 text-teal-400" />
                 <span>Workspace Plan & Billing</span>
               </h2>
-              <p className="text-xs text-slate-400">Upgrade features, manage credit cards, seats and invoices</p>
+              <p className="text-xs text-[#5F6B7A]">Upgrade features, manage credit cards, seats and invoices</p>
             </div>
             <button
               onClick={onClose}
-              className="p-1 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all text-sm font-semibold"
+              className="p-1 rounded-lg text-[#5F6B7A] hover:text-slate-200 hover:bg-[#E2E5E9] transition-all text-sm font-semibold"
             >
               ✕
             </button>
@@ -313,7 +313,7 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
           {loading ? (
             <div className="text-center py-24">
               <div className="w-10 h-10 border-4 border-teal-500/20 border-t-teal-500 rounded-full animate-spin mx-auto mb-3"></div>
-              <span className="text-xs text-slate-500 font-medium">Loading billing data...</span>
+              <span className="text-xs text-[#9AA4AB] font-medium">Loading billing data...</span>
             </div>
           ) : (
             details && (
@@ -323,9 +323,9 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   
                   {/* Subscription summary */}
-                  <div className="p-6 rounded-2xl bg-[#0D0F12]/95 border border-slate-850/60 flex flex-col justify-between space-y-4">
+                  <div className="p-6 rounded-2xl bg-white/95 border border-slate-850/60 flex flex-col justify-between space-y-4">
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-slate-500 block">Subscription Status</span>
+                      <span className="text-[10px] uppercase font-bold text-[#9AA4AB] block">Subscription Status</span>
                       <span className="text-2xl font-black capitalize text-teal-400 mt-1 block">
                         {details.plan} Plan
                       </span>
@@ -345,35 +345,35 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                       </div>
                     </div>
                     <div>
-                      <div className="flex items-center justify-between text-[10px] text-slate-500">
+                      <div className="flex items-center justify-between text-[10px] text-[#9AA4AB]">
                         <span>Auto-renew:</span>
                         <button 
                           onClick={() => setAutoRenew(!autoRenew)}
-                          className={`px-2 py-0.5 rounded font-bold uppercase ${autoRenew ? 'bg-teal-600/10 text-teal-400' : 'bg-slate-800 text-slate-400'}`}
+                          className={`px-2 py-0.5 rounded font-bold uppercase ${autoRenew ? 'bg-teal-600/10 text-teal-400' : 'bg-[#E2E5E9] text-[#5F6B7A]'}`}
                         >
                           {autoRenew ? 'On' : 'Off'}
                         </button>
                       </div>
-                      <span className="text-[9px] text-slate-500 block mt-2">
+                      <span className="text-[9px] text-[#9AA4AB] block mt-2">
                         Next charge on: {new Date(details.current_period_end).toLocaleDateString()}
                       </span>
                     </div>
                   </div>
 
                   {/* Storage usage details */}
-                  <div className="p-6 rounded-2xl bg-[#0D0F12]/95 border border-slate-850/60 space-y-4">
+                  <div className="p-6 rounded-2xl bg-white/95 border border-slate-850/60 space-y-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-[10px] uppercase font-bold text-slate-500">Storage Occupied</span>
-                      <span className="text-xs font-bold text-slate-200">12.5 MB / {details.plan === 'free' ? '50 MB' : details.plan === 'pro' ? '50 GB' : 'Unlimited'}</span>
+                      <span className="text-[10px] uppercase font-bold text-[#9AA4AB]">Storage Occupied</span>
+                      <span className="text-xs font-bold text-[#1A1D21]">12.5 MB / {details.plan === 'free' ? '50 MB' : details.plan === 'pro' ? '50 GB' : 'Unlimited'}</span>
                     </div>
-                    <div className="w-full bg-slate-850 rounded-full h-2 overflow-hidden">
+                    <div className="w-full bg-[#F0F2F4] rounded-full h-2 overflow-hidden">
                       <div 
                         className="bg-teal-500 h-full rounded-full transition-all"
                         style={{ width: `${details.plan === 'free' ? 25 : 5}%` }}
                       />
                     </div>
                     <div className="flex justify-between items-center pt-2">
-                      <span className="text-[9px] text-slate-500">Workspace documents & uploads</span>
+                      <span className="text-[9px] text-[#9AA4AB]">Workspace documents & uploads</span>
                       {details.plan === 'free' && (
                         <span className="text-[9px] text-teal-400 font-extrabold uppercase animate-pulse">Upgrade advised</span>
                       )}
@@ -381,30 +381,30 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                   </div>
 
                   {/* Team seat counters */}
-                  <div className="p-6 rounded-2xl bg-[#0D0F12]/95 border border-slate-850/60 space-y-4">
+                  <div className="p-6 rounded-2xl bg-white/95 border border-slate-850/60 space-y-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-[10px] uppercase font-bold text-slate-500">Team Seats</span>
-                      <span className="text-xs font-bold text-slate-200">{seatsCount} Seats Active</span>
+                      <span className="text-[10px] uppercase font-bold text-[#9AA4AB]">Team Seats</span>
+                      <span className="text-xs font-bold text-[#1A1D21]">{seatsCount} Seats Active</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <button 
                         onClick={() => setSeatsCount(Math.max(1, seatsCount - 1))}
-                        className="w-8 h-8 rounded-lg bg-slate-850 hover:bg-slate-800 flex items-center justify-center text-xs font-bold transition-all"
+                        className="w-8 h-8 rounded-lg bg-[#F0F2F4] hover:bg-[#E2E5E9] flex items-center justify-center text-xs font-bold transition-all"
                       >
                         -
                       </button>
                       <button 
                         onClick={() => setSeatsCount(seatsCount + 1)}
-                        className="w-8 h-8 rounded-lg bg-slate-850 hover:bg-slate-800 flex items-center justify-center text-xs font-bold transition-all"
+                        className="w-8 h-8 rounded-lg bg-[#F0F2F4] hover:bg-[#E2E5E9] flex items-center justify-center text-xs font-bold transition-all"
                       >
                         +
                       </button>
                       <div className="ml-auto text-right">
-                        <span className="text-[10px] text-slate-500 block">Total cost / mo</span>
-                        <span className="text-sm font-bold text-white">${seatsCount * getPlanPrice(details.plan)} USD</span>
+                        <span className="text-[10px] text-[#9AA4AB] block">Total cost / mo</span>
+                        <span className="text-sm font-bold text-[#1A1D21]">${seatsCount * getPlanPrice(details.plan)} USD</span>
                       </div>
                     </div>
-                    <span className="text-[9px] text-slate-500 block">Seats correspond to active member roles</span>
+                    <span className="text-[9px] text-[#9AA4AB] block">Seats correspond to active member roles</span>
                   </div>
 
                 </div>
@@ -412,17 +412,17 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                 {/* Subscriptions Plans Selector */}
                 <div className="space-y-5">
                   <div className="flex justify-between items-center">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Subscription Plans</h3>
-                    <div className="flex items-center gap-2 bg-[#0D0F12]/95 p-1.5 rounded-xl border border-slate-800">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#5F6B7A]">Subscription Plans</h3>
+                    <div className="flex items-center gap-2 bg-white/95 p-1.5 rounded-xl border border-[#E2E5E9]">
                       <button 
                         onClick={() => setBillingCycle('monthly')}
-                        className={`px-3 py-1 rounded-lg text-[10px] font-bold transition-all ${billingCycle === 'monthly' ? 'bg-teal-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                        className={`px-3 py-1 rounded-lg text-[10px] font-bold transition-all ${billingCycle === 'monthly' ? 'bg-teal-600 text-[#1A1D21]' : 'text-[#5F6B7A] hover:text-slate-200'}`}
                       >
                         Monthly
                       </button>
                       <button 
                         onClick={() => setBillingCycle('yearly')}
-                        className={`px-3 py-1 rounded-lg text-[10px] font-bold transition-all ${billingCycle === 'yearly' ? 'bg-teal-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                        className={`px-3 py-1 rounded-lg text-[10px] font-bold transition-all ${billingCycle === 'yearly' ? 'bg-teal-600 text-[#1A1D21]' : 'text-[#5F6B7A] hover:text-slate-200'}`}
                       >
                         Yearly (-20%)
                       </button>
@@ -433,12 +433,12 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                     
                     {/* Free Plan */}
                     <div className={`p-6 rounded-2xl border flex flex-col justify-between space-y-6 transition-all duration-300 hover:scale-[1.01] ${
-                      details.plan === 'free' ? 'border-slate-700 bg-[#0D0F12]/95' : 'border-slate-850 bg-[#0D0F12]/95'
+                      details.plan === 'free' ? 'border-[#CDD2D8] bg-white/95' : 'border-[#E2E5E9] bg-white/95'
                     }`}>
                       <div className="space-y-4">
-                        <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500">Free</span>
-                        <div className="text-2xl font-black text-white">$0 <span className="text-xs font-normal text-slate-500">/mo</span></div>
-                        <ul className="text-xs text-slate-400 space-y-2 pt-2 text-left">
+                        <span className="text-[10px] uppercase font-bold tracking-widest text-[#9AA4AB]">Free</span>
+                        <div className="text-2xl font-black text-[#1A1D21]">$0 <span className="text-xs font-normal text-[#9AA4AB]">/mo</span></div>
+                        <ul className="text-xs text-[#5F6B7A] space-y-2 pt-2 text-left">
                           <li className="flex items-center gap-2">✓ 3 Board Limit</li>
                           <li className="flex items-center gap-2">✓ 3 Members</li>
                           <li className="flex items-center gap-2">✓ 50 MB Storage</li>
@@ -446,7 +446,7 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                       </div>
                       <button 
                         disabled
-                        className="w-full py-2.5 bg-slate-800 disabled:opacity-50 text-slate-400 font-bold rounded-xl text-xs"
+                        className="w-full py-2.5 bg-[#E2E5E9] disabled:opacity-50 text-[#5F6B7A] font-bold rounded-xl text-xs"
                       >
                         {details.plan === 'free' ? 'Current Plan' : 'Free Tier'}
                       </button>
@@ -454,18 +454,18 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
 
                     {/* Pro Plan */}
                     <div className={`p-6 rounded-2xl border flex flex-col justify-between space-y-6 transition-all duration-300 hover:scale-[1.01] ${
-                      details.plan === 'pro' ? 'border-teal-500 bg-teal-950/20' : 'border-slate-850 bg-[#0D0F12]/95'
+                      details.plan === 'pro' ? 'border-teal-500 bg-teal-950/20' : 'border-[#E2E5E9] bg-white/95'
                     }`}>
                       <div className="space-y-4">
                         <div className="flex justify-between items-center">
                           <span className="text-[10px] uppercase font-bold tracking-widest text-teal-400">Pro</span>
                           <Zap className="w-4 h-4 text-teal-400" />
                         </div>
-                        <div className="text-2xl font-black text-white">
+                        <div className="text-2xl font-black text-[#1A1D21]">
                           ${billingCycle === 'monthly' ? 15 : 12} 
-                          <span className="text-xs font-normal text-slate-500">/mo</span>
+                          <span className="text-xs font-normal text-[#9AA4AB]">/mo</span>
                         </div>
-                        <ul className="text-xs text-slate-400 space-y-2 pt-2 text-left">
+                        <ul className="text-xs text-[#5F6B7A] space-y-2 pt-2 text-left">
                           <li className="flex items-center gap-2">✓ 20 Board Limit</li>
                           <li className="flex items-center gap-2">✓ 10 Members</li>
                           <li className="flex items-center gap-2">✓ 1 GB Storage</li>
@@ -475,7 +475,7 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                       <button 
                         onClick={() => handleOpenCheckout('pro')}
                         disabled={details.plan === 'pro' || submitting}
-                        className="w-full py-2.5 bg-teal-600 hover:bg-teal-500 disabled:bg-teal-600/10 disabled:text-teal-400 text-white font-bold rounded-xl text-xs transition-all shadow-lg shadow-teal-600/10"
+                        className="w-full py-2.5 bg-teal-600 hover:bg-teal-500 disabled:bg-teal-600/10 disabled:text-teal-400 text-[#1A1D21] font-bold rounded-xl text-xs transition-all shadow-lg shadow-teal-600/10"
                       >
                         {details.plan === 'pro' ? 'Current Plan' : 'Upgrade to Pro'}
                       </button>
@@ -483,18 +483,18 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
 
                     {/* Business Plan */}
                     <div className={`p-6 rounded-2xl border flex flex-col justify-between space-y-6 transition-all duration-300 hover:scale-[1.01] ${
-                      details.plan === 'business' ? 'border-purple-500 bg-purple-950/20' : 'border-slate-850 bg-[#0D0F12]/95'
+                      details.plan === 'business' ? 'border-purple-500 bg-purple-950/20' : 'border-[#E2E5E9] bg-white/95'
                     }`}>
                       <div className="space-y-4">
                         <div className="flex justify-between items-center">
                           <span className="text-[10px] uppercase font-bold tracking-widest text-teal-400">Business</span>
                           <Award className="w-4 h-4 text-teal-400" />
                         </div>
-                        <div className="text-2xl font-black text-white">
+                        <div className="text-2xl font-black text-[#1A1D21]">
                           ${billingCycle === 'monthly' ? 49 : 39} 
-                          <span className="text-xs font-normal text-slate-500">/mo</span>
+                          <span className="text-xs font-normal text-[#9AA4AB]">/mo</span>
                         </div>
-                        <ul className="text-xs text-slate-400 space-y-2 pt-2 text-left">
+                        <ul className="text-xs text-[#5F6B7A] space-y-2 pt-2 text-left">
                           <li className="flex items-center gap-2">✓ 500 Board Limit</li>
                           <li className="flex items-center gap-2">✓ 50 Members</li>
                           <li className="flex items-center gap-2">✓ 10 GB Storage</li>
@@ -504,7 +504,7 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                       <button 
                         onClick={() => handleOpenCheckout('business')}
                         disabled={details.plan === 'business' || submitting}
-                        className="w-full py-2.5 bg-purple-600 hover:bg-purple-500 disabled:bg-purple-600/10 disabled:text-teal-400 text-white font-bold rounded-xl text-xs transition-all"
+                        className="w-full py-2.5 bg-purple-600 hover:bg-purple-500 disabled:bg-purple-600/10 disabled:text-teal-400 text-[#1A1D21] font-bold rounded-xl text-xs transition-all"
                       >
                         {details.plan === 'business' ? 'Current Plan' : 'Upgrade Business'}
                       </button>
@@ -512,18 +512,18 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
 
                     {/* Enterprise Plan */}
                     <div className={`p-6 rounded-2xl border flex flex-col justify-between space-y-6 transition-all duration-300 hover:scale-[1.01] ${
-                      details.plan === 'enterprise' ? 'border-emerald-500 bg-emerald-950/20' : 'border-slate-850 bg-[#0D0F12]/95'
+                      details.plan === 'enterprise' ? 'border-emerald-500 bg-emerald-950/20' : 'border-[#E2E5E9] bg-white/95'
                     }`}>
                       <div className="space-y-4">
                         <div className="flex justify-between items-center">
                           <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-400">Enterprise</span>
                           <ShieldCheck className="w-4 h-4 text-emerald-400" />
                         </div>
-                        <div className="text-2xl font-black text-white">
+                        <div className="text-2xl font-black text-[#1A1D21]">
                           ${billingCycle === 'monthly' ? 299 : 239} 
-                          <span className="text-xs font-normal text-slate-500">/mo</span>
+                          <span className="text-xs font-normal text-[#9AA4AB]">/mo</span>
                         </div>
-                        <ul className="text-xs text-slate-400 space-y-2 pt-2 text-left">
+                        <ul className="text-xs text-[#5F6B7A] space-y-2 pt-2 text-left">
                           <li className="flex items-center gap-2">✓ Unlimited Everything</li>
                           <li className="flex items-center gap-2">✓ Premium Support</li>
                           <li className="flex items-center gap-2">✓ Admin Dashboard</li>
@@ -533,7 +533,7 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                       <button 
                         onClick={() => handleOpenCheckout('enterprise')}
                         disabled={details.plan === 'enterprise' || submitting}
-                        className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-emerald-600/10 disabled:text-emerald-400 text-white font-bold rounded-xl text-xs transition-all"
+                        className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-emerald-600/10 disabled:text-emerald-400 text-[#1A1D21] font-bold rounded-xl text-xs transition-all"
                       >
                         {details.plan === 'enterprise' ? 'Current Plan' : 'Upgrade Enterprise'}
                       </button>
@@ -543,24 +543,24 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                 </div>
 
                 {/* Saved Payment Methods & Card Creator Form */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-[#2A2F35]">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-[#E2E5E9]">
                   
                   {/* Saved Cards lists */}
                   <div className="space-y-4">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Saved Payment Methods</h3>
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#5F6B7A]">Saved Payment Methods</h3>
                     {savedCards.length === 0 ? (
-                      <p className="text-xs text-slate-500 py-4">No credit cards saved.</p>
+                      <p className="text-xs text-[#9AA4AB] py-4">No credit cards saved.</p>
                     ) : (
                       <div className="space-y-3">
                         {savedCards.map(c => (
-                          <div key={c.id} className="p-4 rounded-2xl bg-[#0D0F12]/95 border border-slate-850 flex items-center justify-between">
+                          <div key={c.id} className="p-4 rounded-2xl bg-white/95 border border-[#E2E5E9] flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-7 rounded bg-slate-900 border border-slate-800 flex items-center justify-center text-[10px] font-bold text-teal-400 uppercase">
+                              <div className="w-10 h-7 rounded bg-[#F8FAFB] border border-[#E2E5E9] flex items-center justify-center text-[10px] font-bold text-teal-400 uppercase">
                                 {c.brand}
                               </div>
                               <div>
-                                <span className="text-xs font-bold text-white block">•••• •••• •••• {c.last4}</span>
-                                <span className="text-[10px] text-slate-500 block">Expires {c.expMonth}/{c.expYear}</span>
+                                <span className="text-xs font-bold text-[#1A1D21] block">•••• •••• •••• {c.last4}</span>
+                                <span className="text-[10px] text-[#9AA4AB] block">Expires {c.expMonth}/{c.expYear}</span>
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
@@ -569,14 +569,14 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                               ) : (
                                 <button 
                                   onClick={() => handleSetDefaultCard(c.id)}
-                                  className="text-[9px] text-slate-500 hover:text-slate-300 font-semibold"
+                                  className="text-[9px] text-[#9AA4AB] hover:text-slate-300 font-semibold"
                                 >
                                   Make Default
                                 </button>
                               )}
                               <button 
                                 onClick={() => handleRemoveCard(c.id)}
-                                className="p-1 text-slate-500 hover:text-rose-400 transition-colors"
+                                className="p-1 text-[#9AA4AB] hover:text-rose-400 transition-colors"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
@@ -588,45 +588,45 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                   </div>
 
                   {/* Add card payment form */}
-                  <form onSubmit={handleAddCard} className="p-5 rounded-2xl bg-[#0D0F12]/95 border border-slate-850/60 space-y-4 text-left">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Add New Card</h3>
+                  <form onSubmit={handleAddCard} className="p-5 rounded-2xl bg-white/95 border border-slate-850/60 space-y-4 text-left">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#5F6B7A]">Add New Card</h3>
                     <div className="space-y-3">
                       <div>
-                        <label className="text-[9px] uppercase font-bold text-slate-500 block mb-1">Cardholder Name</label>
+                        <label className="text-[9px] uppercase font-bold text-[#9AA4AB] block mb-1">Cardholder Name</label>
                         <input 
                           type="text" 
                           required
                           placeholder="Jane Doe"
                           value={newCardName}
                           onChange={(e) => setNewCardName(e.target.value)}
-                          className="w-full px-3 py-2 rounded-xl border border-slate-800 bg-slate-900 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
+                          className="w-full px-3 py-2 rounded-xl border border-[#E2E5E9] bg-[#F8FAFB] text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                         />
                       </div>
                       <div>
-                        <label className="text-[9px] uppercase font-bold text-slate-500 block mb-1">Card Number</label>
+                        <label className="text-[9px] uppercase font-bold text-[#9AA4AB] block mb-1">Card Number</label>
                         <input 
                           type="text" 
                           required
                           placeholder="4242 4242 4242 4242"
                           value={newCardNumber}
                           onChange={(e) => setNewCardNumber(e.target.value)}
-                          className="w-full px-3 py-2 rounded-xl border border-slate-800 bg-slate-900 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
+                          className="w-full px-3 py-2 rounded-xl border border-[#E2E5E9] bg-[#F8FAFB] text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <label className="text-[9px] uppercase font-bold text-slate-500 block mb-1">Expiry (MM/YY)</label>
+                          <label className="text-[9px] uppercase font-bold text-[#9AA4AB] block mb-1">Expiry (MM/YY)</label>
                           <input 
                             type="text" 
                             required
                             placeholder="12/28"
                             value={newCardExpiry}
                             onChange={(e) => setNewCardExpiry(e.target.value)}
-                            className="w-full px-3 py-2 rounded-xl border border-slate-800 bg-slate-900 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
+                            className="w-full px-3 py-2 rounded-xl border border-[#E2E5E9] bg-[#F8FAFB] text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                           />
                         </div>
                         <div>
-                          <label className="text-[9px] uppercase font-bold text-slate-500 block mb-1">CVC / CVV</label>
+                          <label className="text-[9px] uppercase font-bold text-[#9AA4AB] block mb-1">CVC / CVV</label>
                           <input 
                             type="password" 
                             required
@@ -634,14 +634,14 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                             placeholder="•••"
                             value={newCardCVC}
                             onChange={(e) => setNewCardCVC(e.target.value)}
-                            className="w-full px-3 py-2 rounded-xl border border-slate-800 bg-slate-900 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
+                            className="w-full px-3 py-2 rounded-xl border border-[#E2E5E9] bg-[#F8FAFB] text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                           />
                         </div>
                       </div>
                     </div>
                     <button 
                       type="submit" 
-                      className="w-full py-2 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl text-xs transition-all shadow-md shadow-teal-600/10 flex items-center justify-center gap-1.5"
+                      className="w-full py-2 bg-teal-600 hover:bg-teal-500 text-[#1A1D21] font-bold rounded-xl text-xs transition-all shadow-md shadow-teal-600/10 flex items-center justify-center gap-1.5"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Save Card</span>
@@ -651,15 +651,15 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                 </div>
 
                 {/* Invoices History Table */}
-                <div className="space-y-4 pt-4 border-t border-slate-800">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Billing History & Invoices</h3>
+                <div className="space-y-4 pt-4 border-t border-[#E2E5E9]">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#5F6B7A]">Billing History & Invoices</h3>
                   {invoices.length === 0 ? (
-                    <p className="text-xs text-slate-500 py-4 text-center">No payment history found for this workspace.</p>
+                    <p className="text-xs text-[#9AA4AB] py-4 text-center">No payment history found for this workspace.</p>
                   ) : (
                     <div className="overflow-x-auto">
-                      <table className="w-full text-left text-xs text-slate-300">
+                      <table className="w-full text-left text-xs text-[#5F6B7A]">
                         <thead>
-                          <tr className="border-b border-slate-800 text-slate-500 font-semibold">
+                          <tr className="border-b border-[#E2E5E9] text-[#9AA4AB] font-semibold">
                             <th className="py-2.5">Invoice ID</th>
                             <th className="py-2.5">Date</th>
                             <th className="py-2.5">Amount</th>
@@ -706,29 +706,29 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
       {/* Checkout overlay modal */}
       {checkoutStep !== 'none' && selectedPlan && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-[#0D0F12]/95" onClick={() => setCheckoutStep('none')} />
+          <div className="absolute inset-0 bg-white/95" onClick={() => setCheckoutStep('none')} />
           
-          <div className="relative bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-6 text-slate-100 text-left">
+          <div className="relative bg-[#F8FAFB] border border-[#E2E5E9] rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-6 text-[#1A1D21] text-left">
             
             {/* Header */}
             <div>
-              <h3 className="text-base font-bold text-white">Upgrade Subscription</h3>
-              <p className="text-xs text-slate-400 mt-1">Configure your upgrade details to subscribe to {selectedPlan.toUpperCase()}</p>
+              <h3 className="text-base font-bold text-[#1A1D21]">Upgrade Subscription</h3>
+              <p className="text-xs text-[#5F6B7A] mt-1">Configure your upgrade details to subscribe to {selectedPlan.toUpperCase()}</p>
             </div>
 
             {checkoutStep === 'method' && (
               <div className="space-y-5 animate-in fade-in duration-200">
                 {/* Billing details review */}
-                <div className="p-4 rounded-xl bg-[#0D0F12]/95 border border-slate-850 space-y-2">
+                <div className="p-4 rounded-xl bg-white/95 border border-[#E2E5E9] space-y-2">
                   <div className="flex justify-between text-xs">
-                    <span className="text-slate-400">Plan selection:</span>
-                    <span className="font-bold text-white capitalize">{selectedPlan}</span>
+                    <span className="text-[#5F6B7A]">Plan selection:</span>
+                    <span className="font-bold text-[#1A1D21] capitalize">{selectedPlan}</span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-slate-400">Billing cycle:</span>
-                    <span className="font-bold text-white capitalize">{billingCycle}</span>
+                    <span className="text-[#5F6B7A]">Billing cycle:</span>
+                    <span className="font-bold text-[#1A1D21] capitalize">{billingCycle}</span>
                   </div>
-                  <div className="flex justify-between text-xs border-t border-slate-800 pt-2 mt-2 font-bold">
+                  <div className="flex justify-between text-xs border-t border-[#E2E5E9] pt-2 mt-2 font-bold">
                     <span>Due today:</span>
                     <span className="text-teal-400">${getPlanPrice(selectedPlan)} USD</span>
                   </div>
@@ -736,7 +736,7 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
 
                 {/* Select payment method */}
                 <div className="space-y-2.5">
-                  <label className="text-[10px] uppercase font-bold text-slate-500">Select Payment Method</label>
+                  <label className="text-[10px] uppercase font-bold text-[#9AA4AB]">Select Payment Method</label>
                   <div className="grid grid-cols-2 gap-2">
                     {[
                       { key: 'razorpay', name: 'Razorpay' },
@@ -751,8 +751,8 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                         onClick={() => setPaymentMethod(pm.key as any)}
                         className={`p-2.5 rounded-xl border text-xs font-semibold text-center transition-all ${
                           paymentMethod === pm.key 
-                            ? 'bg-teal-600 border-teal-600 text-white' 
-                            : 'bg-transparent border-slate-800 hover:bg-slate-850'
+                            ? 'bg-teal-600 border-teal-600 text-[#1A1D21]' 
+                            : 'bg-transparent border-[#E2E5E9] hover:bg-[#F0F2F4]'
                         }`}
                       >
                         {pm.name}
@@ -763,8 +763,8 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
 
                 {paymentMethod === 'card' && savedCards.length > 0 && (
                   <div className="space-y-2">
-                    <label className="text-[9px] uppercase font-bold text-slate-500 block">Select Saved Card</label>
-                    <select className="w-full px-3 py-2 rounded-xl border border-slate-850 bg-slate-950 text-slate-300 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500">
+                    <label className="text-[9px] uppercase font-bold text-[#9AA4AB] block">Select Saved Card</label>
+                    <select className="w-full px-3 py-2 rounded-xl border border-[#E2E5E9] bg-white text-[#5F6B7A] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500">
                       {savedCards.map(c => (
                         <option key={c.id} value={c.id}>
                           {c.brand} (•••• {c.last4})
@@ -778,14 +778,14 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                   <button 
                     type="button" 
                     onClick={() => setCheckoutStep('none')} 
-                    className="flex-1 py-2.5 bg-slate-850 hover:bg-slate-800 text-slate-300 rounded-xl font-bold text-xs transition-all"
+                    className="flex-1 py-2.5 bg-[#F0F2F4] hover:bg-[#E2E5E9] text-[#5F6B7A] rounded-xl font-bold text-xs transition-all"
                   >
                     Cancel
                   </button>
                   <button 
                     type="button" 
                     onClick={handleCompletePayment}
-                    className="flex-1 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl font-bold text-xs transition-all shadow-lg shadow-teal-600/10"
+                    className="flex-1 py-2.5 bg-teal-600 hover:bg-teal-500 text-[#1A1D21] rounded-xl font-bold text-xs transition-all shadow-lg shadow-teal-600/10"
                   >
                     Complete Payment
                   </button>
@@ -825,8 +825,8 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
             {checkoutStep === 'processing' && (
               <div className="py-8 text-center space-y-3 animate-in fade-in duration-200">
                 <div className="w-10 h-10 border-4 border-teal-500/20 border-t-teal-500 rounded-full animate-spin mx-auto"></div>
-                <h4 className="text-xs font-bold text-slate-300">Processing Subscription Upgrade...</h4>
-                <p className="text-[10px] text-slate-500">Contacting billing gateway. Please do not close or reload.</p>
+                <h4 className="text-xs font-bold text-[#5F6B7A]">Processing Subscription Upgrade...</h4>
+                <p className="text-[10px] text-[#9AA4AB]">Contacting billing gateway. Please do not close or reload.</p>
               </div>
             )}
 
@@ -836,13 +836,13 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                   <CheckCircle className="w-6 h-6" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-white">Upgrade Succeeded!</h4>
-                  <p className="text-xs text-slate-400 mt-1">Thank you. Your workspace is now upgraded to {selectedPlan.toUpperCase()}</p>
+                  <h4 className="text-sm font-bold text-[#1A1D21]">Upgrade Succeeded!</h4>
+                  <p className="text-xs text-[#5F6B7A] mt-1">Thank you. Your workspace is now upgraded to {selectedPlan.toUpperCase()}</p>
                 </div>
                 <button 
                   type="button" 
                   onClick={() => setCheckoutStep('none')}
-                  className="w-full py-2 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl text-xs transition-all"
+                  className="w-full py-2 bg-teal-600 hover:bg-teal-500 text-[#1A1D21] font-bold rounded-xl text-xs transition-all"
                 >
                   Return to Dashboard
                 </button>

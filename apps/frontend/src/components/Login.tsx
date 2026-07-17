@@ -44,14 +44,14 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-slate-950 flex items-center justify-center font-sans px-4">
-      <div className="w-full max-w-md p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl">
+    <div className="w-full min-h-screen bg-white flex items-center justify-center font-sans px-4">
+      <div className="w-full max-w-md p-8 rounded-3xl bg-[#F8FAFB] border border-[#E2E5E9] shadow-2xl">
         <div className="flex flex-col items-center mb-8">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-teal-500 to-purple-600 flex items-center justify-center shadow-lg shadow-teal-500/10 mb-4">
-            <span className="text-xl font-bold text-white">CX</span>
+            <span className="text-xl font-bold text-[#1A1D21]">CX</span>
           </div>
-          <h2 className="text-2xl font-bold text-slate-100">Sign in to CollabBoard X</h2>
-          <p className="text-sm text-slate-400 mt-1">Access your boards and workspaces</p>
+          <h2 className="text-2xl font-bold text-[#1A1D21]">Sign in to CollabBoard X</h2>
+          <p className="text-sm text-[#5F6B7A] mt-1">Access your boards and workspaces</p>
         </div>
 
         {error && (
@@ -62,14 +62,14 @@ export const Login: React.FC = () => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#5F6B7A] mb-1">
               Email Address
             </label>
             <input
               type="email"
               {...register('email')}
               placeholder="you@example.com"
-              className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm"
+              className="w-full px-4 py-3 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm"
             />
             {errors.email && (
               <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>
@@ -78,7 +78,7 @@ export const Login: React.FC = () => {
 
           <div>
             <div className="flex justify-between items-center mb-1">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-[#5F6B7A]">
                 Password
               </label>
               <Link to="/forgot-password" className="text-xs text-teal-400 hover:text-teal-300 font-semibold">
@@ -89,7 +89,7 @@ export const Login: React.FC = () => {
               type="password"
               {...register('password')}
               placeholder="••••••••"
-              className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm"
+              className="w-full px-4 py-3 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all text-sm"
             />
             {errors.password && (
               <p className="text-red-400 text-xs mt-1">{errors.password.message}</p>
@@ -99,13 +99,13 @@ export const Login: React.FC = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-semibold text-sm shadow-md transition-all disabled:opacity-50"
+            className="w-full py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-[#1A1D21] font-semibold text-sm shadow-md transition-all disabled:opacity-50"
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
-        <p className="text-center text-xs text-slate-400 mt-6">
+        <p className="text-center text-xs text-[#5F6B7A] mt-6">
           Don't have an account?{' '}
           <Link to="/register" className="text-teal-400 hover:text-teal-300 font-semibold">
             Sign up

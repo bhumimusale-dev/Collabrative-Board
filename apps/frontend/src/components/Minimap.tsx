@@ -57,7 +57,7 @@ export const Minimap: React.FC = () => {
   };
 
   return (
-    <div className="absolute bottom-6 right-6 pointer-events-auto flat-card p-2 rounded-2xl border border-[#2A2F35] dark:border-[#2A2F35] select-none">
+    <div className="absolute bottom-6 right-6 pointer-events-auto flat-card p-2 rounded-2xl border border-[#E2E5E9] dark:border-[#2A2F35] select-none">
       <div 
         className="relative bg-slate-100/60 dark:bg-zinc-950/60 rounded-lg overflow-hidden border border-slate-200/20 dark:border-zinc-800/20"
         style={{ width: mapW, height: mapH }}

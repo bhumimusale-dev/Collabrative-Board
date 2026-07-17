@@ -88,7 +88,7 @@ export const TopBar: React.FC = () => {
   return (
     <div className="absolute top-6 left-6 right-6 flex items-center justify-between pointer-events-auto select-none">
       {/* Room Name & Sync Status */}
-      <div className="flat-card px-4 py-2.5 rounded-2xl flex items-center gap-3 border border-[#2A2F35] dark:border-[#2A2F35]">
+      <div className="flat-card px-4 py-2.5 rounded-2xl flex items-center gap-3 border border-[#E2E5E9] dark:border-[#2A2F35]">
         <span className="text-sm font-semibold tracking-wide bg-gradient-to-r from-teal-500 to-purple-600 bg-clip-text text-transparent">
           CollabBoard
         </span>
@@ -121,7 +121,7 @@ export const TopBar: React.FC = () => {
       <div className="flex items-center gap-4">
         {/* Active Collaborators */}
         {users.length > 0 && (
-          <div className="flat-card px-3 py-1.5 rounded-2xl flex items-center -space-x-2 border border-[#2A2F35] dark:border-[#2A2F35]">
+          <div className="flat-card px-3 py-1.5 rounded-2xl flex items-center -space-x-2 border border-[#E2E5E9] dark:border-[#2A2F35]">
             {users.map((user) => (
               <img
                 key={user.id}
@@ -136,8 +136,8 @@ export const TopBar: React.FC = () => {
         )}
 
         {/* Board Operations */}
-        <div className="flat-card px-3 py-2 rounded-2xl flex items-center gap-1.5 border border-[#2A2F35] dark:border-[#2A2F35]">
-          <label className="p-1.5 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-xl text-slate-600 dark:text-zinc-300 transition-colors cursor-pointer" title="Import JSON">
+        <div className="flat-card px-3 py-2 rounded-2xl flex items-center gap-1.5 border border-[#E2E5E9] dark:border-[#2A2F35]">
+          <label className="p-1.5 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-xl text-[#5F6B7A] dark:text-zinc-300 transition-colors cursor-pointer" title="Import JSON">
             <Upload className="w-4 h-4" />
             <input 
               type="file" 
@@ -148,14 +148,14 @@ export const TopBar: React.FC = () => {
           </label>
           <button 
             onClick={handleExportJSON} 
-            className="p-1.5 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-xl text-slate-600 dark:text-zinc-300 transition-colors" 
+            className="p-1.5 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-xl text-[#5F6B7A] dark:text-zinc-300 transition-colors" 
             title="Export JSON"
           >
             <Download className="w-4 h-4" />
           </button>
           <button 
             onClick={handleExportPNG} 
-            className="p-1.5 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-xl text-slate-600 dark:text-zinc-300 transition-colors" 
+            className="p-1.5 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-xl text-[#5F6B7A] dark:text-zinc-300 transition-colors" 
             title="Download PNG image"
           >
             <ImageIcon className="w-4 h-4" />
@@ -176,7 +176,7 @@ export const TopBar: React.FC = () => {
 
           <button 
             onClick={() => setIsHistoryOpen(true)} 
-            className="p-1.5 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-xl text-slate-600 dark:text-zinc-300 transition-colors flex items-center gap-1 text-xs font-semibold" 
+            className="p-1.5 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-xl text-[#5F6B7A] dark:text-zinc-300 transition-colors flex items-center gap-1 text-xs font-semibold" 
             title="Open Version History"
           >
             <History className="w-4 h-4" />

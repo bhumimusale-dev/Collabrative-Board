@@ -59,9 +59,9 @@ export const PropertiesPanel: React.FC = () => {
   ];
 
   return (
-    <div className="absolute top-20 right-6 w-72 max-h-[80vh] overflow-y-auto flat-card p-5 rounded-3xl border border-[#2A2F35] dark:border-[#2A2F35] text-slate-800 dark:text-zinc-200 z-40 space-y-6 shadow-2xl animate-in slide-in-from-right-4 duration-300">
+    <div className="absolute top-20 right-6 w-72 max-h-[80vh] overflow-y-auto flat-card p-5 rounded-3xl border border-[#E2E5E9] dark:border-[#2A2F35] text-[#1A1D21] dark:text-zinc-200 z-40 space-y-6 shadow-2xl animate-in slide-in-from-right-4 duration-300">
       <div>
-        <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 dark:text-zinc-500">
+        <h3 className="text-xs font-extrabold uppercase tracking-wider text-[#5F6B7A] dark:text-zinc-500">
           Properties ({selectedIds.size} selected)
         </h3>
       </div>
@@ -69,7 +69,7 @@ export const PropertiesPanel: React.FC = () => {
       {/* Alignment / Distribution */}
       {selectedIds.size >= 2 && (
         <div className="space-y-2.5">
-          <label className="text-[10px] uppercase font-bold text-slate-400 dark:text-zinc-500">Alignment</label>
+          <label className="text-[10px] uppercase font-bold text-[#5F6B7A] dark:text-zinc-500">Alignment</label>
           <div className="grid grid-cols-6 gap-1">
             <button onClick={() => handleAlign('left')} className="p-2 hover:bg-slate-100 dark:hover:bg-zinc-850 rounded-xl transition-all" title="Align Left"><AlignLeft className="w-4 h-4 mx-auto" /></button>
             <button onClick={() => handleAlign('center')} className="p-2 hover:bg-slate-100 dark:hover:bg-zinc-850 rounded-xl transition-all" title="Align Center"><AlignCenter className="w-4 h-4 mx-auto" /></button>
@@ -87,7 +87,7 @@ export const PropertiesPanel: React.FC = () => {
 
       {/* Geometry / Transform */}
       <div className="space-y-3">
-        <label className="text-[10px] uppercase font-bold text-slate-400 dark:text-zinc-500">Transform</label>
+        <label className="text-[10px] uppercase font-bold text-[#5F6B7A] dark:text-zinc-500">Transform</label>
         <div className="grid grid-cols-3 gap-1.5">
           <button onClick={() => store.rotateSelected(90)} className="p-2 hover:bg-slate-100 dark:hover:bg-zinc-850 rounded-xl transition-all flex flex-col items-center gap-1 font-semibold text-[10px]" title="Rotate 90 deg"><RotateCw className="w-4 h-4" /><span>+90°</span></button>
           <button onClick={() => store.flipSelected('h')} className="p-2 hover:bg-slate-100 dark:hover:bg-zinc-850 rounded-xl transition-all flex flex-col items-center gap-1 font-semibold text-[10px]" title="Flip Horizontal"><FlipHorizontal className="w-4 h-4" /><span>Flip H</span></button>
@@ -103,7 +103,7 @@ export const PropertiesPanel: React.FC = () => {
 
       {/* Lock / Unlock */}
       <div className="space-y-2">
-        <label className="text-[10px] uppercase font-bold text-slate-400 dark:text-zinc-500">Locking</label>
+        <label className="text-[10px] uppercase font-bold text-[#5F6B7A] dark:text-zinc-500">Locking</label>
         <div className="flex gap-2">
           <button 
             onClick={() => store.lockSelected()} 
@@ -124,7 +124,7 @@ export const PropertiesPanel: React.FC = () => {
 
       {/* Fill Color */}
       <div className="space-y-2.5">
-        <label className="text-[10px] uppercase font-bold text-slate-400 dark:text-zinc-500">Fill Color</label>
+        <label className="text-[10px] uppercase font-bold text-[#5F6B7A] dark:text-zinc-500">Fill Color</label>
         <div className="flex flex-wrap gap-1.5">
           {colors.map(col => (
             <button 
@@ -136,7 +136,7 @@ export const PropertiesPanel: React.FC = () => {
               } flex items-center justify-center`}
               title={col.name}
             >
-              {col.value === 'transparent' && <span className="text-[10px] text-slate-400">×</span>}
+              {col.value === 'transparent' && <span className="text-[10px] text-[#5F6B7A]">×</span>}
             </button>
           ))}
         </div>
@@ -144,7 +144,7 @@ export const PropertiesPanel: React.FC = () => {
 
       {/* Stroke Style */}
       <div className="space-y-4">
-        <label className="text-[10px] uppercase font-bold text-slate-400 dark:text-zinc-500 block">Border / Stroke</label>
+        <label className="text-[10px] uppercase font-bold text-[#5F6B7A] dark:text-zinc-500 block">Border / Stroke</label>
         {/* Stroke Color */}
         <div className="flex flex-wrap gap-1.5">
           {colors.filter(c => c.value !== 'transparent').map(col => (
@@ -161,7 +161,7 @@ export const PropertiesPanel: React.FC = () => {
         </div>
         {/* Stroke Width */}
         <div className="space-y-1.5">
-          <span className="text-[9px] font-bold text-slate-400 dark:text-zinc-500 block">Stroke Width ({firstEl?.strokeWidth || 2}px)</span>
+          <span className="text-[9px] font-bold text-[#5F6B7A] dark:text-zinc-500 block">Stroke Width ({firstEl?.strokeWidth || 2}px)</span>
           <input 
             type="range" 
             min={1} 
@@ -178,7 +178,7 @@ export const PropertiesPanel: React.FC = () => {
               key={st}
               onClick={() => updateSelectedStyle({ borderStyle: st as any })}
               className={`py-1.5 rounded-lg text-[10px] font-bold capitalize transition-all border ${
-                (firstEl?.borderStyle || 'solid') === st ? 'bg-teal-600 border-teal-600 text-white' : 'bg-transparent border-slate-200 dark:border-zinc-850 hover:bg-slate-50 dark:hover:bg-zinc-900'
+                (firstEl?.borderStyle || 'solid') === st ? 'bg-teal-600 border-teal-600 text-[#1A1D21]' : 'bg-transparent border-slate-200 dark:border-zinc-850 hover:bg-slate-50 dark:hover:bg-zinc-900'
               }`}
             >
               {st}
@@ -189,8 +189,8 @@ export const PropertiesPanel: React.FC = () => {
 
       {/* Typography settings (If type is text or sticky note) */}
       {(firstEl?.type === 'text' || firstEl?.type === 'sticky') && (
-        <div className="space-y-4 pt-4 border-t border-[#2A2F35] dark:border-zinc-850">
-          <label className="text-[10px] uppercase font-bold text-slate-400 dark:text-zinc-500 block">Typography</label>
+        <div className="space-y-4 pt-4 border-t border-[#E2E5E9] dark:border-zinc-850">
+          <label className="text-[10px] uppercase font-bold text-[#5F6B7A] dark:text-zinc-500 block">Typography</label>
           {/* Font Sizes */}
           <div className="grid grid-cols-4 gap-1.5">
             {[12, 16, 20, 24, 32, 48].slice(0, 4).map(sz => (
@@ -198,7 +198,7 @@ export const PropertiesPanel: React.FC = () => {
                 key={sz}
                 onClick={() => updateSelectedStyle({ fontSize: sz })}
                 className={`py-1 rounded-lg text-xs font-semibold transition-all border ${
-                  (firstEl?.fontSize || 20) === sz ? 'bg-teal-600 border-teal-600 text-white' : 'bg-transparent border-slate-200 dark:border-zinc-850'
+                  (firstEl?.fontSize || 20) === sz ? 'bg-teal-600 border-teal-600 text-[#1A1D21]' : 'bg-transparent border-slate-200 dark:border-zinc-850'
                 }`}
               >
                 {sz}px
@@ -209,28 +209,28 @@ export const PropertiesPanel: React.FC = () => {
           <div className="grid grid-cols-4 gap-1.5">
             <button 
               onClick={() => updateSelectedStyle({ fontWeight: firstEl.fontWeight === 'bold' ? 'normal' : 'bold' })}
-              className={`p-2 rounded-xl transition-all border ${firstEl.fontWeight === 'bold' ? 'bg-teal-600 border-teal-600 text-white' : 'bg-transparent border-slate-200 dark:border-zinc-850'}`}
+              className={`p-2 rounded-xl transition-all border ${firstEl.fontWeight === 'bold' ? 'bg-teal-600 border-teal-600 text-[#1A1D21]' : 'bg-transparent border-slate-200 dark:border-zinc-850'}`}
               title="Bold"
             >
               <Bold className="w-4 h-4 mx-auto" />
             </button>
             <button 
               onClick={() => updateSelectedStyle({ fontStyle: firstEl.fontStyle === 'italic' ? 'normal' : 'italic' })}
-              className={`p-2 rounded-xl transition-all border ${firstEl.fontStyle === 'italic' ? 'bg-teal-600 border-teal-600 text-white' : 'bg-transparent border-slate-200 dark:border-zinc-850'}`}
+              className={`p-2 rounded-xl transition-all border ${firstEl.fontStyle === 'italic' ? 'bg-teal-600 border-teal-600 text-[#1A1D21]' : 'bg-transparent border-slate-200 dark:border-zinc-850'}`}
               title="Italic"
             >
               <Italic className="w-4 h-4 mx-auto" />
             </button>
             <button 
               onClick={() => updateSelectedStyle({ textDecoration: firstEl.textDecoration === 'underline' ? 'none' : 'underline' })}
-              className={`p-2 rounded-xl transition-all border ${firstEl.textDecoration === 'underline' ? 'bg-teal-600 border-teal-600 text-white' : 'bg-transparent border-slate-200 dark:border-zinc-850'}`}
+              className={`p-2 rounded-xl transition-all border ${firstEl.textDecoration === 'underline' ? 'bg-teal-600 border-teal-600 text-[#1A1D21]' : 'bg-transparent border-slate-200 dark:border-zinc-850'}`}
               title="Underline"
             >
               <Underline className="w-4 h-4 mx-auto" />
             </button>
             <button 
               onClick={() => updateSelectedStyle({ textDecoration: firstEl.textDecoration === 'line-through' ? 'none' : 'line-through' })}
-              className={`p-2 rounded-xl transition-all border ${firstEl.textDecoration === 'line-through' ? 'bg-teal-600 border-teal-600 text-white' : 'bg-transparent border-slate-200 dark:border-zinc-850'}`}
+              className={`p-2 rounded-xl transition-all border ${firstEl.textDecoration === 'line-through' ? 'bg-teal-600 border-teal-600 text-[#1A1D21]' : 'bg-transparent border-slate-200 dark:border-zinc-850'}`}
               title="Strikethrough"
             >
               <Strikethrough className="w-4 h-4 mx-auto" />
@@ -240,9 +240,9 @@ export const PropertiesPanel: React.FC = () => {
       )}
 
       {/* Opacity & Shadow */}
-      <div className="space-y-4 pt-4 border-t border-[#2A2F35] dark:border-zinc-850">
+      <div className="space-y-4 pt-4 border-t border-[#E2E5E9] dark:border-zinc-850">
         <div className="space-y-1.5">
-          <span className="text-[10px] uppercase font-bold text-slate-400 dark:text-zinc-500 block">Opacity ({Math.round((firstEl?.opacity ?? 1) * 100)}%)</span>
+          <span className="text-[10px] uppercase font-bold text-[#5F6B7A] dark:text-zinc-500 block">Opacity ({Math.round((firstEl?.opacity ?? 1) * 100)}%)</span>
           <input 
             type="range" 
             min={0} 
@@ -253,7 +253,7 @@ export const PropertiesPanel: React.FC = () => {
           />
         </div>
         <div className="space-y-1.5">
-          <span className="text-[10px] uppercase font-bold text-slate-400 dark:text-zinc-500 block">Corner Radius ({firstEl?.cornerRadius ?? 4}px)</span>
+          <span className="text-[10px] uppercase font-bold text-[#5F6B7A] dark:text-zinc-500 block">Corner Radius ({firstEl?.cornerRadius ?? 4}px)</span>
           <input 
             type="range" 
             min={0} 

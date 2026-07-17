@@ -553,14 +553,14 @@ export const Dashboard: React.FC = () => {
 
   if (errorMessage) {
     return (
-      <div className="w-full min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-6">
-        <div className="max-w-md w-full p-8 border border-red-600 bg-slate-900 rounded-3xl text-center space-y-4 shadow-2xl">
+      <div className="w-full min-h-screen bg-white text-[#1A1D21] flex items-center justify-center p-6">
+        <div className="max-w-md w-full p-8 border border-red-600 bg-[#F8FAFB] rounded-3xl text-center space-y-4 shadow-2xl">
           <AlertCircle className="w-12 h-12 text-red-500 mx-auto" />
-          <h2 className="text-xl font-bold text-white">Oops! Something went wrong</h2>
-          <p className="text-slate-400 text-sm leading-relaxed">{errorMessage}</p>
+          <h2 className="text-xl font-bold text-[#1A1D21]">Oops! Something went wrong</h2>
+          <p className="text-[#5F6B7A] text-sm leading-relaxed">{errorMessage}</p>
           <button 
             onClick={() => window.location.reload()} 
-            className="px-6 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-teal-600/10 transition-all"
+            className="px-6 py-2.5 bg-teal-600 hover:bg-teal-500 text-[#1A1D21] rounded-xl text-xs font-semibold shadow-lg shadow-teal-600/10 transition-all"
           >
             Try Again
           </button>
@@ -570,7 +570,7 @@ export const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="w-full min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row font-sans relative overflow-hidden selection:bg-teal-500 selection:text-white">
+    <div className="w-full min-h-screen bg-white text-[#1A1D21] flex flex-col md:flex-row font-sans relative overflow-hidden selection:bg-teal-500 selection:text-[#1A1D21]">
       
       {/* Background Ornaments / Ambient Lights */}
       <div className="absolute top-0 right-0 w-[45rem] h-[45rem] bg-teal-600/5 rounded-full blur-[12rem] pointer-events-none" />
@@ -578,17 +578,17 @@ export const Dashboard: React.FC = () => {
 
       {/* Toast Notification */}
       {toast && (
-        <div className="fixed top-6 right-6 z-[100] flex items-center gap-3 px-4 py-3.5 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl animate-in slide-in-from-top-4 duration-300">
+        <div className="fixed top-6 right-6 z-[100] flex items-center gap-3 px-4 py-3.5 bg-[#F8FAFB] border border-[#E2E5E9] rounded-2xl shadow-2xl animate-in slide-in-from-top-4 duration-300">
           {toast.type === 'success' && <CheckCircle className="w-4 h-4 text-emerald-400" />}
           {toast.type === 'error' && <AlertCircle className="w-4 h-4 text-red-400" />}
           {toast.type === 'info' && <Bell className="w-4 h-4 text-teal-400" />}
-          <span className="text-xs font-medium text-slate-200">{toast.message}</span>
+          <span className="text-xs font-medium text-[#1A1D21]">{toast.message}</span>
         </div>
       )}
 
       {/* Responsive Left Sidebar */}
       <aside 
-        className={`fixed md:sticky top-0 left-0 h-screen z-30 bg-[#171B1F] border-r border-[#2A2F35] flex flex-col justify-between transition-all duration-300 ${
+        className={`fixed md:sticky top-0 left-0 h-screen z-30 bg-[#F8FAFB] border-r border-[#E2E5E9] flex flex-col justify-between transition-all duration-300 ${
           isSidebarOpen ? 'w-64 translate-x-0' : 'w-0 -translate-x-full md:w-20 md:translate-x-0'
         }`}
       >
@@ -597,26 +597,26 @@ export const Dashboard: React.FC = () => {
           <div className="relative">
             <button 
               onClick={() => setShowOrgDropdown(!showOrgDropdown)}
-              className="w-full flex items-center justify-between p-2 rounded-2xl bg-[#0D0F12]/95 border border-[#2A2F35] hover:border-teal-500/30 transition-all text-left"
+              className="w-full flex items-center justify-between p-2 rounded-2xl bg-white/95 border border-[#E2E5E9] hover:border-teal-500/30 transition-all text-left"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-teal-600 to-purple-600 flex items-center justify-center text-sm font-bold text-white shadow-md shadow-teal-600/10">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-teal-600 to-purple-600 flex items-center justify-center text-sm font-bold text-[#1A1D21] shadow-md shadow-teal-600/10">
                   {activeOrg?.name?.charAt(0) || 'W'}
                 </div>
                 {isSidebarOpen && (
                   <div className="min-w-0">
-                    <h4 className="text-xs font-bold text-slate-100 truncate">{activeOrg?.name || 'Workspace'}</h4>
-                    <span className="text-[10px] text-slate-500 block truncate">{activeOrg?.domain || 'collab.space'}</span>
+                    <h4 className="text-xs font-bold text-[#1A1D21] truncate">{activeOrg?.name || 'Workspace'}</h4>
+                    <span className="text-[10px] text-[#9AA4AB] block truncate">{activeOrg?.domain || 'collab.space'}</span>
                   </div>
                 )}
               </div>
-              {isSidebarOpen && <ChevronDown className="w-4 h-4 text-slate-400" />}
+              {isSidebarOpen && <ChevronDown className="w-4 h-4 text-[#5F6B7A]" />}
             </button>
 
             {/* Org Switcher Dropdown */}
             {showOrgDropdown && (
-              <div className="absolute left-0 right-0 mt-2 bg-slate-900 border border-[#2A2F35] rounded-2xl p-2.5 shadow-2xl z-50 space-y-1">
-                <span className="text-[9px] uppercase font-bold tracking-wider text-slate-500 px-2 block mb-1">Organizations</span>
+              <div className="absolute left-0 right-0 mt-2 bg-[#F8FAFB] border border-[#E2E5E9] rounded-2xl p-2.5 shadow-2xl z-50 space-y-1">
+                <span className="text-[9px] uppercase font-bold tracking-wider text-[#9AA4AB] px-2 block mb-1">Organizations</span>
                 {organizations.map(o => (
                   <button
                     key={o.id}
@@ -625,20 +625,20 @@ export const Dashboard: React.FC = () => {
                       setShowOrgDropdown(false);
                     }}
                     className={`w-full flex items-center justify-between p-2 rounded-xl text-left text-xs transition-colors ${
-                      activeOrg?.id === o.id ? 'bg-teal-600/10 text-teal-400 font-semibold' : 'hover:bg-slate-850/60 text-slate-300'
+                      activeOrg?.id === o.id ? 'bg-teal-600/10 text-teal-400 font-semibold' : 'hover:bg-[#F0F2F4]/60 text-[#5F6B7A]'
                     }`}
                   >
                     <span className="truncate">{o.name}</span>
                     {o.id === activeOrg?.id && <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />}
                   </button>
                 ))}
-                <div className="border-t border-[#2A2F35] mt-2 pt-2">
+                <div className="border-t border-[#E2E5E9] mt-2 pt-2">
                   <button 
                     onClick={() => {
                       setShowOrgDropdown(false);
                       setShowOrgModal(true);
                     }}
-                    className="w-full flex items-center gap-2 p-2 hover:bg-slate-850/60 text-xs font-semibold text-teal-400 rounded-xl transition-all"
+                    className="w-full flex items-center gap-2 p-2 hover:bg-[#F0F2F4]/60 text-xs font-semibold text-teal-400 rounded-xl transition-all"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>New Organization</span>
@@ -650,11 +650,11 @@ export const Dashboard: React.FC = () => {
 
           {/* Teams Switcher Section */}
           <div className="space-y-2">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 block px-2">Teams</span>
+            <span className="text-[10px] uppercase font-bold tracking-wider text-[#9AA4AB] block px-2">Teams</span>
             <div className="relative">
               <button 
                 onClick={() => setShowTeamDropdown(!showTeamDropdown)}
-                className="w-full flex items-center justify-between p-2 rounded-xl hover:bg-slate-850/60 transition-all text-left"
+                className="w-full flex items-center justify-between p-2 rounded-xl hover:bg-[#F0F2F4]/60 transition-all text-left"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-5 h-5 rounded-lg bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-[10px] font-bold text-teal-400">
@@ -662,16 +662,16 @@ export const Dashboard: React.FC = () => {
                   </div>
                   {isSidebarOpen && (
                     <div className="min-w-0">
-                      <span className="text-xs font-semibold text-slate-200 truncate block">{activeTeam?.name || 'General Team'}</span>
-                      <span className="text-[10px] text-slate-500 block truncate">{workspaces.length} workspaces</span>
+                      <span className="text-xs font-semibold text-[#1A1D21] truncate block">{activeTeam?.name || 'General Team'}</span>
+                      <span className="text-[10px] text-[#9AA4AB] block truncate">{workspaces.length} workspaces</span>
                     </div>
                   )}
                 </div>
-                {isSidebarOpen && <ChevronDown className="w-3.5 h-3.5 text-slate-400" />}
+                {isSidebarOpen && <ChevronDown className="w-3.5 h-3.5 text-[#5F6B7A]" />}
               </button>
 
               {showTeamDropdown && (
-                <div className="absolute left-0 right-0 mt-1 bg-slate-900 border border-slate-800 rounded-xl p-2 shadow-xl z-50 space-y-1">
+                <div className="absolute left-0 right-0 mt-1 bg-[#F8FAFB] border border-[#E2E5E9] rounded-xl p-2 shadow-xl z-50 space-y-1">
                   {teams.map(t => (
                     <button
                       key={t.id}
@@ -680,19 +680,19 @@ export const Dashboard: React.FC = () => {
                         setShowTeamDropdown(false);
                       }}
                       className={`w-full p-2 rounded-lg text-left text-xs transition-colors ${
-                        activeTeam?.id === t.id ? 'bg-teal-600/10 text-teal-400 font-semibold' : 'hover:bg-slate-850 text-slate-300'
+                        activeTeam?.id === t.id ? 'bg-teal-600/10 text-teal-400 font-semibold' : 'hover:bg-[#F0F2F4] text-[#5F6B7A]'
                       }`}
                     >
                       {t.name}
                     </button>
                   ))}
-                  <div className="border-t border-slate-800 mt-2 pt-2">
+                  <div className="border-t border-[#E2E5E9] mt-2 pt-2">
                     <button
                       onClick={() => {
                         setShowTeamDropdown(false);
                         setShowTeamModal(true);
                       }}
-                      className="w-full flex items-center gap-2 p-1.5 hover:bg-slate-850 text-xs font-semibold text-teal-400 rounded-lg"
+                      className="w-full flex items-center gap-2 p-1.5 hover:bg-[#F0F2F4] text-xs font-semibold text-teal-400 rounded-lg"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Create Team</span>
@@ -705,11 +705,11 @@ export const Dashboard: React.FC = () => {
 
           {/* Sidebar Nav Links */}
           <div className="space-y-1">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 block px-2 mb-2">Navigation</span>
+            <span className="text-[10px] uppercase font-bold tracking-wider text-[#9AA4AB] block px-2 mb-2">Navigation</span>
             <button
               onClick={() => setCurrentTab('dashboard')}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                currentTab === 'dashboard' ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/10' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
+                currentTab === 'dashboard' ? 'bg-teal-600 text-[#1A1D21] shadow-lg shadow-teal-600/10' : 'text-[#5F6B7A] hover:text-slate-200 hover:bg-[#F0F2F4]/50'
               }`}
             >
               <LayoutDashboard className="w-4 h-4" />
@@ -718,7 +718,7 @@ export const Dashboard: React.FC = () => {
             <button
               onClick={() => setCurrentTab('boards')}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                currentTab === 'boards' ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/10' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
+                currentTab === 'boards' ? 'bg-teal-600 text-[#1A1D21] shadow-lg shadow-teal-600/10' : 'text-[#5F6B7A] hover:text-slate-200 hover:bg-[#F0F2F4]/50'
               }`}
             >
               <Layers className="w-4 h-4" />
@@ -727,7 +727,7 @@ export const Dashboard: React.FC = () => {
             <button
               onClick={() => setCurrentTab('members')}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                currentTab === 'members' ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/10' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
+                currentTab === 'members' ? 'bg-teal-600 text-[#1A1D21] shadow-lg shadow-teal-600/10' : 'text-[#5F6B7A] hover:text-slate-200 hover:bg-[#F0F2F4]/50'
               }`}
             >
               <Users className="w-4 h-4" />
@@ -736,7 +736,7 @@ export const Dashboard: React.FC = () => {
             <button
               onClick={() => setCurrentTab('activities')}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                currentTab === 'activities' ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/10' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
+                currentTab === 'activities' ? 'bg-teal-600 text-[#1A1D21] shadow-lg shadow-teal-600/10' : 'text-[#5F6B7A] hover:text-slate-200 hover:bg-[#F0F2F4]/50'
               }`}
             >
               <Activity className="w-4 h-4" />
@@ -745,7 +745,7 @@ export const Dashboard: React.FC = () => {
             <button
               onClick={() => setCurrentTab('settings')}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                currentTab === 'settings' ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/10' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
+                currentTab === 'settings' ? 'bg-teal-600 text-[#1A1D21] shadow-lg shadow-teal-600/10' : 'text-[#5F6B7A] hover:text-slate-200 hover:bg-[#F0F2F4]/50'
               }`}
             >
               <Settings className="w-4 h-4" />
@@ -756,20 +756,20 @@ export const Dashboard: React.FC = () => {
 
         {/* User profile and logout */}
         {isSidebarOpen && (
-          <div className="p-4 border-t border-[#2A2F35] bg-[#171B1F]">
+          <div className="p-4 border-t border-[#E2E5E9] bg-[#F8FAFB]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-white shadow-inner">
+                <div className="w-9 h-9 rounded-full bg-[#E2E5E9] border border-[#CDD2D8] flex items-center justify-center font-bold text-[#1A1D21] shadow-inner">
                   {user?.name?.charAt(0) || 'U'}
                 </div>
                 <div className="min-w-0">
-                  <h5 className="text-xs font-bold text-slate-200 truncate">{user?.name || 'Default User'}</h5>
-                  <span className="text-[10px] text-slate-500 block truncate">{user?.email}</span>
+                  <h5 className="text-xs font-bold text-[#1A1D21] truncate">{user?.name || 'Default User'}</h5>
+                  <span className="text-[10px] text-[#9AA4AB] block truncate">{user?.email}</span>
                 </div>
               </div>
               <button 
                 onClick={handleLogout}
-                className="p-1.5 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-slate-200 transition-colors"
+                className="p-1.5 hover:bg-[#E2E5E9] rounded-lg text-[#5F6B7A] hover:text-slate-200 transition-colors"
                 title="Logout"
               >
                 <LogOut className="w-4 h-4" />
@@ -783,26 +783,26 @@ export const Dashboard: React.FC = () => {
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto h-screen pb-16">
         
         {/* Sticky Topbar */}
-        <header className="sticky top-0 bg-[#0D0F12]/95 border-b border-[#2A2F35] z-20 px-6 py-4 flex items-center justify-between">
+        <header className="sticky top-0 bg-white/95 border-b border-[#E2E5E9] z-20 px-6 py-4 flex items-center justify-between">
           {/* Breadcrumb Navigation */}
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
+          <div className="flex items-center gap-2 text-xs font-semibold text-[#5F6B7A]">
             <button className="hover:text-slate-200" onClick={() => setCurrentTab('dashboard')}>
               {activeOrg?.name || 'Workspace'}
             </button>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
-            <span className="text-slate-100 font-bold capitalize">{currentTab}</span>
+            <ChevronRight className="w-3.5 h-3.5 text-[#5F6B7A]" />
+            <span className="text-[#1A1D21] font-bold capitalize">{currentTab}</span>
           </div>
 
           <div className="flex items-center gap-4">
             {/* Quick Search */}
             <div className="relative hidden md:block">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9AA4AB]" />
               <input
                 type="text"
                 placeholder="Search boards..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2 w-56 rounded-full bg-slate-905 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-all"
+                className="pl-10 pr-4 py-2 w-56 rounded-full bg-slate-905 border border-[#E2E5E9] text-xs text-[#1A1D21] focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-all"
               />
             </div>
 
@@ -813,29 +813,29 @@ export const Dashboard: React.FC = () => {
                   setShowNotificationsMenu(!showNotificationsMenu);
                   if (!showNotificationsMenu) handleMarkNotificationsRead();
                 }}
-                className="p-2 bg-slate-900 border border-slate-800 rounded-xl hover:bg-slate-800 transition-colors relative"
+                className="p-2 bg-[#F8FAFB] border border-[#E2E5E9] rounded-xl hover:bg-[#E2E5E9] transition-colors relative"
               >
-                <Bell className="w-4 h-4 text-slate-300" />
+                <Bell className="w-4 h-4 text-[#5F6B7A]" />
                 {notifications.some(n => !n.is_read) && (
                   <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
                 )}
               </button>
 
               {showNotificationsMenu && (
-                <div className="absolute right-0 mt-3 w-80 bg-slate-900 border border-slate-850 rounded-2xl shadow-2xl p-4 z-50 space-y-3">
-                  <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                    <h4 className="text-xs font-bold text-white">Notifications</h4>
-                    <span className="text-[10px] text-slate-500">{notifications.length} total</span>
+                <div className="absolute right-0 mt-3 w-80 bg-[#F8FAFB] border border-[#E2E5E9] rounded-2xl shadow-2xl p-4 z-50 space-y-3">
+                  <div className="flex items-center justify-between border-b border-[#E2E5E9] pb-2">
+                    <h4 className="text-xs font-bold text-[#1A1D21]">Notifications</h4>
+                    <span className="text-[10px] text-[#9AA4AB]">{notifications.length} total</span>
                   </div>
                   <div className="max-h-60 overflow-y-auto space-y-2.5">
                     {notifications.length === 0 ? (
-                      <p className="text-center text-[10px] text-slate-500 py-6">No notifications found.</p>
+                      <p className="text-center text-[10px] text-[#9AA4AB] py-6">No notifications found.</p>
                     ) : (
                       notifications.map(n => (
-                        <div key={n.id} className="p-2.5 rounded-xl bg-[#0D0F12]/95 border border-slate-855/60 text-left text-xs">
-                          <h5 className="font-bold text-slate-200">{n.title}</h5>
-                          <p className="text-slate-400 mt-1 text-[11px] leading-relaxed">{n.content}</p>
-                          <span className="text-[9px] text-slate-500 block mt-2">{new Date(n.created_at).toLocaleDateString()}</span>
+                        <div key={n.id} className="p-2.5 rounded-xl bg-white/95 border border-slate-855/60 text-left text-xs">
+                          <h5 className="font-bold text-[#1A1D21]">{n.title}</h5>
+                          <p className="text-[#5F6B7A] mt-1 text-[11px] leading-relaxed">{n.content}</p>
+                          <span className="text-[9px] text-[#9AA4AB] block mt-2">{new Date(n.created_at).toLocaleDateString()}</span>
                         </div>
                       ))
                     )}
@@ -854,7 +854,7 @@ export const Dashboard: React.FC = () => {
                   if (el) el.focus();
                 }, 100);
               }}
-              className="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-teal-600/10 flex items-center gap-2 transition-all"
+              className="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-[#1A1D21] rounded-xl text-xs font-bold shadow-lg shadow-teal-600/10 flex items-center gap-2 transition-all"
             >
               <Plus className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">New Board</span>
@@ -868,11 +868,11 @@ export const Dashboard: React.FC = () => {
             <div className="space-y-8 animate-in fade-in duration-300">
               {/* Quick Actions Header */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="p-6 rounded-3xl bg-slate-900 border border-[#2A2F35] shadow-xl flex items-center justify-between group hover:border-teal-500/30 transition-all duration-300">
+                <div className="p-6 rounded-3xl bg-[#F8FAFB] border border-[#E2E5E9] shadow-xl flex items-center justify-between group hover:border-teal-500/30 transition-all duration-300">
                   <div className="space-y-1">
-                    <span className="text-[10px] uppercase font-extrabold tracking-widest text-slate-500">Collaborate</span>
-                    <h3 className="text-sm font-bold text-white">Create Board</h3>
-                    <p className="text-xs text-slate-400">Launch a new canvas workspace</p>
+                    <span className="text-[10px] uppercase font-extrabold tracking-widest text-[#9AA4AB]">Collaborate</span>
+                    <h3 className="text-sm font-bold text-[#1A1D21]">Create Board</h3>
+                    <p className="text-xs text-[#5F6B7A]">Launch a new canvas workspace</p>
                   </div>
                   <button 
                     onClick={() => {
@@ -884,11 +884,11 @@ export const Dashboard: React.FC = () => {
                     <Plus className="w-5 h-5" />
                   </button>
                 </div>
-                <div className="p-6 rounded-3xl bg-slate-900 border border-[#2A2F35] shadow-xl flex items-center justify-between group hover:border-teal-500/30 transition-all duration-300">
+                <div className="p-6 rounded-3xl bg-[#F8FAFB] border border-[#E2E5E9] shadow-xl flex items-center justify-between group hover:border-teal-500/30 transition-all duration-300">
                   <div className="space-y-1">
-                    <span className="text-[10px] uppercase font-extrabold tracking-widest text-slate-500">Scale</span>
-                    <h3 className="text-sm font-bold text-white">Invite Member</h3>
-                    <p className="text-xs text-slate-400">Bring new minds into the team</p>
+                    <span className="text-[10px] uppercase font-extrabold tracking-widest text-[#9AA4AB]">Scale</span>
+                    <h3 className="text-sm font-bold text-[#1A1D21]">Invite Member</h3>
+                    <p className="text-xs text-[#5F6B7A]">Bring new minds into the team</p>
                   </div>
                   <button 
                     onClick={() => setShowInviteModal(true)}
@@ -897,11 +897,11 @@ export const Dashboard: React.FC = () => {
                     <UserPlus className="w-5 h-5" />
                   </button>
                 </div>
-                <div className="p-6 rounded-3xl bg-slate-900 border border-[#2A2F35] shadow-xl flex items-center justify-between group hover:border-teal-500/30 transition-all duration-300">
+                <div className="p-6 rounded-3xl bg-[#F8FAFB] border border-[#E2E5E9] shadow-xl flex items-center justify-between group hover:border-teal-500/30 transition-all duration-300">
                   <div className="space-y-1">
-                    <span className="text-[10px] uppercase font-extrabold tracking-widest text-slate-500">Coordinate</span>
-                    <h3 className="text-sm font-bold text-white">Create Team</h3>
-                    <p className="text-xs text-slate-400">Assemble team boards together</p>
+                    <span className="text-[10px] uppercase font-extrabold tracking-widest text-[#9AA4AB]">Coordinate</span>
+                    <h3 className="text-sm font-bold text-[#1A1D21]">Create Team</h3>
+                    <p className="text-xs text-[#5F6B7A]">Assemble team boards together</p>
                   </div>
                   <button 
                     onClick={() => setShowTeamModal(true)}
@@ -914,36 +914,36 @@ export const Dashboard: React.FC = () => {
 
               {/* Statistics & Billing details */}
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <div className="p-6 rounded-3xl bg-slate-905 border border-slate-850 flex flex-col justify-between h-36">
-                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500">Boards Created</span>
+                <div className="p-6 rounded-3xl bg-slate-905 border border-[#E2E5E9] flex flex-col justify-between h-36">
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-[#9AA4AB]">Boards Created</span>
                   <div className="flex items-baseline gap-2 mt-2">
-                    <span className="text-3xl font-extrabold text-white">{boards.length}</span>
-                    <span className="text-xs text-slate-500">/ {billingDetails?.board_limit || 3} limit</span>
+                    <span className="text-3xl font-extrabold text-[#1A1D21]">{boards.length}</span>
+                    <span className="text-xs text-[#9AA4AB]">/ {billingDetails?.board_limit || 3} limit</span>
                   </div>
-                  <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-3">
+                  <div className="w-full bg-[#E2E5E9] h-1.5 rounded-full overflow-hidden mt-3">
                     <div 
                       className="bg-teal-500 h-full rounded-full transition-all duration-550" 
                       style={{ width: `${Math.min(100, (boards.length / (billingDetails?.board_limit || 3)) * 100)}%` }} 
                     />
                   </div>
                 </div>
-                <div className="p-6 rounded-3xl bg-slate-905 border border-slate-850 flex flex-col justify-between h-36">
-                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500">Team Members</span>
+                <div className="p-6 rounded-3xl bg-slate-905 border border-[#E2E5E9] flex flex-col justify-between h-36">
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-[#9AA4AB]">Team Members</span>
                   <div className="flex items-baseline gap-2 mt-2">
-                    <span className="text-3xl font-extrabold text-white">{orgMembers.length}</span>
-                    <span className="text-xs text-slate-500">/ {billingDetails?.member_limit || 3} limit</span>
+                    <span className="text-3xl font-extrabold text-[#1A1D21]">{orgMembers.length}</span>
+                    <span className="text-xs text-[#9AA4AB]">/ {billingDetails?.member_limit || 3} limit</span>
                   </div>
-                  <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-3">
+                  <div className="w-full bg-[#E2E5E9] h-1.5 rounded-full overflow-hidden mt-3">
                     <div 
                       className="bg-teal-500 h-full rounded-full transition-all duration-550" 
                       style={{ width: `${Math.min(100, (orgMembers.length / (billingDetails?.member_limit || 3)) * 100)}%` }} 
                     />
                   </div>
                 </div>
-                <div className="p-6 rounded-3xl bg-slate-905 border border-slate-850 flex flex-col justify-between h-36">
-                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500">Active Tier Plan</span>
+                <div className="p-6 rounded-3xl bg-slate-905 border border-[#E2E5E9] flex flex-col justify-between h-36">
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-[#9AA4AB]">Active Tier Plan</span>
                   <div className="flex items-center justify-between mt-2">
-                    <span className="text-xl font-black uppercase text-white bg-teal-600/10 px-3 py-1 rounded-xl border border-teal-500/20 text-teal-400">
+                    <span className="text-xl font-black uppercase text-[#1A1D21] bg-teal-600/10 px-3 py-1 rounded-xl border border-teal-500/20 text-teal-400">
                       {billingDetails?.plan || 'Free'}
                     </span>
                     <button 
@@ -953,15 +953,15 @@ export const Dashboard: React.FC = () => {
                       Manage Plan
                     </button>
                   </div>
-                  <span className="text-[10px] text-slate-500 block mt-3">Storage space: {billingDetails?.storage_limit || '50 MB'}</span>
+                  <span className="text-[10px] text-[#9AA4AB] block mt-3">Storage space: {billingDetails?.storage_limit || '50 MB'}</span>
                 </div>
-                <div className="p-6 rounded-3xl bg-slate-905 border border-slate-850 flex flex-col justify-between h-36">
-                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500">Storage Consumption</span>
+                <div className="p-6 rounded-3xl bg-slate-905 border border-[#E2E5E9] flex flex-col justify-between h-36">
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-[#9AA4AB]">Storage Consumption</span>
                   <div className="flex items-baseline gap-2 mt-2">
-                    <span className="text-xl font-bold text-white">0.2 MB</span>
-                    <span className="text-xs text-slate-500">/ {billingDetails?.storage_limit || '50 MB'}</span>
+                    <span className="text-xl font-bold text-[#1A1D21]">0.2 MB</span>
+                    <span className="text-xs text-[#9AA4AB]">/ {billingDetails?.storage_limit || '50 MB'}</span>
                   </div>
-                  <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-3">
+                  <div className="w-full bg-[#E2E5E9] h-1.5 rounded-full overflow-hidden mt-3">
                     <div className="bg-teal-500 h-full rounded-full" style={{ width: '4%' }} />
                   </div>
                 </div>
@@ -970,22 +970,22 @@ export const Dashboard: React.FC = () => {
               {/* Recent Activity Logs list and Boards list side-by-side */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Recent activity */}
-                <div className="lg:col-span-1 p-6 rounded-3xl bg-slate-900 border border-[#2A2F35] shadow-xl space-y-4">
+                <div className="lg:col-span-1 p-6 rounded-3xl bg-[#F8FAFB] border border-[#E2E5E9] shadow-xl space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-white">Team Activity</h3>
+                    <h3 className="text-sm font-bold text-[#1A1D21]">Team Activity</h3>
                     <button onClick={() => setCurrentTab('activities')} className="text-[10px] font-extrabold text-teal-400 hover:underline">View All</button>
                   </div>
                   <div className="space-y-4 max-h-72 overflow-y-auto">
                     {activityLogs.length === 0 ? (
-                      <p className="text-xs text-slate-500 text-center py-8">No activities recorded yet.</p>
+                      <p className="text-xs text-[#9AA4AB] text-center py-8">No activities recorded yet.</p>
                     ) : (
                       activityLogs.slice(0, 5).map(l => (
                         <div key={l.id} className="flex gap-3 text-xs leading-normal">
                           <div className="w-1.5 h-1.5 rounded-full bg-teal-500 mt-1.5 shrink-0" />
                           <div>
-                            <span className="font-semibold text-slate-300">{l.user_name || 'Collaborator'}</span>{' '}
-                            <span className="text-slate-400 font-normal">{l.details || l.action}</span>
-                            <span className="text-[9px] text-slate-500 block mt-0.5">{new Date(l.created_at).toLocaleTimeString()}</span>
+                            <span className="font-semibold text-[#5F6B7A]">{l.user_name || 'Collaborator'}</span>{' '}
+                            <span className="text-[#5F6B7A] font-normal">{l.details || l.action}</span>
+                            <span className="text-[9px] text-[#9AA4AB] block mt-0.5">{new Date(l.created_at).toLocaleTimeString()}</span>
                           </div>
                         </div>
                       ))
@@ -994,9 +994,9 @@ export const Dashboard: React.FC = () => {
                 </div>
 
                 {/* Recent boards */}
-                <div className="lg:col-span-2 p-6 rounded-3xl bg-slate-900 border border-[#2A2F35] shadow-xl space-y-4">
+                <div className="lg:col-span-2 p-6 rounded-3xl bg-[#F8FAFB] border border-[#E2E5E9] shadow-xl space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-white">Recent Boards</h3>
+                    <h3 className="text-sm font-bold text-[#1A1D21]">Recent Boards</h3>
                     <button onClick={() => setCurrentTab('boards')} className="text-[10px] font-extrabold text-teal-400 hover:underline">All Boards</button>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1004,17 +1004,17 @@ export const Dashboard: React.FC = () => {
                       <div
                         key={b.id}
                         onClick={() => navigate(`/board/${b.id}`)}
-                        className="p-4 rounded-2xl bg-[#0D0F12]/95 border border-slate-850 hover:border-teal-500/35 transition-all text-left cursor-pointer flex flex-col justify-between h-28 group"
+                        className="p-4 rounded-2xl bg-white/95 border border-[#E2E5E9] hover:border-teal-500/35 transition-all text-left cursor-pointer flex flex-col justify-between h-28 group"
                       >
                         <div>
-                          <h4 className="font-bold text-slate-200 group-hover:text-white text-xs truncate">{b.name}</h4>
-                          <p className="text-[10px] text-slate-500 mt-1 line-clamp-2 leading-relaxed">{b.description || 'No description'}</p>
+                          <h4 className="font-bold text-[#1A1D21] group-hover:text-white text-xs truncate">{b.name}</h4>
+                          <p className="text-[10px] text-[#9AA4AB] mt-1 line-clamp-2 leading-relaxed">{b.description || 'No description'}</p>
                         </div>
-                        <span className="text-[9px] text-slate-400 self-end">Private</span>
+                        <span className="text-[9px] text-[#5F6B7A] self-end">Private</span>
                       </div>
                     ))}
                     {boards.length === 0 && (
-                      <div className="col-span-2 text-center py-10 text-xs text-slate-500">
+                      <div className="col-span-2 text-center py-10 text-xs text-[#9AA4AB]">
                         Create your first board to start collaborating!
                       </div>
                     )}
@@ -1030,9 +1030,9 @@ export const Dashboard: React.FC = () => {
               {(() => {
                 const canCreateBoard = userOrgRole === 'owner' || userOrgRole === 'admin' || userOrgRole === 'editor';
                 return canCreateBoard && (
-                <form onSubmit={handleCreateBoard} className="p-6 rounded-3xl bg-slate-900 border border-slate-800/85 shadow-lg flex flex-col sm:flex-row gap-4 items-end">
+                <form onSubmit={handleCreateBoard} className="p-6 rounded-3xl bg-[#F8FAFB] border border-slate-800/85 shadow-lg flex flex-col sm:flex-row gap-4 items-end">
                   <div className="flex-1 w-full space-y-1 text-left">
-                    <label className="text-[10px] uppercase font-bold text-slate-500 block">Board Name</label>
+                    <label className="text-[10px] uppercase font-bold text-[#9AA4AB] block">Board Name</label>
                     <input
                       id="boardNameInput"
                       type="text"
@@ -1040,31 +1040,31 @@ export const Dashboard: React.FC = () => {
                       placeholder="e.g. Brainstorming Session"
                       value={newBoardName}
                       onChange={(e) => setNewBoardName(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
+                      className="w-full px-4 py-2.5 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                     />
                   </div>
                   <div className="flex-1 w-full space-y-1 text-left">
-                    <label className="text-[10px] uppercase font-bold text-slate-500 block">Description (Optional)</label>
+                    <label className="text-[10px] uppercase font-bold text-[#9AA4AB] block">Description (Optional)</label>
                     <input
                       type="text"
                       placeholder="e.g. Design critique & spatial mapping"
                       value={newBoardDesc}
                       onChange={(e) => setNewBoardDesc(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
+                      className="w-full px-4 py-2.5 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                     />
                   </div>
                   <div className="flex gap-2 w-full sm:w-auto">
                     <button
                       type="button"
                       onClick={() => setShowTemplates(true)}
-                      className="flex-1 sm:flex-none px-4 py-2.5 bg-slate-850 hover:bg-slate-800 border border-slate-800 text-slate-300 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all"
+                      className="flex-1 sm:flex-none px-4 py-2.5 bg-[#F0F2F4] hover:bg-[#E2E5E9] border border-[#E2E5E9] text-[#5F6B7A] rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all"
                     >
                       <Sparkles className="w-3.5 h-3.5 text-teal-400" />
                       <span>Templates</span>
                     </button>
                     <button
                       type="submit"
-                      className="flex-1 sm:flex-none px-5 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-teal-600/10 transition-all"
+                      className="flex-1 sm:flex-none px-5 py-2.5 bg-teal-600 hover:bg-teal-500 text-[#1A1D21] rounded-xl text-xs font-bold shadow-lg shadow-teal-600/10 transition-all"
                     >
                       Create Canvas
                     </button>
@@ -1087,7 +1087,7 @@ export const Dashboard: React.FC = () => {
                     key={item.key}
                     onClick={() => setBoardSubView(item.key as any)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                      boardSubView === item.key ? 'bg-teal-600/15 text-teal-400 border border-teal-500/20' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                      boardSubView === item.key ? 'bg-teal-600/15 text-teal-400 border border-teal-500/20' : 'text-[#5F6B7A] hover:text-slate-200 hover:bg-slate-900'
                     }`}
                   >
                     {item.label}
@@ -1097,29 +1097,29 @@ export const Dashboard: React.FC = () => {
 
               {/* Boards Grid */}
               {getFilteredBoards().length === 0 ? (
-                <div className="p-12 text-center rounded-3xl border border-dashed border-[#2A2F35] bg-slate-900/10">
-                  <Folder className="w-8 h-8 text-slate-600 mx-auto mb-3" />
-                  <p className="text-slate-400 text-xs font-semibold">No boards found in this view.</p>
-                  <p className="text-[10px] text-slate-600 mt-1">Get started by creating a new collaborative board above.</p>
+                <div className="p-12 text-center rounded-3xl border border-dashed border-[#E2E5E9] bg-slate-900/10">
+                  <Folder className="w-8 h-8 text-[#5F6B7A] mx-auto mb-3" />
+                  <p className="text-[#5F6B7A] text-xs font-semibold">No boards found in this view.</p>
+                  <p className="text-[10px] text-[#5F6B7A] mt-1">Get started by creating a new collaborative board above.</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {getFilteredBoards().map((b) => (
                     <div 
                       key={b.id}
-                      className="p-6 rounded-3xl bg-slate-900 border border-[#2A2F35] hover:border-teal-500/40 hover:shadow-xl hover:shadow-teal-500/10 hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between h-44 shadow-lg cursor-pointer group"
+                      className="p-6 rounded-3xl bg-[#F8FAFB] border border-[#E2E5E9] hover:border-teal-500/40 hover:shadow-xl hover:shadow-teal-500/10 hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between h-44 shadow-lg cursor-pointer group"
                       onClick={() => !b.is_deleted && navigate(`/board/${b.id}`)}
                     >
                       <div>
                         <div className="flex items-start justify-between">
-                          <h3 className="font-bold text-slate-200 group-hover:text-white truncate max-w-[180px] text-sm transition-colors">
+                          <h3 className="font-bold text-[#1A1D21] group-hover:text-white truncate max-w-[180px] text-sm transition-colors">
                             {b.name}
                           </h3>
                           <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
                             <button 
                               onClick={() => toggleStar(b)}
-                              className={`p-1.5 rounded-lg hover:bg-slate-850 transition-colors ${
-                                b.is_starred ? 'text-amber-400 bg-amber-500/5 border border-amber-500/10' : 'text-slate-500 hover:text-slate-300'
+                              className={`p-1.5 rounded-lg hover:bg-[#F0F2F4] transition-colors ${
+                                b.is_starred ? 'text-amber-400 bg-amber-500/5 border border-amber-500/10' : 'text-[#9AA4AB] hover:text-slate-300'
                               }`}
                               title={b.is_starred ? 'Unstar Board' : 'Star Board'}
                             >
@@ -1127,8 +1127,8 @@ export const Dashboard: React.FC = () => {
                             </button>
                             <button 
                               onClick={() => toggleArchive(b)}
-                              className={`p-1.5 rounded-lg hover:bg-slate-850 transition-colors ${
-                                b.is_archived ? 'text-teal-400 bg-teal-500/5 border border-teal-500/10' : 'text-slate-500 hover:text-slate-300'
+                              className={`p-1.5 rounded-lg hover:bg-[#F0F2F4] transition-colors ${
+                                b.is_archived ? 'text-teal-400 bg-teal-500/5 border border-teal-500/10' : 'text-[#9AA4AB] hover:text-slate-300'
                               }`}
                               title={b.is_archived ? 'Unarchive Board' : 'Archive Board'}
                             >
@@ -1136,13 +1136,13 @@ export const Dashboard: React.FC = () => {
                             </button>
                           </div>
                         </div>
-                        <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed font-normal">
+                        <p className="text-xs text-[#5F6B7A] mt-2 line-clamp-2 leading-relaxed font-normal">
                           {b.description || 'No description provided.'}
                         </p>
                       </div>
 
-                      <div className="flex items-center justify-between mt-4 pt-3.5 border-t border-slate-850" onClick={(e) => e.stopPropagation()}>
-                        <span className="text-[9px] uppercase font-extrabold tracking-widest text-slate-500 bg-slate-955 px-2.5 py-0.5 rounded-full border border-[#2A2F35]">
+                      <div className="flex items-center justify-between mt-4 pt-3.5 border-t border-[#E2E5E9]" onClick={(e) => e.stopPropagation()}>
+                        <span className="text-[9px] uppercase font-extrabold tracking-widest text-[#9AA4AB] bg-white px-2.5 py-0.5 rounded-full border border-[#E2E5E9]">
                           {b.visibility}
                         </span>
                         
@@ -1156,7 +1156,7 @@ export const Dashboard: React.FC = () => {
                         ) : (
                           <button 
                             onClick={() => moveBoardToTrash(b, true)}
-                            className="p-1.5 hover:bg-red-500/5 rounded-lg text-slate-500 hover:text-red-400 transition-colors"
+                            className="p-1.5 hover:bg-red-500/5 rounded-lg text-[#9AA4AB] hover:text-red-400 transition-colors"
                             title="Move to Trash"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -1173,25 +1173,25 @@ export const Dashboard: React.FC = () => {
           {currentTab === 'members' && (
             <div className="space-y-6 animate-in fade-in duration-300">
               {/* Member Invite Header Form */}
-              <div className="flex flex-col md:flex-row gap-4 items-end justify-between p-6 bg-slate-900 border border-slate-800 rounded-3xl">
+              <div className="flex flex-col md:flex-row gap-4 items-end justify-between p-6 bg-[#F8FAFB] border border-[#E2E5E9] rounded-3xl">
                 <form onSubmit={handleSendInvite} className="w-full flex flex-col sm:flex-row gap-4 items-end">
                   <div className="flex-1 w-full space-y-1 text-left">
-                    <label className="text-[10px] uppercase font-bold text-slate-500 block">Email Address</label>
+                    <label className="text-[10px] uppercase font-bold text-[#9AA4AB] block">Email Address</label>
                     <input
                       type="email"
                       required
                       placeholder="collaborator@example.com"
                       value={inviteEmail}
                       onChange={(e) => setInviteEmail(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
+                      className="w-full px-4 py-2.5 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                     />
                   </div>
                   <div className="w-full sm:w-48 space-y-1 text-left">
-                    <label className="text-[10px] uppercase font-bold text-slate-500 block">Role</label>
+                    <label className="text-[10px] uppercase font-bold text-[#9AA4AB] block">Role</label>
                     <select
                       value={inviteRole}
                       onChange={(e) => setInviteRole(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
+                      className="w-full px-4 py-2.5 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                     >
                       <option value="admin">Admin</option>
                       <option value="editor">Editor</option>
@@ -1201,7 +1201,7 @@ export const Dashboard: React.FC = () => {
                   <button
                     type="submit"
                     disabled={isInviting}
-                    className="w-full sm:w-auto px-5 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-teal-600/10 flex items-center justify-center gap-2"
+                    className="w-full sm:w-auto px-5 py-2.5 bg-teal-600 hover:bg-teal-500 text-[#1A1D21] rounded-xl text-xs font-bold transition-all shadow-lg shadow-teal-600/10 flex items-center justify-center gap-2"
                   >
                     <UserPlus className="w-3.5 h-3.5" />
                     <span>{isInviting ? 'Inviting...' : 'Invite'}</span>
@@ -1210,21 +1210,21 @@ export const Dashboard: React.FC = () => {
               </div>
 
               {/* Members Table Filter controls */}
-              <div className="flex flex-col sm:flex-row gap-3 justify-between items-center bg-[#171B1F] p-4 border border-slate-800 rounded-2xl">
+              <div className="flex flex-col sm:flex-row gap-3 justify-between items-center bg-[#F8FAFB] p-4 border border-[#E2E5E9] rounded-2xl">
                 <div className="relative w-full sm:w-72">
-                  <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                  <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#9AA4AB]" />
                   <input
                     type="text"
                     placeholder="Search by name or email..."
                     value={memberFilter}
                     onChange={(e) => setMemberFilter(e.target.value)}
-                    className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-955 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                    className="w-full pl-9 pr-4 py-2 rounded-xl bg-white border border-[#E2E5E9] text-xs text-[#1A1D21] focus:outline-none focus:ring-1 focus:ring-teal-500"
                   />
                 </div>
                 <select
                   value={roleFilter}
                   onChange={(e) => setRoleFilter(e.target.value)}
-                  className="px-3 py-2 rounded-xl bg-slate-955 border border-slate-800 text-xs text-slate-300 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                  className="px-3 py-2 rounded-xl bg-white border border-[#E2E5E9] text-xs text-[#5F6B7A] focus:outline-none focus:ring-1 focus:ring-teal-500"
                 >
                   <option value="all">All Roles</option>
                   <option value="owner">Owner</option>
@@ -1235,11 +1235,11 @@ export const Dashboard: React.FC = () => {
               </div>
 
               {/* Responsive Members List */}
-              <div className="border border-slate-800 rounded-3xl bg-slate-900 overflow-hidden shadow-xl">
+              <div className="border border-[#E2E5E9] rounded-3xl bg-[#F8FAFB] overflow-hidden shadow-xl">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse text-xs">
                     <thead>
-                      <tr className="bg-[#0D0F12]/95 border-b border-slate-800 text-slate-400 font-bold">
+                      <tr className="bg-white/95 border-b border-[#E2E5E9] text-[#5F6B7A] font-bold">
                         <th className="p-4">Name / Username</th>
                         <th className="p-4">Email</th>
                         <th className="p-4">Role</th>
@@ -1248,23 +1248,23 @@ export const Dashboard: React.FC = () => {
                     </thead>
                     <tbody className="divide-y divide-slate-800/60">
                       {getFilteredMembers().map((m) => (
-                        <tr key={m.user_id} className="hover:bg-slate-850/40 transition-colors">
+                        <tr key={m.user_id} className="hover:bg-[#F0F2F4]/40 transition-colors">
                           <td className="p-4 flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-white">
+                            <div className="w-8 h-8 rounded-full bg-[#E2E5E9] flex items-center justify-center font-bold text-[#1A1D21]">
                               {m.name?.charAt(0) || 'U'}
                             </div>
                             <div>
-                              <div className="font-bold text-slate-200">{m.name}</div>
-                              <div className="text-[10px] text-slate-500">@{m.username}</div>
+                              <div className="font-bold text-[#1A1D21]">{m.name}</div>
+                              <div className="text-[10px] text-[#9AA4AB]">@{m.username}</div>
                             </div>
                           </td>
-                          <td className="p-4 text-slate-300">{m.email}</td>
+                          <td className="p-4 text-[#5F6B7A]">{m.email}</td>
                           <td className="p-4">
                             <select
                               value={m.role}
                               disabled={m.role === 'owner' || userOrgRole === 'viewer'}
                               onChange={(e) => handleUpdateMemberRole(m.user_id, e.target.value)}
-                              className="bg-slate-955 border border-slate-800 rounded-lg px-2 py-1 text-xs text-slate-300 focus:outline-none disabled:opacity-50"
+                              className="bg-white border border-[#E2E5E9] rounded-lg px-2 py-1 text-xs text-[#5F6B7A] focus:outline-none disabled:opacity-50"
                             >
                               <option value="owner">Owner</option>
                               <option value="admin">Admin</option>
@@ -1301,26 +1301,26 @@ export const Dashboard: React.FC = () => {
 
           {currentTab === 'activities' && (
             <div className="space-y-6 max-w-2xl mx-auto animate-in fade-in duration-300">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h2 className="text-base font-bold text-white">Activity Trail Log</h2>
-                <button onClick={() => activeOrg && loadActivityLogs(activeOrg.id)} className="p-2 bg-slate-900 border border-slate-800 rounded-lg hover:bg-slate-800 transition-colors">
-                  <RefreshCw className="w-3.5 h-3.5 text-slate-400" />
+              <div className="flex items-center justify-between border-b border-[#E2E5E9] pb-3">
+                <h2 className="text-base font-bold text-[#1A1D21]">Activity Trail Log</h2>
+                <button onClick={() => activeOrg && loadActivityLogs(activeOrg.id)} className="p-2 bg-[#F8FAFB] border border-[#E2E5E9] rounded-lg hover:bg-[#E2E5E9] transition-colors">
+                  <RefreshCw className="w-3.5 h-3.5 text-[#5F6B7A]" />
                 </button>
               </div>
 
-              <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-800">
+              <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-[2px] before:bg-[#E2E5E9]">
                 {activityLogs.map((l) => (
                   <div key={l.id} className="relative text-xs text-left leading-relaxed">
                     <div className="absolute -left-[22px] top-1 w-3.5 h-3.5 rounded-full border-2 border-slate-950 bg-teal-500 flex items-center justify-center shrink-0" />
                     <div>
-                      <span className="font-bold text-slate-100">{l.user_name || 'Collaborator'}</span>{' '}
-                      <span className="text-slate-400">{l.details || l.action}</span>
-                      <span className="text-[10px] text-slate-500 block mt-1">{new Date(l.created_at).toLocaleString()}</span>
+                      <span className="font-bold text-[#1A1D21]">{l.user_name || 'Collaborator'}</span>{' '}
+                      <span className="text-[#5F6B7A]">{l.details || l.action}</span>
+                      <span className="text-[10px] text-[#9AA4AB] block mt-1">{new Date(l.created_at).toLocaleString()}</span>
                     </div>
                   </div>
                 ))}
                 {activityLogs.length === 0 && (
-                  <p className="text-slate-500 text-center py-10">No activities log found.</p>
+                  <p className="text-[#9AA4AB] text-center py-10">No activities log found.</p>
                 )}
               </div>
             </div>
@@ -1329,42 +1329,42 @@ export const Dashboard: React.FC = () => {
           {currentTab === 'settings' && (
             <div className="max-w-xl mx-auto space-y-8 animate-in fade-in duration-300">
               {/* Org settings form */}
-              <div className="p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-6">
+              <div className="p-6 bg-[#F8FAFB] border border-[#E2E5E9] rounded-3xl space-y-6">
                 <div>
-                  <h3 className="text-sm font-bold text-white">Organization Settings</h3>
-                  <p className="text-xs text-slate-400 mt-0.5">Customize workspace information.</p>
+                  <h3 className="text-sm font-bold text-[#1A1D21]">Organization Settings</h3>
+                  <p className="text-xs text-[#5F6B7A] mt-0.5">Customize workspace information.</p>
                 </div>
                 <form onSubmit={handleUpdateOrg} className="space-y-4 text-left">
                   <div className="space-y-1">
-                    <label className="text-[10px] uppercase font-bold text-slate-500">Org Name</label>
+                    <label className="text-[10px] uppercase font-bold text-[#9AA4AB]">Org Name</label>
                     <input
                       type="text"
                       required
                       value={editOrgName}
                       onChange={(e) => setEditOrgName(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
+                      className="w-full px-4 py-2.5 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] uppercase font-bold text-slate-500">Domain / URL Prefix</label>
+                    <label className="text-[10px] uppercase font-bold text-[#9AA4AB]">Domain / URL Prefix</label>
                     <input
                       type="text"
                       value={editOrgDomain}
                       onChange={(e) => setEditOrgDomain(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
+                      className="w-full px-4 py-2.5 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] uppercase font-bold text-slate-500">Description</label>
+                    <label className="text-[10px] uppercase font-bold text-[#9AA4AB]">Description</label>
                     <textarea
                       value={editOrgDesc}
                       onChange={(e) => setEditOrgDesc(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500 h-20"
+                      className="w-full px-4 py-2.5 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500 h-20"
                     />
                   </div>
                   <button
                     type="submit"
-                    className="px-5 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-teal-600/10"
+                    className="px-5 py-2.5 bg-teal-600 hover:bg-teal-500 text-[#1A1D21] rounded-xl text-xs font-bold transition-all shadow-lg shadow-teal-600/10"
                   >
                     Save Changes
                   </button>
@@ -1373,35 +1373,35 @@ export const Dashboard: React.FC = () => {
 
               {/* Team Settings Panel */}
               {activeTeam && (
-                <div className="p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-6">
+                <div className="p-6 bg-[#F8FAFB] border border-[#E2E5E9] rounded-3xl space-y-6">
                   <div>
-                    <h3 className="text-sm font-bold text-white">Team Configuration</h3>
-                    <p className="text-xs text-slate-400 mt-0.5">Edit settings for team "{activeTeam.name}".</p>
+                    <h3 className="text-sm font-bold text-[#1A1D21]">Team Configuration</h3>
+                    <p className="text-xs text-[#5F6B7A] mt-0.5">Edit settings for team "{activeTeam.name}".</p>
                   </div>
                   <form onSubmit={handleUpdateTeam} className="space-y-4 text-left">
                     <div className="space-y-1">
-                      <label className="text-[10px] uppercase font-bold text-slate-500">Team Name</label>
+                      <label className="text-[10px] uppercase font-bold text-[#9AA4AB]">Team Name</label>
                       <input
                         type="text"
                         required
                         value={editTeamName}
                         onChange={(e) => setEditTeamName(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
+                        className="w-full px-4 py-2.5 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[10px] uppercase font-bold text-slate-500">Team Description</label>
+                      <label className="text-[10px] uppercase font-bold text-[#9AA4AB]">Team Description</label>
                       <input
                         type="text"
                         value={editTeamDesc}
                         onChange={(e) => setEditTeamDesc(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
+                        className="w-full px-4 py-2.5 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                       />
                     </div>
                     <div className="flex gap-2">
                       <button
                         type="submit"
-                        className="px-5 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-teal-600/10"
+                        className="px-5 py-2.5 bg-teal-600 hover:bg-teal-500 text-[#1A1D21] rounded-xl text-xs font-bold transition-all shadow-lg shadow-teal-600/10"
                       >
                         Update Team
                       </button>
@@ -1421,12 +1421,12 @@ export const Dashboard: React.FC = () => {
               <div className="p-6 bg-red-500/5 border border-red-500/15 rounded-3xl space-y-4 text-left">
                 <div>
                   <h3 className="text-sm font-bold text-red-400">Danger Zone</h3>
-                  <p className="text-xs text-slate-400 mt-0.5">Destructive actions for organization managers.</p>
+                  <p className="text-xs text-[#5F6B7A] mt-0.5">Destructive actions for organization managers.</p>
                 </div>
                 <button
                   onClick={handleDeleteOrg}
                   disabled={userOrgRole !== 'owner'}
-                  className="px-5 py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-bold transition-all disabled:opacity-50"
+                  className="px-5 py-2.5 bg-red-600 hover:bg-red-500 text-[#1A1D21] rounded-xl text-xs font-bold transition-all disabled:opacity-50"
                 >
                   Delete Organization Workspace
                 </button>
@@ -1439,11 +1439,11 @@ export const Dashboard: React.FC = () => {
       {/* Invite Member Modal */}
       {showInviteModal && activeTeam && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-[#0D0F12]/95" onClick={() => setShowInviteModal(false)} />
-          <form onSubmit={handleSendInvite} className="relative bg-slate-900 border border-slate-850 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 text-left text-slate-100">
+          <div className="absolute inset-0 bg-white/95" onClick={() => setShowInviteModal(false)} />
+          <form onSubmit={handleSendInvite} className="relative bg-[#F8FAFB] border border-[#E2E5E9] rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 text-left text-[#1A1D21]">
             <div>
-              <h3 className="text-base font-bold text-white">Invite to Team Workspace</h3>
-              <p className="text-xs text-slate-400 mt-1">Send a direct token link to invite users.</p>
+              <h3 className="text-base font-bold text-[#1A1D21]">Invite to Team Workspace</h3>
+              <p className="text-xs text-[#5F6B7A] mt-1">Send a direct token link to invite users.</p>
             </div>
             
             {inviteSuccess && (
@@ -1454,23 +1454,23 @@ export const Dashboard: React.FC = () => {
 
             <div className="space-y-4">
               <div>
-                <label className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Email Address</label>
+                <label className="text-[10px] uppercase font-bold text-[#9AA4AB] block mb-1">Email Address</label>
                 <input
                   type="email"
                   required
                   placeholder="collaborator@example.com"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                 />
               </div>
 
               <div>
-                <label className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Target Role</label>
+                <label className="text-[10px] uppercase font-bold text-[#9AA4AB] block mb-1">Target Role</label>
                 <select
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                 >
                   <option value="admin">Admin</option>
                   <option value="editor">Editor</option>
@@ -1486,14 +1486,14 @@ export const Dashboard: React.FC = () => {
                   setShowInviteModal(false);
                   setInviteSuccess(false);
                 }}
-                className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-300 rounded-xl font-semibold text-xs transition-all"
+                className="flex-1 py-2.5 bg-[#E2E5E9] hover:bg-slate-750 text-[#5F6B7A] rounded-xl font-semibold text-xs transition-all"
               >
                 Close
               </button>
               <button
                 type="submit"
                 disabled={isInviting}
-                className="flex-1 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl font-semibold text-xs transition-all shadow-lg shadow-teal-600/10"
+                className="flex-1 py-2.5 bg-teal-600 hover:bg-teal-500 text-[#1A1D21] rounded-xl font-semibold text-xs transition-all shadow-lg shadow-teal-600/10"
               >
                 {isInviting ? 'Inviting...' : 'Send'}
               </button>
@@ -1505,40 +1505,40 @@ export const Dashboard: React.FC = () => {
       {/* Create Org Modal */}
       {showOrgModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-[#0D0F12]/95" onClick={() => setShowOrgModal(false)} />
-          <form onSubmit={handleCreateOrg} className="relative bg-slate-900 border border-slate-850 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 text-left text-slate-100">
+          <div className="absolute inset-0 bg-white/95" onClick={() => setShowOrgModal(false)} />
+          <form onSubmit={handleCreateOrg} className="relative bg-[#F8FAFB] border border-[#E2E5E9] rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 text-left text-[#1A1D21]">
             <div>
-              <h3 className="text-base font-bold text-white">New Organization</h3>
-              <p className="text-xs text-slate-400 mt-1">Spin up a new workspace tenant.</p>
+              <h3 className="text-base font-bold text-[#1A1D21]">New Organization</h3>
+              <p className="text-xs text-[#5F6B7A] mt-1">Spin up a new workspace tenant.</p>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Organization Name</label>
+                <label className="text-[10px] uppercase font-bold text-[#9AA4AB] block mb-1">Organization Name</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Acme Corp"
                   value={newOrgName}
                   onChange={(e) => setNewOrgName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                 />
               </div>
               <div>
-                <label className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Domain URL Prefix (Optional)</label>
+                <label className="text-[10px] uppercase font-bold text-[#9AA4AB] block mb-1">Domain URL Prefix (Optional)</label>
                 <input
                   type="text"
                   placeholder="e.g. acme"
                   value={newOrgDomain}
                   onChange={(e) => setNewOrgDomain(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                 />
               </div>
             </div>
 
             <div className="flex gap-3 pt-2">
-              <button type="button" onClick={() => setShowOrgModal(false)} className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-300 rounded-xl font-semibold text-xs transition-all">Cancel</button>
-              <button type="submit" className="flex-1 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl font-semibold text-xs transition-all shadow-lg shadow-teal-600/10">Create</button>
+              <button type="button" onClick={() => setShowOrgModal(false)} className="flex-1 py-2.5 bg-[#E2E5E9] hover:bg-slate-750 text-[#5F6B7A] rounded-xl font-semibold text-xs transition-all">Cancel</button>
+              <button type="submit" className="flex-1 py-2.5 bg-teal-600 hover:bg-teal-500 text-[#1A1D21] rounded-xl font-semibold text-xs transition-all shadow-lg shadow-teal-600/10">Create</button>
             </div>
           </form>
         </div>
@@ -1547,40 +1547,40 @@ export const Dashboard: React.FC = () => {
       {/* Create Team Modal */}
       {showTeamModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-[#0D0F12]/95" onClick={() => setShowTeamModal(false)} />
-          <form onSubmit={handleCreateTeam} className="relative bg-slate-900 border border-slate-855 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 text-left text-slate-100">
+          <div className="absolute inset-0 bg-white/95" onClick={() => setShowTeamModal(false)} />
+          <form onSubmit={handleCreateTeam} className="relative bg-[#F8FAFB] border border-slate-855 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 text-left text-[#1A1D21]">
             <div>
-              <h3 className="text-base font-bold text-white">Create New Team</h3>
-              <p className="text-xs text-slate-400 mt-1">Spin up a team unit within the organization.</p>
+              <h3 className="text-base font-bold text-[#1A1D21]">Create New Team</h3>
+              <p className="text-xs text-[#5F6B7A] mt-1">Spin up a team unit within the organization.</p>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Team Name</label>
+                <label className="text-[10px] uppercase font-bold text-[#9AA4AB] block mb-1">Team Name</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Frontend Engineering"
                   value={newTeamName}
                   onChange={(e) => setNewTeamName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                 />
               </div>
               <div>
-                <label className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Description</label>
+                <label className="text-[10px] uppercase font-bold text-[#9AA4AB] block mb-1">Description</label>
                 <input
                   type="text"
                   placeholder="e.g. Design systems and UI specs"
                   value={newTeamDesc}
                   onChange={(e) => setNewTeamDesc(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] text-xs focus:outline-none focus:ring-1 focus:ring-teal-500"
                 />
               </div>
             </div>
 
             <div className="flex gap-3 pt-2">
-              <button type="button" onClick={() => setShowTeamModal(false)} className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-300 rounded-xl font-semibold text-xs transition-all">Cancel</button>
-              <button type="submit" className="flex-1 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl font-semibold text-xs transition-all shadow-lg shadow-teal-600/10">Create</button>
+              <button type="button" onClick={() => setShowTeamModal(false)} className="flex-1 py-2.5 bg-[#E2E5E9] hover:bg-slate-750 text-[#5F6B7A] rounded-xl font-semibold text-xs transition-all">Cancel</button>
+              <button type="submit" className="flex-1 py-2.5 bg-teal-600 hover:bg-teal-500 text-[#1A1D21] rounded-xl font-semibold text-xs transition-all shadow-lg shadow-teal-600/10">Create</button>
             </div>
           </form>
         </div>

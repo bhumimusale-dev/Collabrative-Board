@@ -12,7 +12,7 @@ import {
 
 export const LandingPage: React.FC = () => {
   return (
-    <div className="w-full min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between overflow-x-hidden font-sans relative">
+    <div className="w-full min-h-screen bg-white text-[#1A1D21] flex flex-col justify-between overflow-x-hidden font-sans relative">
       
       {/* Ambient Radial & Linear Lights */}
       <div className="absolute top-0 left-1/4 w-[35rem] h-[35rem] bg-teal-600/10 rounded-full blur-[10rem] pointer-events-none" />
@@ -23,19 +23,19 @@ export const LandingPage: React.FC = () => {
       <header className="w-full max-w-7xl mx-auto px-6 py-8 flex items-center justify-between relative z-10">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-500 to-purple-600 flex items-center justify-center shadow-lg shadow-teal-500/10">
-            <span className="text-xl font-bold text-white">CX</span>
+            <span className="text-xl font-bold text-[#1A1D21]">CX</span>
           </div>
           <span className="text-lg font-bold tracking-tight bg-gradient-to-r from-slate-100 to-teal-200 bg-clip-text text-transparent">
             CollabBoard X
           </span>
         </div>
         <div className="flex items-center gap-6">
-          <Link to="/login" className="text-sm font-semibold text-slate-400 hover:text-white transition-colors">
+          <Link to="/login" className="text-sm font-semibold text-[#5F6B7A] hover:text-white transition-colors">
             Sign In
           </Link>
           <Link 
             to="/register" 
-            className="px-5 py-2.5 rounded-2xl bg-teal-600 hover:bg-teal-500 text-sm font-semibold text-white shadow-lg shadow-teal-600/10 hover:shadow-teal-600/10 hover:-translate-y-0.5 transition-all"
+            className="px-5 py-2.5 rounded-2xl bg-teal-600 hover:bg-teal-500 text-sm font-semibold text-[#1A1D21] shadow-lg shadow-teal-600/10 hover:shadow-teal-600/10 hover:-translate-y-0.5 transition-all"
           >
             Get Started
           </Link>
@@ -44,7 +44,7 @@ export const LandingPage: React.FC = () => {
 
       {/* Hero Section */}
       <main className="w-full max-w-7xl mx-auto px-6 pt-20 pb-28 flex flex-col items-center gap-8 relative z-10">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#171B1F] border border-slate-800 text-xs font-semibold text-teal-400">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F8FAFB] border border-[#E2E5E9] text-xs font-semibold text-teal-400">
           <Sparkles className="w-3.5 h-3.5 animate-pulse" />
           <span>Next-Generation Infinite Spatial Canvas</span>
         </div>
@@ -56,42 +56,42 @@ export const LandingPage: React.FC = () => {
           </span>
         </h1>
         
-        <p className="text-base md:text-lg text-slate-400 text-center max-w-2xl leading-relaxed">
+        <p className="text-base md:text-lg text-[#5F6B7A] text-center max-w-2xl leading-relaxed">
           An offline-first, real-time spatial canvas utilizing state-of-the-art Conflict-free Replicated Data Types (CRDTs). Brainstorm, design systems, and manage workflows with millisecond latency.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 mt-4">
           <Link 
             to="/register" 
-            className="px-8 py-4 rounded-2xl bg-gradient-to-r from-teal-500 via-purple-600 to-pink-500 hover:from-teal-600 hover:to-pink-600 text-white font-bold text-sm shadow-xl shadow-teal-500/10 hover:shadow-teal-500/10 hover:-translate-y-0.5 transition-all flex items-center gap-2"
+            className="px-8 py-4 rounded-2xl bg-gradient-to-r from-teal-500 via-purple-600 to-pink-500 hover:from-teal-600 hover:to-pink-600 text-[#1A1D21] font-bold text-sm shadow-xl shadow-teal-500/10 hover:shadow-teal-500/10 hover:-translate-y-0.5 transition-all flex items-center gap-2"
           >
             Create Free Account <ArrowRight className="w-4 h-4" />
           </Link>
           <Link 
             to="/login" 
-            className="px-8 py-4 rounded-2xl bg-[#171B1F] hover:bg-slate-850 text-slate-200 font-bold text-sm border border-slate-800 hover:border-slate-700 hover:-translate-y-0.5 transition-all"
+            className="px-8 py-4 rounded-2xl bg-[#F8FAFB] hover:bg-[#F0F2F4] text-[#1A1D21] font-bold text-sm border border-[#E2E5E9] hover:border-[#CDD2D8] hover:-translate-y-0.5 transition-all"
           >
             Log In to Workspace
           </Link>
         </div>
 
         {/* Spatial Preview Canvas mockup */}
-        <div className="w-full max-w-5xl mt-16 p-4 rounded-3xl bg-[#171B1F] border border-[#2A2F35] shadow-2xl relative overflow-hidden group">
+        <div className="w-full max-w-5xl mt-16 p-4 rounded-3xl bg-[#F8FAFB] border border-[#E2E5E9] shadow-2xl relative overflow-hidden group">
           <div className="absolute inset-0 bg-grid-slate-800/[0.05] bg-[size:3rem_3rem] pointer-events-none" />
           
-          <div className="w-full h-80 rounded-2xl bg-[#0D0F12]/95 border border-slate-900 overflow-hidden relative flex items-center justify-center">
+          <div className="w-full h-80 rounded-2xl bg-white/95 border border-[#E2E5E9] overflow-hidden relative flex items-center justify-center">
             {/* Dots Grid Pattern */}
             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]" />
             
             {/* Visual Board Mockup Elements */}
             <div className="absolute top-12 left-16 p-4 rounded-2xl bg-teal-500/10 border border-teal-500/30 shadow-lg flex flex-col gap-2">
               <div className="text-xs font-bold text-teal-300">CRDT Sync State</div>
-              <div className="text-[10px] text-slate-400 font-mono">vector_clock: [192, 45, 87]</div>
+              <div className="text-[10px] text-[#5F6B7A] font-mono">vector_clock: [192, 45, 87]</div>
             </div>
 
             <div className="absolute top-28 right-24 p-5 rounded-2xl bg-teal-500/10 border border-teal-500/30 shadow-lg max-w-xs">
               <div className="text-xs font-bold text-teal-300 mb-1">Architecture Mindmap</div>
-              <div className="text-[10px] text-slate-400">Offline changes broadcast automatically via binary sync streams.</div>
+              <div className="text-[10px] text-[#5F6B7A]">Offline changes broadcast automatically via binary sync streams.</div>
             </div>
 
             <div className="absolute bottom-16 left-1/3 p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/30 shadow-lg flex items-center gap-3">
@@ -104,7 +104,7 @@ export const LandingPage: React.FC = () => {
               <svg className="w-4 h-4 text-emerald-400 fill-emerald-400 filter drop-shadow" viewBox="0 0 24 24">
                 <path d="M4.5 2v20l5.8-5.8 5.7 5.8 3-3-5.8-5.7L19 12.8z" />
               </svg>
-              <div className="bg-emerald-500 text-white text-[9px] px-1.5 py-0.5 rounded-md font-semibold shadow">
+              <div className="bg-emerald-500 text-[#1A1D21] text-[9px] px-1.5 py-0.5 rounded-md font-semibold shadow">
                 Emily
               </div>
             </div>
@@ -113,46 +113,46 @@ export const LandingPage: React.FC = () => {
               <svg className="w-4 h-4 text-amber-400 fill-amber-400 filter drop-shadow" viewBox="0 0 24 24">
                 <path d="M4.5 2v20l5.8-5.8 5.7 5.8 3-3-5.8-5.7L19 12.8z" />
               </svg>
-              <div className="bg-amber-500 text-white text-[9px] px-1.5 py-0.5 rounded-md font-semibold shadow">
+              <div className="bg-amber-500 text-[#1A1D21] text-[9px] px-1.5 py-0.5 rounded-md font-semibold shadow">
                 Marcus (Offline)
               </div>
             </div>
 
             <div className="text-center z-10 flex flex-col items-center gap-2">
-              <Layers className="w-12 h-12 text-slate-600 animate-bounce" />
-              <span className="text-xs text-slate-500 font-medium">Infinite Canvas Workspace</span>
+              <Layers className="w-12 h-12 text-[#5F6B7A] animate-bounce" />
+              <span className="text-xs text-[#9AA4AB] font-medium">Infinite Canvas Workspace</span>
             </div>
           </div>
         </div>
 
         {/* Feature Highlights Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24 w-full">
-          <div className="p-8 rounded-3xl bg-[#0D0F12]/95 border border-slate-900 text-left flex flex-col gap-4 hover:border-teal-500/20 hover:shadow-2xl hover:shadow-teal-500/10 hover:-translate-y-1 transition-all duration-300">
+          <div className="p-8 rounded-3xl bg-white/95 border border-[#E2E5E9] text-left flex flex-col gap-4 hover:border-teal-500/20 hover:shadow-2xl hover:shadow-teal-500/10 hover:-translate-y-1 transition-all duration-300">
             <div className="w-12 h-12 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/10 shadow-inner">
               <Zap className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-slate-200">Offline-First Engine</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">
+            <h3 className="text-lg font-bold text-[#1A1D21]">Offline-First Engine</h3>
+            <p className="text-sm text-[#5F6B7A] leading-relaxed">
               Never lose your progress. Edits are instantly stored locally using IndexedDB and seamlessly synchronized the moment connection is restored.
             </p>
           </div>
 
-          <div className="p-8 rounded-3xl bg-[#0D0F12]/95 border border-slate-900 text-left flex flex-col gap-4 hover:border-teal-500/30 hover:shadow-2xl hover:shadow-teal-500/10 hover:-translate-y-1 transition-all duration-300">
+          <div className="p-8 rounded-3xl bg-white/95 border border-[#E2E5E9] text-left flex flex-col gap-4 hover:border-teal-500/30 hover:shadow-2xl hover:shadow-teal-500/10 hover:-translate-y-1 transition-all duration-300">
             <div className="w-12 h-12 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/30 shadow-inner">
               <Users className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-slate-200">Real-Time Collaboration</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">
+            <h3 className="text-lg font-bold text-[#1A1D21]">Real-Time Collaboration</h3>
+            <p className="text-sm text-[#5F6B7A] leading-relaxed">
               Work together simultaneously with presence indication, live cursor tracking, organization workspace structure, and team invite sharing.
             </p>
           </div>
 
-          <div className="p-8 rounded-3xl bg-[#0D0F12]/95 border border-slate-900 text-left flex flex-col gap-4 hover:border-cyan-500/30 hover:shadow-2xl hover:shadow-cyan-500/10 hover:-translate-y-1 transition-all duration-300">
+          <div className="p-8 rounded-3xl bg-white/95 border border-[#E2E5E9] text-left flex flex-col gap-4 hover:border-cyan-500/30 hover:shadow-2xl hover:shadow-cyan-500/10 hover:-translate-y-1 transition-all duration-300">
             <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 border border-cyan-500/30 shadow-inner">
               <LayoutTemplate className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-slate-200">Templates Marketplace</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">
+            <h3 className="text-lg font-bold text-[#1A1D21]">Templates Marketplace</h3>
+            <p className="text-sm text-[#5F6B7A] leading-relaxed">
               Install pre-built structures like Mind Maps, Kanban Boards, and SWOT analysis. Rate and review templates dynamically with the community.
             </p>
           </div>
@@ -168,15 +168,15 @@ export const LandingPage: React.FC = () => {
               Unlike traditional collaboration boards that overwrite whole canvas elements via websocket broadcasts, CollabBoard X synchronizes using a Yjs CRDT model. This guarantees that concurrent edits automatically merge correctly without data loss or conflicts.
             </p>
             <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-3 text-sm text-slate-300">
+              <div className="flex items-center gap-3 text-sm text-[#5F6B7A]">
                 <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0" />
                 <span>Zero server state replacement issues</span>
               </div>
-              <div className="flex items-center gap-3 text-sm text-slate-300">
+              <div className="flex items-center gap-3 text-sm text-[#5F6B7A]">
                 <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0" />
                 <span>Secure WebSocket (WSS) streaming in production</span>
               </div>
-              <div className="flex items-center gap-3 text-sm text-slate-300">
+              <div className="flex items-center gap-3 text-sm text-[#5F6B7A]">
                 <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0" />
                 <span>Automatic local caching using IndexedDB</span>
               </div>
@@ -186,19 +186,19 @@ export const LandingPage: React.FC = () => {
           <div className="grid grid-cols-2 gap-6">
             <div className="p-6 rounded-2xl bg-slate-900/30 border border-slate-900/80 flex flex-col gap-2">
               <span className="text-3xl font-extrabold text-teal-400">99.9%</span>
-              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Sync Reliability</span>
+              <span className="text-xs font-semibold text-[#5F6B7A] uppercase tracking-wider">Sync Reliability</span>
             </div>
             <div className="p-6 rounded-2xl bg-slate-900/30 border border-slate-900/80 flex flex-col gap-2">
               <span className="text-3xl font-extrabold text-teal-400">&lt; 50ms</span>
-              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">WebSocket Latency</span>
+              <span className="text-xs font-semibold text-[#5F6B7A] uppercase tracking-wider">WebSocket Latency</span>
             </div>
             <div className="p-6 rounded-2xl bg-slate-900/30 border border-slate-900/80 flex flex-col gap-2">
               <span className="text-3xl font-extrabold text-cyan-400">Unlimited</span>
-              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Workspace Scale</span>
+              <span className="text-xs font-semibold text-[#5F6B7A] uppercase tracking-wider">Workspace Scale</span>
             </div>
             <div className="p-6 rounded-2xl bg-slate-900/30 border border-slate-900/80 flex flex-col gap-2">
               <span className="text-3xl font-extrabold text-emerald-400">100%</span>
-              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Offline Functional</span>
+              <span className="text-xs font-semibold text-[#5F6B7A] uppercase tracking-wider">Offline Functional</span>
             </div>
           </div>
         </div>
@@ -209,20 +209,20 @@ export const LandingPage: React.FC = () => {
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight bg-gradient-to-r from-slate-100 to-teal-200 bg-clip-text text-transparent">
               Flexible Plans for Every Workspace
             </h2>
-            <p className="text-slate-400 max-w-xl text-sm">
+            <p className="text-[#5F6B7A] max-w-xl text-sm">
               Scale from personal projects to enterprise-wide coordination seamlessly.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
             {/* Free Plan */}
-            <div className="p-8 rounded-3xl bg-[#0D0F12]/95 border border-slate-900/80 flex flex-col justify-between text-left group hover:border-slate-800 transition-all duration-300">
+            <div className="p-8 rounded-3xl bg-white/95 border border-slate-900/80 flex flex-col justify-between text-left group hover:border-slate-800 transition-all duration-300">
               <div className="flex flex-col gap-4">
-                <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">Free Starter</span>
-                <span className="text-3xl font-bold text-white">$0 <span className="text-sm font-normal text-slate-500">/ forever</span></span>
-                <p className="text-xs text-slate-400 leading-relaxed mt-2">Perfect for individuals organizing thoughts and drawing mind maps.</p>
-                <div className="w-full h-[1px] bg-slate-900 my-4" />
-                <ul className="flex flex-col gap-2.5 text-xs text-slate-400">
+                <span className="text-sm font-bold text-[#5F6B7A] uppercase tracking-wider">Free Starter</span>
+                <span className="text-3xl font-bold text-[#1A1D21]">$0 <span className="text-sm font-normal text-[#9AA4AB]">/ forever</span></span>
+                <p className="text-xs text-[#5F6B7A] leading-relaxed mt-2">Perfect for individuals organizing thoughts and drawing mind maps.</p>
+                <div className="w-full h-[1px] bg-[#F8FAFB] my-4" />
+                <ul className="flex flex-col gap-2.5 text-xs text-[#5F6B7A]">
                   <li className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-teal-400" />
                     <span>Up to 3 boards</span>
@@ -241,15 +241,15 @@ export const LandingPage: React.FC = () => {
 
             {/* Pro Plan */}
             <div className="p-8 rounded-3xl bg-teal-950/10 border border-teal-500/20 flex flex-col justify-between text-left relative group hover:border-teal-500/40 transition-all duration-300 shadow-xl shadow-teal-500/[0.02]">
-              <div className="absolute top-0 right-8 -translate-y-1/2 px-3 py-1 bg-gradient-to-r from-teal-500 to-purple-600 text-[10px] font-extrabold text-white rounded-full uppercase tracking-wider">
+              <div className="absolute top-0 right-8 -translate-y-1/2 px-3 py-1 bg-gradient-to-r from-teal-500 to-purple-600 text-[10px] font-extrabold text-[#1A1D21] rounded-full uppercase tracking-wider">
                 Popular
               </div>
               <div className="flex flex-col gap-4">
                 <span className="text-sm font-bold text-teal-400 uppercase tracking-wider">Professional</span>
-                <span className="text-3xl font-bold text-white">$9 <span className="text-sm font-normal text-slate-500">/ month</span></span>
-                <p className="text-xs text-slate-400 leading-relaxed mt-2">Enhanced limits and collaboration access for startup builders.</p>
-                <div className="w-full h-[1px] bg-slate-900 my-4" />
-                <ul className="flex flex-col gap-2.5 text-xs text-slate-400">
+                <span className="text-3xl font-bold text-[#1A1D21]">$9 <span className="text-sm font-normal text-[#9AA4AB]">/ month</span></span>
+                <p className="text-xs text-[#5F6B7A] leading-relaxed mt-2">Enhanced limits and collaboration access for startup builders.</p>
+                <div className="w-full h-[1px] bg-[#F8FAFB] my-4" />
+                <ul className="flex flex-col gap-2.5 text-xs text-[#5F6B7A]">
                   <li className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-teal-400" />
                     <span>Unlimited boards</span>
@@ -267,13 +267,13 @@ export const LandingPage: React.FC = () => {
             </div>
 
             {/* Business Plan */}
-            <div className="p-8 rounded-3xl bg-[#0D0F12]/95 border border-slate-900/80 flex flex-col justify-between text-left group hover:border-slate-800 transition-all duration-300">
+            <div className="p-8 rounded-3xl bg-white/95 border border-slate-900/80 flex flex-col justify-between text-left group hover:border-slate-800 transition-all duration-300">
               <div className="flex flex-col gap-4">
                 <span className="text-sm font-bold text-teal-400 uppercase tracking-wider">Enterprise</span>
-                <span className="text-3xl font-bold text-white">$49 <span className="text-sm font-normal text-slate-500">/ month</span></span>
-                <p className="text-xs text-slate-400 leading-relaxed mt-2">Complete audit logs, role settings, and custom version controls.</p>
-                <div className="w-full h-[1px] bg-slate-900 my-4" />
-                <ul className="flex flex-col gap-2.5 text-xs text-slate-400">
+                <span className="text-3xl font-bold text-[#1A1D21]">$49 <span className="text-sm font-normal text-[#9AA4AB]">/ month</span></span>
+                <p className="text-xs text-[#5F6B7A] leading-relaxed mt-2">Complete audit logs, role settings, and custom version controls.</p>
+                <div className="w-full h-[1px] bg-[#F8FAFB] my-4" />
+                <ul className="flex flex-col gap-2.5 text-xs text-[#5F6B7A]">
                   <li className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-teal-400" />
                     <span>Priority secure endpoints</span>
@@ -294,7 +294,7 @@ export const LandingPage: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-12 text-center text-xs text-slate-500 border-t border-slate-900/60 max-w-7xl mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
+      <footer className="w-full py-12 text-center text-xs text-[#9AA4AB] border-t border-slate-900/60 max-w-7xl mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
         <span>&copy; {new Date().getFullYear()} CollabBoard X. Designed for high performance engineering teams.</span>
         <div className="flex items-center gap-6">
           <a href="#" className="hover:text-slate-300 transition-colors">Privacy Policy</a>

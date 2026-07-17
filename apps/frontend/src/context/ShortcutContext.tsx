@@ -225,53 +225,53 @@ export const ShortcutProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 const ShortcutDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-[#0D0F12]/95" onClick={onClose} />
-      <div className="relative bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-xl w-full shadow-2xl space-y-6 text-left text-slate-100 max-h-[80vh] overflow-y-auto">
-        <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+      <div className="absolute inset-0 bg-white/95" onClick={onClose} />
+      <div className="relative bg-[#F8FAFB] border border-[#E2E5E9] rounded-3xl p-6 max-w-xl w-full shadow-2xl space-y-6 text-left text-[#1A1D21] max-h-[80vh] overflow-y-auto">
+        <div className="flex justify-between items-center border-b border-[#E2E5E9] pb-3">
           <div>
-            <h3 className="text-base font-bold text-white">Keyboard Shortcuts Reference</h3>
-            <p className="text-xs text-slate-400">Boost your productivity with quick board controls</p>
+            <h3 className="text-base font-bold text-[#1A1D21]">Keyboard Shortcuts Reference</h3>
+            <p className="text-xs text-[#5F6B7A]">Boost your productivity with quick board controls</p>
           </div>
-          <button onClick={onClose} className="p-1 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg">✕</button>
+          <button onClick={onClose} className="p-1 text-[#5F6B7A] hover:text-white hover:bg-[#E2E5E9] rounded-lg">✕</button>
         </div>
 
         <div className="grid grid-cols-2 gap-6 text-xs leading-relaxed">
           {/* Editing Column */}
           <div className="space-y-4">
-            <span className="text-[10px] uppercase font-bold text-slate-500 block border-b border-slate-850 pb-1">Editing</span>
+            <span className="text-[10px] uppercase font-bold text-[#9AA4AB] block border-b border-[#E2E5E9] pb-1">Editing</span>
             <div className="space-y-2">
-              <div className="flex justify-between"><span className="text-slate-400">Undo</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">Ctrl + Z</kbd></div>
-              <div className="flex justify-between"><span className="text-slate-400">Redo</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">Ctrl + Y</kbd></div>
-              <div className="flex justify-between"><span className="text-slate-400">Delete</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">Del / Backspace</kbd></div>
-              <div className="flex justify-between"><span className="text-slate-400">Select All</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">Ctrl + A</kbd></div>
-              <div className="flex justify-between"><span className="text-slate-400">Copy</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">Ctrl + C</kbd></div>
-              <div className="flex justify-between"><span className="text-slate-400">Paste</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">Ctrl + V</kbd></div>
-              <div className="flex justify-between"><span className="text-slate-400">Duplicate</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">Ctrl + D</kbd></div>
-              <div className="flex justify-between"><span className="text-slate-400">Lock Shape</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">Ctrl + L</kbd></div>
-              <div className="flex justify-between"><span className="text-slate-400">Unlock Shape</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">Ctrl+Shift+L</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Undo</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">Ctrl + Z</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Redo</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">Ctrl + Y</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Delete</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">Del / Backspace</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Select All</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">Ctrl + A</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Copy</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">Ctrl + C</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Paste</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">Ctrl + V</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Duplicate</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">Ctrl + D</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Lock Shape</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">Ctrl + L</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Unlock Shape</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">Ctrl+Shift+L</kbd></div>
             </div>
           </div>
 
           {/* Tools & Navigation */}
           <div className="space-y-4">
-            <span className="text-[10px] uppercase font-bold text-slate-500 block border-b border-slate-850 pb-1">Tools & Navigation</span>
+            <span className="text-[10px] uppercase font-bold text-[#9AA4AB] block border-b border-[#E2E5E9] pb-1">Tools & Navigation</span>
             <div className="space-y-2">
-              <div className="flex justify-between"><span className="text-slate-400">Selection Tool</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">V</kbd></div>
-              <div className="flex justify-between"><span className="text-slate-400">Rectangle</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">R</kbd></div>
-              <div className="flex justify-between"><span className="text-slate-400">Circle</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">O</kbd></div>
-              <div className="flex justify-between"><span className="text-slate-400">Text Tool</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">T</kbd></div>
-              <div className="flex justify-between"><span className="text-slate-400">Sticky Note</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">S</kbd></div>
-              <div className="flex justify-between"><span className="text-slate-400">Pencil / Brush</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">P / B</kbd></div>
-              <div className="flex justify-between"><span className="text-slate-400">Eraser</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">E</kbd></div>
-              <div className="flex justify-between"><span className="text-slate-400">Move Shapes</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">Arrow Keys</kbd></div>
-              <div className="flex justify-between"><span className="text-slate-400">Zoom In / Out</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">Ctrl + (+ / -)</kbd></div>
-              <div className="flex justify-between"><span className="text-slate-400">Reset Zoom</span><kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-mono">Ctrl + 0</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Selection Tool</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">V</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Rectangle</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">R</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Circle</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">O</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Text Tool</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">T</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Sticky Note</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">S</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Pencil / Brush</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">P / B</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Eraser</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">E</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Move Shapes</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">Arrow Keys</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Zoom In / Out</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">Ctrl + (+ / -)</kbd></div>
+              <div className="flex justify-between"><span className="text-[#5F6B7A]">Reset Zoom</span><kbd className="px-1.5 py-0.5 bg-[#E2E5E9] rounded text-[10px] font-mono">Ctrl + 0</kbd></div>
             </div>
           </div>
         </div>
 
-        <div className="pt-2 border-t border-slate-800 text-[10px] text-center text-slate-500">
-          Tip: Press <kbd className="px-1 py-0.5 bg-slate-800 rounded font-mono">Ctrl + /</kbd> anywhere on the board to toggle this dialog.
+        <div className="pt-2 border-t border-[#E2E5E9] text-[10px] text-center text-[#9AA4AB]">
+          Tip: Press <kbd className="px-1 py-0.5 bg-[#E2E5E9] rounded font-mono">Ctrl + /</kbd> anywhere on the board to toggle this dialog.
         </div>
       </div>
     </div>

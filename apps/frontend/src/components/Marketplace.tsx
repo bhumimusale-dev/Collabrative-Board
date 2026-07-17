@@ -119,18 +119,18 @@ export const Marketplace: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-slate-900 text-slate-100 p-8 font-sans">
+    <div className="w-full min-h-screen bg-[#F8FAFB] text-[#1A1D21] p-8 font-sans">
       {/* Detail overlay view */}
       {selectedTemplate ? (
         <div className="max-w-4xl mx-auto space-y-8">
           <header className="flex items-center gap-4">
             <button 
               onClick={() => setSearchParams({})}
-              className="p-2 hover:bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-colors"
+              className="p-2 hover:bg-[#E2E5E9] rounded-xl text-[#5F6B7A] hover:text-white transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <span className="text-sm font-semibold text-slate-400">Back to Community</span>
+            <span className="text-sm font-semibold text-[#5F6B7A]">Back to Community</span>
           </header>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -153,25 +153,25 @@ export const Marketplace: React.FC = () => {
               </p>
 
               {/* Simulated Preview Box */}
-              <div className="h-64 rounded-2xl bg-slate-950 border border-slate-850 flex items-center justify-center relative overflow-hidden">
+              <div className="h-64 rounded-2xl bg-white border border-[#E2E5E9] flex items-center justify-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-tr from-teal-500/5 to-purple-600/5" />
-                <span className="text-slate-600 font-semibold text-sm">Spatial Canvas Preview Frame</span>
+                <span className="text-[#5F6B7A] font-semibold text-sm">Spatial Canvas Preview Frame</span>
               </div>
 
               {/* Review submit form */}
-              <form onSubmit={handleReviewSubmit} className="p-6 rounded-2xl bg-slate-850 border border-slate-800 space-y-4">
+              <form onSubmit={handleReviewSubmit} className="p-6 rounded-2xl bg-[#F0F2F4] border border-[#E2E5E9] space-y-4">
                 <h3 className="font-bold text-lg flex items-center gap-2">
                   <MessageSquare className="w-5 h-5 text-teal-400" />
                   Leave a Review
                 </h3>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-slate-400">Rating:</span>
+                  <span className="text-sm font-semibold text-[#5F6B7A]">Rating:</span>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={star}
                       type="button"
                       onClick={() => setReviewRating(star)}
-                      className={`text-lg p-0.5 ${reviewRating >= star ? 'text-amber-400' : 'text-slate-600'}`}
+                      className={`text-lg p-0.5 ${reviewRating >= star ? 'text-amber-400' : 'text-[#5F6B7A]'}`}
                     >
                       ★
                     </button>
@@ -182,11 +182,11 @@ export const Marketplace: React.FC = () => {
                   placeholder="Share your thoughts on this diagram template..."
                   value={reviewText}
                   onChange={(e) => setReviewText(e.target.value)}
-                  className="w-full p-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 placeholder-slate-500 text-sm focus:outline-none focus:ring-1 focus:ring-teal-500 h-24"
+                  className="w-full p-3 rounded-xl border border-[#E2E5E9] bg-white text-[#1A1D21] placeholder-slate-500 text-sm focus:outline-none focus:ring-1 focus:ring-teal-500 h-24"
                 />
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-teal-650 hover:bg-teal-700 text-white font-semibold text-xs transition-colors"
+                  className="px-4 py-2 rounded-xl bg-teal-650 hover:bg-teal-700 text-[#1A1D21] font-semibold text-xs transition-colors"
                 >
                   Submit Review
                 </button>
@@ -194,27 +194,27 @@ export const Marketplace: React.FC = () => {
             </div>
 
             {/* Right side install sidebar */}
-            <div className="p-6 rounded-3xl bg-slate-950 border border-slate-850 h-fit space-y-6">
+            <div className="p-6 rounded-3xl bg-white border border-[#E2E5E9] h-fit space-y-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5 text-amber-400">
                   <Star className="w-4 h-4 fill-current" />
                   <span className="font-bold text-sm">{selectedTemplate.rating.toFixed(1)} / 5</span>
                 </div>
-                <div className="text-xs text-slate-400">
+                <div className="text-xs text-[#5F6B7A]">
                   {selectedTemplate.download_count} installs
                 </div>
               </div>
 
-              <div className="w-[1px] h-full bg-slate-800" />
+              <div className="w-[1px] h-full bg-[#E2E5E9]" />
 
               <div className="space-y-3">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#5F6B7A]">
                   Select Workspace
                 </label>
                 <select
                   value={targetWorkspaceId}
                   onChange={(e) => setTargetWorkspaceId(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-800 bg-slate-900 text-slate-250 text-sm focus:outline-none"
+                  className="w-full px-3 py-2.5 rounded-xl border border-[#E2E5E9] bg-[#F8FAFB] text-slate-250 text-sm focus:outline-none"
                 >
                   {workspaces.map((w) => (
                     <option key={w.id} value={w.id}>
@@ -226,7 +226,7 @@ export const Marketplace: React.FC = () => {
                 <button
                   onClick={handleInstall}
                   disabled={installing}
-                  className="w-full py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm shadow-md transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-[#1A1D21] font-bold text-sm shadow-md transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   <Download className="w-4 h-4" />
                   <span>{installing ? 'Cloning...' : 'Use Template'}</span>
@@ -242,19 +242,19 @@ export const Marketplace: React.FC = () => {
             <div className="flex items-center gap-3">
               <button 
                 onClick={() => navigate('/dashboard')}
-                className="p-2 hover:bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-colors"
+                className="p-2 hover:bg-[#E2E5E9] rounded-xl text-[#5F6B7A] hover:text-white transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
               <div>
                 <h1 className="text-3xl font-extrabold tracking-tight">Community Templates</h1>
-                <p className="text-sm text-slate-400">Discover and duplicate premium layout templates</p>
+                <p className="text-sm text-[#5F6B7A]">Discover and duplicate premium layout templates</p>
               </div>
             </div>
           </header>
 
           {loading ? (
-            <div className="flex items-center gap-2 text-slate-400">
+            <div className="flex items-center gap-2 text-[#5F6B7A]">
               <RefreshCw className="w-4 h-4 animate-spin" />
               <span>Loading community templates...</span>
             </div>
@@ -264,26 +264,26 @@ export const Marketplace: React.FC = () => {
                 <div
                   key={t.id}
                   onClick={() => setSearchParams({ template_id: t.id })}
-                  className="p-5 rounded-2xl bg-slate-850 border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between h-48 cursor-pointer group shadow-md"
+                  className="p-5 rounded-2xl bg-[#F0F2F4] border border-[#E2E5E9] hover:border-[#CDD2D8] transition-all flex flex-col justify-between h-48 cursor-pointer group shadow-md"
                 >
                   <div>
                     <span className="text-[10px] text-teal-400 font-bold bg-teal-500/10 px-2 py-0.5 rounded uppercase tracking-wider">
                       {t.category}
                     </span>
-                    <h3 className="font-bold text-slate-100 group-hover:text-teal-400 transition-colors mt-2 text-base truncate">
+                    <h3 className="font-bold text-[#1A1D21] group-hover:text-teal-400 transition-colors mt-2 text-base truncate">
                       {t.name}
                     </h3>
-                    <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-[#5F6B7A] mt-2 line-clamp-2 leading-relaxed">
                       {t.description || 'No description provided.'}
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between pt-3 border-t border-[#2A2F35]">
+                  <div className="flex items-center justify-between pt-3 border-t border-[#E2E5E9]">
                     <div className="flex items-center gap-1.5 text-amber-400">
                       <Star className="w-3.5 h-3.5 fill-current" />
                       <span className="font-bold text-xs">{t.rating.toFixed(1)}</span>
                     </div>
-                    <div className="text-[10px] text-slate-500 flex items-center gap-1">
+                    <div className="text-[10px] text-[#9AA4AB] flex items-center gap-1">
                       <span>{t.download_count} installs</span>
                       <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                     </div>
