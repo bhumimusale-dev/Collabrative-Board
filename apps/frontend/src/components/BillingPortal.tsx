@@ -98,7 +98,7 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
       }
 
       const invList = await api.getInvoices(teamId);
-      setInvoices(invList);
+      setInvoices(invList || []);
     } catch (e: any) {
       setError(e.message || 'Failed to load billing details.');
     } finally {
