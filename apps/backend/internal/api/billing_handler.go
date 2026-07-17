@@ -102,11 +102,11 @@ func (h *BillingHandler) Subscribe(w http.ResponseWriter, r *http.Request) {
 		payIDToken, _ := auth.GenerateRandomToken()
 		payID := "pay_" + payIDToken[:16]
 		pay := &storage.PaymentHistory{
-			ID:         payID,
-			TeamID:     req.TeamID,
-			Amount:     price,
-			Currency:   "USD",
-			Status:     "succeeded",
+			ID:       payID,
+			TeamID:   req.TeamID,
+			Amount:   price,
+			Currency: "USD",
+			Status:   "succeeded",
 			InvoiceURL: func() string {
 				backendURL := os.Getenv("BACKEND_URL")
 				if backendURL == "" {
@@ -172,15 +172,15 @@ func (h *BillingHandler) GetBillingDetails(w http.ResponseWriter, r *http.Reques
 
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(map[string]interface{}{
-		"plan":                 sub.Plan,
-		"status":               sub.Status,
-		"trial_ends_at":        sub.TrialEndsAt,
-		"current_period_end":   sub.CurrentPeriodEnd,
-		"current_boards":       boardCount,
-		"board_limit":          limits.BoardLimit,
-		"current_members":      memberCount,
-		"member_limit":         limits.MemberLimit,
-		"storage_limit":        limits.StorageLimit,
+		"plan":               sub.Plan,
+		"status":             sub.Status,
+		"trial_ends_at":      sub.TrialEndsAt,
+		"current_period_end": sub.CurrentPeriodEnd,
+		"current_boards":     boardCount,
+		"board_limit":        limits.BoardLimit,
+		"current_members":    memberCount,
+		"member_limit":       limits.MemberLimit,
+		"storage_limit":      limits.StorageLimit,
 	})
 }
 
@@ -292,19 +292,19 @@ func (h *BillingHandler) CreateRazorpayOrder(w http.ResponseWriter, r *http.Requ
 		if req.BillingCycle == "yearly" {
 			price = 14400 // $144.00 in cents
 		} else {
-			price = 1500  // $15.00
+			price = 1500 // $15.00
 		}
 	case "business":
 		if req.BillingCycle == "yearly" {
 			price = 46800 // $468.00
 		} else {
-			price = 4900  // $49.00
+			price = 4900 // $49.00
 		}
 	case "enterprise":
 		if req.BillingCycle == "yearly" {
 			price = 286800 // $2868.00
 		} else {
-			price = 29900  // $299.00
+			price = 29900 // $299.00
 		}
 	}
 
@@ -316,7 +316,7 @@ func (h *BillingHandler) CreateRazorpayOrder(w http.ResponseWriter, r *http.Requ
 		"order_id": orderID,
 		"amount":   price * 83, // Convert USD cents to INR roughly (* 83)
 		"currency": "INR",
-		"key":      "rzp_test_8d9g8h7j6k5l4m",
+		"key":      "rzp_test_TEcAEI1Pi8pbvP",
 	})
 }
 
@@ -401,4 +401,3 @@ func (h *BillingHandler) VerifyRazorpayPayment(w http.ResponseWriter, r *http.Re
 		"plan":   req.Plan,
 	})
 }
-
