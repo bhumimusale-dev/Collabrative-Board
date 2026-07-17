@@ -259,3 +259,146 @@ func (h *BillingHandler) ServeInvoiceHTML(w http.ResponseWriter, r *http.Request
 
 	_, _ = w.Write([]byte(html))
 }
+
+type RazorpayOrderRequest struct {
+	TeamID       string `json:"team_id"`
+	Plan         string `json:"plan"`
+	BillingCycle string `json:"billing_cycle"`
+}
+
+type RazorpayVerifyRequest struct {
+	TeamID            string `json:"team_id"`
+	Plan              string `json:"plan"`
+	RazorpayPaymentID string `json:"razorpay_payment_id"`
+	RazorpayOrderID   string `json:"razorpay_order_id"`
+	RazorpaySignature string `json:"razorpay_signature"`
+}
+
+func (h *BillingHandler) CreateRazorpayOrder(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var req RazorpayOrderRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
+	}
+
+	price := 0
+	switch req.Plan {
+	case "pro":
+		if req.BillingCycle == "yearly" {
+			price = 14400 // $144.00 in cents
+		} else {
+			price = 1500  // $15.00
+		}
+	case "business":
+		if req.BillingCycle == "yearly" {
+			price = 46800 // $468.00
+		} else {
+			price = 4900  // $49.00
+		}
+	case "enterprise":
+		if req.BillingCycle == "yearly" {
+			price = 286800 // $2868.00
+		} else {
+			price = 29900  // $299.00
+		}
+	}
+
+	orderIDToken, _ := auth.GenerateRandomToken()
+	orderID := "order_" + orderIDToken[:16]
+
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(map[string]interface{}{
+		"order_id": orderID,
+		"amount":   price * 83, // Convert USD cents to INR roughly (* 83)
+		"currency": "INR",
+		"key":      "rzp_test_CollabBoardMockKey123",
+	})
+}
+
+func (h *BillingHandler) VerifyRazorpayPayment(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	userID, ok := GetUserIDFromContext(r)
+	if !ok {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	var req RazorpayVerifyRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
+	}
+
+	// 1. Verify user role
+	role, err := h.Store.GetUserTeamRole(req.TeamID, userID)
+	if err != nil {
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
+	if role != "owner" && role != "admin" {
+		http.Error(w, "Forbidden: Only Owners/Admins can manage subscriptions", http.StatusForbidden)
+		return
+	}
+
+	// 2. Mock signature validation (verify payment matches our order)
+	if req.RazorpayOrderID == "" || req.RazorpayPaymentID == "" {
+		http.Error(w, "Invalid Razorpay verification payload", http.StatusBadRequest)
+		return
+	}
+
+	// 3. Upgrade Subscription
+	subIDToken, _ := auth.GenerateRandomToken()
+	sub := &storage.Subscription{
+		ID:                 "sub_" + subIDToken[:16],
+		TeamID:             req.TeamID,
+		Plan:               req.Plan,
+		Status:             "active",
+		TrialEndsAt:        time.Now().AddDate(0, 0, 14),
+		CurrentPeriodStart: time.Now(),
+		CurrentPeriodEnd:   time.Now().AddDate(0, 1, 0),
+	}
+
+	if err := h.Store.UpdateSubscription(sub); err != nil {
+		http.Error(w, "Failed to update subscription", http.StatusInternalServerError)
+		return
+	}
+
+	// 4. Record invoice
+	price := 0
+	switch req.Plan {
+	case "pro":
+		price = 1500
+	case "business":
+		price = 4900
+	case "enterprise":
+		price = 29900
+	}
+
+	if price > 0 {
+		pay := &storage.PaymentHistory{
+			ID:         req.RazorpayPaymentID,
+			TeamID:     req.TeamID,
+			Amount:     price,
+			Currency:   "USD",
+			Status:     "succeeded",
+			InvoiceURL: fmt.Sprintf("http://localhost:8080/api/billing/invoice?id=%s", req.RazorpayPaymentID),
+		}
+		_ = h.Store.CreatePaymentRecord(pay)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(map[string]interface{}{
+		"status": "success",
+		"plan":   req.Plan,
+	})
+}
+

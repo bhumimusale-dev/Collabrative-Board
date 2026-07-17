@@ -429,6 +429,26 @@ class ApiService {
   public async getInvoices(teamId: string): Promise<any> {
     return this.request(`/billing/invoices?team_id=${teamId}`);
   }
+
+  public async createRazorpayOrder(teamId: string, plan: string, billingCycle: string): Promise<any> {
+    return this.request('/billing/razorpay/order', {
+      method: 'POST',
+      body: JSON.stringify({ team_id: teamId, plan, billing_cycle: billingCycle }),
+    });
+  }
+
+  public async verifyRazorpayPayment(payload: {
+    team_id: string;
+    plan: string;
+    razorpay_payment_id: string;
+    razorpay_order_id: string;
+    razorpay_signature: string;
+  }): Promise<any> {
+    return this.request('/billing/razorpay/verify', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
 }
 
 export const api = new ApiService();

@@ -260,6 +260,8 @@ func main() {
 	http.HandleFunc("/api/billing/details", CORS(api.AuthMiddleware(billingHandler.GetBillingDetails)))
 	http.HandleFunc("/api/billing/invoices", CORS(api.AuthMiddleware(billingHandler.GetInvoices)))
 	http.HandleFunc("/api/billing/invoice", CORS(billingHandler.ServeInvoiceHTML))
+	http.HandleFunc("/api/billing/razorpay/order", CORS(api.AuthMiddleware(billingHandler.CreateRazorpayOrder)))
+	http.HandleFunc("/api/billing/razorpay/verify", CORS(api.AuthMiddleware(billingHandler.VerifyRazorpayPayment)))
 
 	// Template Marketplace Routes
 	http.HandleFunc("/api/templates", CORS(templateHandler.ListTemplates))

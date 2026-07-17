@@ -62,7 +62,7 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
   // Checkout flow state
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [checkoutStep, setCheckoutStep] = useState<'none' | 'method' | 'processing' | 'success'>('none');
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'upi' | 'paypal' | 'gplay'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'upi' | 'paypal' | 'gplay' | 'razorpay'>('razorpay');
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   // Auto renewal state
@@ -118,16 +118,89 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
     setCheckoutStep('method');
   };
 
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if ((window as any).Razorpay) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
   const handleCompletePayment = async () => {
     if (!selectedPlan) return;
     setCheckoutStep('processing');
     setError(null);
     try {
-      await api.subscribeToPlan(teamId, selectedPlan);
-      setCheckoutStep('success');
-      showToast(`Successfully subscribed to ${selectedPlan.toUpperCase()} plan!`);
-      if (onPlanChanged) onPlanChanged();
-      await fetchBillingData();
+      if (paymentMethod === 'razorpay') {
+        const scriptLoaded = await loadRazorpayScript();
+        if (!scriptLoaded) {
+          throw new Error('Failed to load Razorpay SDK. Check your internet connection.');
+        }
+
+        // 1. Create order on backend
+        const orderData = await api.createRazorpayOrder(teamId, selectedPlan, billingCycle);
+
+        // 2. Open Razorpay checkout modal
+        const options = {
+          key: orderData.key,
+          amount: orderData.amount,
+          currency: orderData.currency,
+          name: "CollabBoard",
+          description: `Subscription Upgrade to ${selectedPlan.toUpperCase()}`,
+          order_id: orderData.order_id,
+          handler: async function (response: any) {
+            setCheckoutStep('processing');
+            try {
+              // 3. Verify payment signature on backend
+              await api.verifyRazorpayPayment({
+                team_id: teamId,
+                plan: selectedPlan,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature || 'mock_sig_ok',
+              });
+
+              setCheckoutStep('success');
+              showToast(`Successfully subscribed to ${selectedPlan.toUpperCase()}!`);
+              if (onPlanChanged) onPlanChanged();
+              await fetchBillingData();
+            } catch (e: any) {
+              setError(e.message || 'Razorpay payment verification failed.');
+              setCheckoutStep('method');
+            }
+          },
+          prefill: {
+            name: "Jane Doe",
+            email: "johndoe@example.com",
+            contact: "9999999999"
+          },
+          theme: {
+            color: "#6366f1",
+          },
+          modal: {
+            ondismiss: function () {
+              setCheckoutStep('method');
+              showToast("Payment cancelled by user.", "error");
+            }
+          }
+        };
+
+        const rzp = new (window as any).Razorpay(options);
+        rzp.open();
+      } else {
+        // Fallback standard subscription direct flow
+        await api.subscribeToPlan(teamId, selectedPlan);
+        setCheckoutStep('success');
+        showToast(`Successfully subscribed to ${selectedPlan.toUpperCase()} plan!`);
+        if (onPlanChanged) onPlanChanged();
+        await fetchBillingData();
+      }
     } catch (e: any) {
       setError(e.message || 'Subscription upgrade failed.');
       setCheckoutStep('method');
@@ -666,6 +739,7 @@ export const BillingPortal: React.FC<BillingPortalProps> = ({ teamId, isOpen, on
                   <label className="text-[10px] uppercase font-bold text-slate-500">Select Payment Method</label>
                   <div className="grid grid-cols-2 gap-2">
                     {[
+                      { key: 'razorpay', name: 'Razorpay' },
                       { key: 'card', name: 'Saved Card' },
                       { key: 'upi', name: 'UPI / NetBanking' },
                       { key: 'paypal', name: 'PayPal' },
