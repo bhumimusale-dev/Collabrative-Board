@@ -101,6 +101,7 @@ export interface Organization {
   logo?: string;
   domain?: string;
   description?: string;
+  owner_id?: string;
 }
 
 class ApiService {
@@ -311,15 +312,43 @@ class ApiService {
 
   // SaaS Operations
   public async getOrganizations(): Promise<Organization[]> {
-    // Note: Since multi-tenant org list is implicit per user, we fetch through workspace context
-    // or direct endpoint. For now, we can create orgs.
-    return [];
+    return this.request('/orgs');
   }
 
   public async createOrganization(name: string, domain = '', description = ''): Promise<Organization> {
     return this.request('/orgs', {
       method: 'POST',
       body: JSON.stringify({ name, domain, description }),
+    });
+  }
+
+  public async updateOrganization(id: string, name: string, domain = '', description = ''): Promise<Organization> {
+    return this.request(`/orgs?id=${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ name, domain, description }),
+    });
+  }
+
+  public async deleteOrganization(id: string): Promise<{ status: string }> {
+    return this.request(`/orgs?id=${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  public async getOrgMembers(orgId: string): Promise<any[]> {
+    return this.request(`/orgs/members?org_id=${orgId}`);
+  }
+
+  public async updateOrgMemberRole(orgId: string, userId: string, role: string): Promise<{ status: string }> {
+    return this.request('/orgs/members', {
+      method: 'PUT',
+      body: JSON.stringify({ org_id: orgId, user_id: userId, role }),
+    });
+  }
+
+  public async removeOrgMember(orgId: string, userId: string): Promise<{ status: string }> {
+    return this.request(`/orgs/members?org_id=${orgId}&user_id=${userId}`, {
+      method: 'DELETE',
     });
   }
 
@@ -331,6 +360,19 @@ class ApiService {
     return this.request('/teams', {
       method: 'POST',
       body: JSON.stringify({ org_id: orgId, name, description }),
+    });
+  }
+
+  public async updateTeam(id: string, name: string, description = '', avatar = ''): Promise<Team> {
+    return this.request('/teams', {
+      method: 'PUT',
+      body: JSON.stringify({ id, name, description, avatar }),
+    });
+  }
+
+  public async deleteTeam(id: string): Promise<{ status: string }> {
+    return this.request(`/teams?id=${id}`, {
+      method: 'DELETE',
     });
   }
 
@@ -358,6 +400,18 @@ class ApiService {
 
   public async getTeamWorkspaces(teamId: string): Promise<Workspace[]> {
     return this.request(`/teams/workspaces?team_id=${teamId}`);
+  }
+
+  public async getNotifications(): Promise<any[]> {
+    return this.request('/notifications');
+  }
+
+  public async markNotificationsAsRead(): Promise<{ status: string }> {
+    return this.request('/notifications', { method: 'POST' });
+  }
+
+  public async getActivityLogs(orgId: string): Promise<any[]> {
+    return this.request(`/orgs/activities?org_id=${orgId}`);
   }
 
   // Billing Operations

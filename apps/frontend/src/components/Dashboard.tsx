@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { 
   Folder, 
   Star, 
@@ -10,69 +10,162 @@ import {
   ChevronDown, 
   LogOut,
   RefreshCw,
-  Menu,
-  X,
   Users,
   UserPlus,
-  CreditCard,
-  Sparkles
+  Sparkles,
+  Settings,
+  Bell,
+  Search,
+  Activity,
+  Layers,
+  ChevronRight,
+  CheckCircle,
+  AlertCircle,
 } from 'lucide-react';
 import { api } from '../services/api';
-import type { Workspace, Board, TeamInvitation, TeamMember } from '../services/api';
+import type { Workspace, Board, Organization, Team } from '../services/api';
 import { useAuth } from './AuthContext';
 import { BillingPortal } from './BillingPortal';
 import { TemplatesModal } from './TemplatesModal';
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  // Core organization, teams and workspace data structures
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
+  const [activeOrg, setActiveOrg] = useState<Organization | null>(null);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [activeTeam, setActiveTeam] = useState<Team | null>(null);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [activeWorkspace, setActiveWorkspace] = useState<Workspace | null>(null);
   const [boards, setBoards] = useState<Board[]>([]);
-  const [view, setView] = useState<'all' | 'starred' | 'archive' | 'trash'>('all');
+
+  // Navigation and UI view tabs
+  const [currentTab, setCurrentTab] = useState<'dashboard' | 'boards' | 'members' | 'settings' | 'activities'>('dashboard');
+  const [boardSubView, setBoardSubView] = useState<'all' | 'starred' | 'personal' | 'team' | 'shared' | 'archive' | 'trash'>('all');
   
-  // SaaS States
-  const [invitations, setInvitations] = useState<TeamInvitation[]>([]);
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
-  const [userRole, setUserRole] = useState<string>('owner'); // owner, admin, editor, viewer
+  // Lists for management panels
+  const [orgMembers, setOrgMembers] = useState<any[]>([]);
+  const [activityLogs, setActivityLogs] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [billingDetails, setBillingDetails] = useState<any>(null);
 
-  // UI toggles
-  const [showWorkspaceMenu, setShowWorkspaceMenu] = useState(false);
-  const [newBoardName, setNewBoardName] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { user } = useAuth();
+  // Search and Filters
+  const [searchQuery, setSearchQuery] = useState('');
+  const [memberFilter, setMemberFilter] = useState('');
+  const [roleFilter, setRoleFilter] = useState('all');
 
-  // SaaS Modals / Forms
+  // Permissions and roles
+  const [userOrgRole, setUserOrgRole] = useState<string>('viewer'); // owner, admin, editor, viewer
+
+  // Dropdown states
+  const [showOrgDropdown, setShowOrgDropdown] = useState(false);
+  const [showTeamDropdown, setShowTeamDropdown] = useState(false);
+  const [showNotificationsMenu, setShowNotificationsMenu] = useState(false);
+  const [isSidebarOpen] = useState(true);
+
+  // New Creation Modals / Forms States
+  const [showOrgModal, setShowOrgModal] = useState(false);
+  const [newOrgName, setNewOrgName] = useState('');
+  const [newOrgDomain, setNewOrgDomain] = useState('');
+  const [newOrgDesc, setNewOrgDesc] = useState('');
+
+  const [showTeamModal, setShowTeamModal] = useState(false);
+  const [newTeamName, setNewTeamName] = useState('');
+  const [newTeamDesc, setNewTeamDesc] = useState('');
+
+
+
   const [showInviteModal, setShowInviteModal] = useState(false);
-  const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
-  const [showBillingModal, setShowBillingModal] = useState(false);
-  const [showTemplates, setShowTemplates] = useState(false);
-  const [newWorkspaceName, setNewWorkspaceName] = useState('');
-  const [newWorkspaceType, setNewWorkspaceType] = useState('team');
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState('editor');
   const [isInviting, setIsInviting] = useState(false);
   const [inviteSuccess, setInviteSuccess] = useState(false);
 
+  const [showBillingModal, setShowBillingModal] = useState(false);
+  const [showTemplates, setShowTemplates] = useState(false);
+
+  // Editor forms for Settings Tab
+  const [editOrgName, setEditOrgName] = useState('');
+  const [editOrgDomain, setEditOrgDomain] = useState('');
+  const [editOrgDesc, setEditOrgDesc] = useState('');
+  const [editTeamName, setEditTeamName] = useState('');
+  const [editTeamDesc, setEditTeamDesc] = useState('');
+
+  // Quick inputs
+  const [newBoardName, setNewBoardName] = useState('');
+  const [newBoardDesc, setNewBoardDesc] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // Toast System
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
   useEffect(() => {
-    // Check URL for direct invitation tokens
+    // Check URL parameters for direct invitation links
     const params = new URLSearchParams(window.location.search);
     const inviteToken = params.get('invite_token');
     if (inviteToken) {
       handleDirectInvite(inviteToken);
     } else {
-      loadInitialData();
+      loadInitialOrgs();
     }
   }, []);
 
+  // Whenever Organization changes, load corresponding Teams, Members and Activity Logs
+  useEffect(() => {
+    if (activeOrg) {
+      loadTeams(activeOrg.id);
+      loadOrgMembers(activeOrg.id);
+      loadActivityLogs(activeOrg.id);
+      loadNotifications();
+      // Prep settings editor values
+      setEditOrgName(activeOrg.name || '');
+      setEditOrgDomain(activeOrg.domain || '');
+      setEditOrgDesc(activeOrg.description || '');
+
+      // Load user org role
+      const loadUserRole = async () => {
+        try {
+          const members = await api.getOrgMembers(activeOrg.id);
+          const current = members.find(m => m.user_id === user?.id);
+          if (current) {
+            setUserOrgRole(current.role);
+          } else {
+            setUserOrgRole(activeOrg.owner_id === user?.id ? 'owner' : 'viewer');
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      };
+      loadUserRole();
+    }
+  }, [activeOrg]);
+
+  // Whenever Team changes, load Workspaces and Billing info
+  useEffect(() => {
+    if (activeTeam) {
+      loadTeamWorkspaces(activeTeam.id);
+      loadBillingDetails(activeTeam.id);
+      setEditTeamName(activeTeam.name || '');
+      setEditTeamDesc(activeTeam.description || '');
+    } else {
+      setWorkspaces([]);
+      setActiveWorkspace(null);
+    }
+  }, [activeTeam]);
+
+  // Load boards when workspace changes
   useEffect(() => {
     if (activeWorkspace) {
       loadBoards(activeWorkspace.id);
-      if (activeWorkspace.team_id) {
-        loadTeamDetails(activeWorkspace.team_id);
-      } else {
-        setUserRole('owner'); // Personal workspaces give owner permission
-      }
+    } else {
+      setBoards([]);
     }
   }, [activeWorkspace]);
 
@@ -81,125 +174,281 @@ export const Dashboard: React.FC = () => {
     try {
       if (accept) {
         await api.respondToInvitation(token, 'accept');
-        alert("Joined the team successfully!");
+        showToast("Joined the team successfully!");
       } else {
         await api.respondToInvitation(token, 'decline');
-        alert("Invitation declined.");
+        showToast("Invitation declined.", "info");
       }
     } catch (e: any) {
-      alert(e.message || "Failed to respond to invitation.");
+      showToast(e.message || "Failed to respond to invitation.", "error");
     } finally {
-      window.location.href = '/dashboard';
+      window.history.replaceState({}, document.title, "/dashboard");
+      loadInitialOrgs();
     }
   };
 
-  const loadInitialData = async () => {
-    setLoading(true);
+  const loadInitialOrgs = async () => {
     try {
-      const wsList = await api.getWorkspaces();
+      const orgList = await api.getOrganizations();
+      setOrganizations(orgList || []);
+      if (orgList && orgList.length > 0) {
+        setActiveOrg(orgList[0]);
+      } else {
+        // Automatically create a default organization for a new user if none exists
+        const defaultOrg = await api.createOrganization(`${user?.name || 'My'}'s Space`, '', 'Default organization workspace');
+        setOrganizations([defaultOrg]);
+        setActiveOrg(defaultOrg);
+      }
+    } catch (e: any) {
+      console.error(e);
+      setErrorMessage(e.message || "Failed to load organizations.");
+    }
+  };
+
+  const loadTeams = async (orgId: string) => {
+    try {
+      const teamList = await api.getTeams(orgId);
+      setTeams(teamList || []);
+      if (teamList && teamList.length > 0) {
+        setActiveTeam(teamList[0]);
+      } else {
+        // Create default general team
+        const defaultTeam = await api.createTeam(orgId, 'General Team', 'Collaborative general workspace team');
+        setTeams([defaultTeam]);
+        setActiveTeam(defaultTeam);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const loadOrgMembers = async (orgId: string) => {
+    try {
+      const members = await api.getOrgMembers(orgId);
+      setOrgMembers(members || []);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const loadTeamWorkspaces = async (teamId: string) => {
+    try {
+      const wsList = await api.getTeamWorkspaces(teamId);
       setWorkspaces(wsList || []);
       if (wsList && wsList.length > 0) {
         setActiveWorkspace(wsList[0]);
+      } else {
+        // Create general workspace
+        const generalWs = await api.createWorkspace('General Workspace', 'team', teamId);
+        setWorkspaces([generalWs]);
+        setActiveWorkspace(generalWs);
       }
-      
-      // Load pending invitations
-      const inviteList = await api.listInvitations();
-      setInvitations(inviteList || []);
     } catch (e) {
-      console.error('Failed to load initial workspace data', e);
-      navigate('/login');
-    } finally {
-      setLoading(false);
+      console.error(e);
     }
   };
 
-  const loadTeamDetails = async (teamId: string) => {
+  const loadBillingDetails = async (teamId: string) => {
     try {
-      const members = await api.getTeamMembers(teamId) || [];
-      setTeamMembers(members);
-      
-      const currentMember = members.find(m => m.user_id === user?.id);
-      if (currentMember) {
-        setUserRole(currentMember.role);
-      }
+      const details = await api.getBillingDetails(teamId);
+      setBillingDetails(details);
     } catch (e) {
-      console.error('Failed to load team details', e);
+      console.error(e);
     }
   };
 
   const loadBoards = async (workspaceId: string) => {
-    setLoading(true);
     try {
       const list = await api.getBoards(workspaceId);
       setBoards(list || []);
     } catch (e) {
-      console.error('Failed to load boards', e);
-    } finally {
-      setLoading(false);
+      console.error(e);
     }
   };
+
+  const loadNotifications = async () => {
+    try {
+      const notifs = await api.getNotifications();
+      setNotifications(notifs || []);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const loadActivityLogs = async (orgId: string) => {
+    try {
+      const logs = await api.getActivityLogs(orgId);
+      setActivityLogs(logs || []);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleCreateOrg = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newOrgName.trim()) return;
+    try {
+      const o = await api.createOrganization(newOrgName.trim(), newOrgDomain.trim(), newOrgDesc.trim());
+      setOrganizations([...organizations, o]);
+      setActiveOrg(o);
+      setShowOrgModal(false);
+      setNewOrgName('');
+      setNewOrgDomain('');
+      setNewOrgDesc('');
+      showToast("Organization created successfully!");
+    } catch (e) {
+      showToast("Failed to create organization", "error");
+    }
+  };
+
+  const handleUpdateOrg = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!activeOrg || !editOrgName.trim()) return;
+    try {
+      const updated = await api.updateOrganization(activeOrg.id, editOrgName.trim(), editOrgDomain.trim(), editOrgDesc.trim());
+      setActiveOrg(updated);
+      setOrganizations(organizations.map(o => o.id === updated.id ? updated : o));
+      showToast("Organization settings updated!");
+    } catch (e) {
+      showToast("Failed to update organization settings", "error");
+    }
+  };
+
+  const handleDeleteOrg = async () => {
+    if (!activeOrg) return;
+    const confirm = window.confirm(`WARNING: This will permanently delete organization "${activeOrg.name}" and all its teams/boards. Are you sure?`);
+    if (!confirm) return;
+
+    try {
+      await api.deleteOrganization(activeOrg.id);
+      const remaining = organizations.filter(o => o.id !== activeOrg.id);
+      setOrganizations(remaining);
+      if (remaining.length > 0) {
+        setActiveOrg(remaining[0]);
+      } else {
+        setActiveOrg(null);
+      }
+      showToast("Organization deleted", "info");
+    } catch (e: any) {
+      showToast(e.message || "Failed to delete organization", "error");
+    }
+  };
+
+  const handleCreateTeam = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTeamName.trim() || !activeOrg) return;
+    try {
+      const t = await api.createTeam(activeOrg.id, newTeamName.trim(), newTeamDesc.trim());
+      setTeams([...teams, t]);
+      setActiveTeam(t);
+      setShowTeamModal(false);
+      setNewTeamName('');
+      setNewTeamDesc('');
+      showToast(`Team "${t.name}" created!`);
+    } catch (e) {
+      showToast("Failed to create team", "error");
+    }
+  };
+
+  const handleUpdateTeam = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!activeTeam || !editTeamName.trim()) return;
+    try {
+      const updated = await api.updateTeam(activeTeam.id, editTeamName.trim(), editTeamDesc.trim());
+      setActiveTeam(updated);
+      setTeams(teams.map(t => t.id === updated.id ? updated : t));
+      showToast("Team settings updated!");
+    } catch (e) {
+      showToast("Failed to update team settings", "error");
+    }
+  };
+
+  const handleDeleteTeam = async () => {
+    if (!activeTeam || !activeOrg) return;
+    const confirm = window.confirm(`Are you sure you want to delete the team "${activeTeam.name}"?`);
+    if (!confirm) return;
+    try {
+      await api.deleteTeam(activeTeam.id);
+      const remaining = teams.filter(t => t.id !== activeTeam.id);
+      setTeams(remaining);
+      if (remaining.length > 0) {
+        setActiveTeam(remaining[0]);
+      } else {
+        setActiveTeam(null);
+      }
+      showToast("Team deleted successfully", "info");
+    } catch (e) {
+      showToast("Failed to delete team", "error");
+    }
+  };
+
+
 
   const handleCreateBoard = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newBoardName.trim() || !activeWorkspace) return;
-    if (userRole === 'viewer') {
-      alert("Permission Denied: Viewers cannot create boards.");
-      return;
-    }
-
     try {
-      const b = await api.createBoard(activeWorkspace.id, newBoardName.trim());
+      const b = await api.createBoard(activeWorkspace.id, newBoardName.trim(), newBoardDesc.trim());
       setNewBoardName('');
+      setNewBoardDesc('');
+      showToast(`Board "${b.name}" created!`);
       navigate(`/board/${b.id}`);
-    } catch (e) {
-      alert('Failed to create board');
-    }
-  };
-
-  const handleCreateWorkspace = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newWorkspaceName.trim()) return;
-
-    try {
-      const newWs = await api.createWorkspace(
-        newWorkspaceName.trim(), 
-        newWorkspaceType,
-        activeWorkspace?.team_id || undefined
-      );
-      setWorkspaces([...workspaces, newWs]);
-      setActiveWorkspace(newWs);
-      setNewWorkspaceName('');
-      setShowWorkspaceModal(false);
-    } catch (e) {
-      alert('Failed to create workspace');
+    } catch (e: any) {
+      showToast(e.message || "Failed to create board. You might need to upgrade your subscription.", "error");
     }
   };
 
   const handleSendInvite = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inviteEmail.trim() || !activeWorkspace?.team_id) return;
+    if (!inviteEmail.trim() || !activeTeam) return;
     setIsInviting(true);
     setInviteSuccess(false);
-
     try {
-      await api.sendInvitation(activeWorkspace.team_id, inviteEmail.trim(), inviteRole);
+      await api.sendInvitation(activeTeam.id, inviteEmail.trim(), inviteRole);
       setInviteSuccess(true);
       setInviteEmail('');
+      showToast("Invitation sent! (Logged to server terminal)");
     } catch (e: any) {
-      alert(e.message || "Failed to send invitation.");
+      showToast(e.message || "Failed to invite member.", "error");
     } finally {
       setIsInviting(false);
     }
   };
 
-  const handleRespondInvitation = async (token: string, action: 'accept' | 'decline') => {
+  const handleUpdateMemberRole = async (targetUserId: string, targetRole: string) => {
+    if (!activeOrg) return;
     try {
-      await api.respondToInvitation(token, action);
-      alert(`Invitation ${action}ed successfully!`);
-      // Reload initial data to fetch updated workspaces/invitations
-      loadInitialData();
-    } catch (e: any) {
-      alert(e.message || "Action failed.");
+      await api.updateOrgMemberRole(activeOrg.id, targetUserId, targetRole);
+      showToast("Member role updated");
+      loadOrgMembers(activeOrg.id);
+    } catch (e) {
+      showToast("Failed to update role", "error");
+    }
+  };
+
+  const handleRemoveMember = async (targetUserId: string) => {
+    if (!activeOrg) return;
+    const confirm = window.confirm("Are you sure you want to remove this member?");
+    if (!confirm) return;
+    try {
+      await api.removeOrgMember(activeOrg.id, targetUserId);
+      showToast("Member removed from organization");
+      loadOrgMembers(activeOrg.id);
+    } catch (e) {
+      showToast("Failed to remove member", "error");
+    }
+  };
+
+  const handleLeaveOrg = async () => {
+    if (!activeOrg || !user) return;
+    const confirm = window.confirm("Are you sure you want to leave this organization?");
+    if (!confirm) return;
+    try {
+      await api.removeOrgMember(activeOrg.id, user.id);
+      showToast("You left the organization");
+      loadInitialOrgs();
+    } catch (e) {
+      showToast("Failed to leave organization", "error");
     }
   };
 
@@ -211,6 +460,7 @@ export const Dashboard: React.FC = () => {
         is_deleted: b.is_deleted,
       });
       if (activeWorkspace) loadBoards(activeWorkspace.id);
+      showToast(b.is_starred ? "Unstarred board" : "Starred board");
     } catch (e) {
       console.error(e);
     }
@@ -224,6 +474,7 @@ export const Dashboard: React.FC = () => {
         is_deleted: b.is_deleted,
       });
       if (activeWorkspace) loadBoards(activeWorkspace.id);
+      showToast(b.is_archived ? "Unarchived board" : "Archived board");
     } catch (e) {
       console.error(e);
     }
@@ -237,6 +488,7 @@ export const Dashboard: React.FC = () => {
         is_deleted: toTrash,
       });
       if (activeWorkspace) loadBoards(activeWorkspace.id);
+      showToast(toTrash ? "Board moved to trash" : "Board restored");
     } catch (e) {
       console.error(e);
     }
@@ -247,440 +499,956 @@ export const Dashboard: React.FC = () => {
     navigate('/login');
   };
 
-  // Filter boards based on view type
+  const handleMarkNotificationsRead = async () => {
+    try {
+      await api.markNotificationsAsRead();
+      loadNotifications();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const getFilteredBoards = () => {
-    if (!Array.isArray(boards)) return [];
-    return boards.filter((b) => {
-      if (view === 'trash') return b.is_deleted;
+    let result = boards || [];
+    
+    // Search filter
+    if (searchQuery.trim()) {
+      result = result.filter(b => 
+        b.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        (b.description && b.description.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+    }
+
+    // Tab sub-view filters
+    return result.filter((b) => {
+      if (boardSubView === 'trash') return b.is_deleted;
       if (b.is_deleted) return false;
 
-      if (view === 'starred') return b.is_starred;
-      if (view === 'archive') return b.is_archived;
+      if (boardSubView === 'starred') return b.is_starred;
+      if (boardSubView === 'archive') return b.is_archived;
+      if (boardSubView === 'personal') return b.visibility === 'private' && !b.is_archived;
+      if (boardSubView === 'team') return b.visibility === 'shared' && !b.is_archived;
       
       return !b.is_archived;
     });
   };
 
-  // Check permissions based on user role
-  const canCreateBoard = userRole === 'owner' || userRole === 'admin' || userRole === 'editor';
-  const canManageMembers = userRole === 'owner' || userRole === 'admin';
+  const getFilteredMembers = () => {
+    let result = orgMembers || [];
+
+    if (memberFilter.trim()) {
+      result = result.filter(m => 
+        m.name.toLowerCase().includes(memberFilter.toLowerCase()) || 
+        m.email.toLowerCase().includes(memberFilter.toLowerCase()) ||
+        m.username.toLowerCase().includes(memberFilter.toLowerCase())
+      );
+    }
+
+    if (roleFilter !== 'all') {
+      result = result.filter(m => m.role === roleFilter);
+    }
+
+    return result;
+  };
+
+  if (errorMessage) {
+    return (
+      <div className="w-full min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-6">
+        <div className="max-w-md w-full p-8 border border-red-500/20 bg-slate-900 rounded-3xl text-center space-y-4 shadow-2xl">
+          <AlertCircle className="w-12 h-12 text-red-500 mx-auto" />
+          <h2 className="text-xl font-bold text-white">Oops! Something went wrong</h2>
+          <p className="text-slate-400 text-sm leading-relaxed">{errorMessage}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/10 transition-all"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full min-h-screen bg-slate-900 text-slate-100 flex flex-col md:flex-row font-sans relative overflow-hidden">
+    <div className="w-full min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row font-sans relative overflow-hidden selection:bg-indigo-500 selection:text-white">
       
-      {/* Ambient Radial Lights */}
-      <div className="absolute top-0 right-0 w-[40rem] h-[40rem] bg-indigo-600/5 rounded-full blur-[10rem] pointer-events-none" />
-      <div className="absolute bottom-10 left-1/3 w-[30rem] h-[30rem] bg-purple-500/5 rounded-full blur-[8rem] pointer-events-none" />
+      {/* Background Ornaments / Ambient Lights */}
+      <div className="absolute top-0 right-0 w-[45rem] h-[45rem] bg-indigo-600/5 rounded-full blur-[12rem] pointer-events-none" />
+      <div className="absolute bottom-10 left-1/3 w-[35rem] h-[35rem] bg-purple-500/5 rounded-full blur-[10rem] pointer-events-none" />
 
-      {/* Mobile Top Navbar */}
-      <header className="w-full bg-slate-950 border-b border-slate-800 p-4 flex md:hidden items-center justify-between z-20">
-        <div className="flex items-center gap-2.5">
-          <div className="w-6 h-6 rounded-md bg-indigo-500 flex items-center justify-center text-xs font-bold text-white">
-            {activeWorkspace?.name?.charAt(0) || 'W'}
-          </div>
-          <span className="text-sm font-semibold truncate max-w-[150px]">
-            {activeWorkspace?.name || 'Workspace'}
-          </span>
+      {/* Toast Notification */}
+      {toast && (
+        <div className="fixed top-6 right-6 z-[100] flex items-center gap-3 px-4 py-3.5 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl animate-in slide-in-from-top-4 duration-300">
+          {toast.type === 'success' && <CheckCircle className="w-4 h-4 text-emerald-400" />}
+          {toast.type === 'error' && <AlertCircle className="w-4 h-4 text-red-400" />}
+          {toast.type === 'info' && <Bell className="w-4 h-4 text-indigo-400" />}
+          <span className="text-xs font-medium text-slate-200">{toast.message}</span>
         </div>
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="p-2 text-slate-400 hover:text-slate-200 hover:bg-slate-900 rounded-lg transition-all"
-        >
-          {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
-      </header>
-
-      {/* Mobile Sidebar Backdrop Overlay */}
-      {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/60 z-20 md:hidden backdrop-blur-sm"
-          onClick={() => setIsSidebarOpen(false)}
-        />
       )}
 
-      {/* Sidebar Panel */}
-      <aside className={`fixed inset-y-0 left-0 w-64 bg-slate-950 border-r border-slate-800 p-4 flex flex-col justify-between z-30 transition-transform duration-300 md:static md:translate-x-0 ${
-        isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}>
-        <div className="space-y-6">
-          
-          {/* Workspace Switcher */}
+      {/* Responsive Left Sidebar */}
+      <aside 
+        className={`fixed md:sticky top-0 left-0 h-screen z-30 bg-slate-900/60 backdrop-blur-xl border-r border-slate-800/80 flex flex-col justify-between transition-all duration-300 ${
+          isSidebarOpen ? 'w-64 translate-x-0' : 'w-0 -translate-x-full md:w-20 md:translate-x-0'
+        }`}
+      >
+        <div className="flex flex-col overflow-y-auto flex-1 px-4 py-6 space-y-7">
+          {/* Workspace Switcher / Org details */}
           <div className="relative">
             <button 
-              onClick={() => setShowWorkspaceMenu(!showWorkspaceMenu)}
-              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-850 transition-colors"
+              onClick={() => setShowOrgDropdown(!showOrgDropdown)}
+              className="w-full flex items-center justify-between p-2 rounded-2xl bg-slate-950/40 border border-slate-800/60 hover:border-indigo-500/30 transition-all text-left"
             >
-              <div className="flex items-center gap-2.5 text-left">
-                <div className="w-6 h-6 rounded-md bg-indigo-500 flex items-center justify-center text-xs font-bold text-white">
-                  {activeWorkspace?.name?.charAt(0) || 'W'}
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-sm font-bold text-white shadow-md shadow-indigo-600/10">
+                  {activeOrg?.name?.charAt(0) || 'W'}
                 </div>
-                <div className="flex flex-col text-left">
-                  <span className="text-sm font-semibold truncate max-w-[120px]">
-                    {activeWorkspace?.name || 'Workspace'}
-                  </span>
-                  <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">
-                    Role: {userRole}
-                  </span>
-                </div>
+                {isSidebarOpen && (
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-bold text-slate-100 truncate">{activeOrg?.name || 'Workspace'}</h4>
+                    <span className="text-[10px] text-slate-500 block truncate">{activeOrg?.domain || 'collab.space'}</span>
+                  </div>
+                )}
               </div>
-              <ChevronDown className="w-4 h-4 text-slate-400" />
+              {isSidebarOpen && <ChevronDown className="w-4 h-4 text-slate-400" />}
             </button>
 
-            {showWorkspaceMenu && (
-              <div className="absolute top-full left-0 right-0 mt-1 z-40 rounded-xl bg-slate-900 border border-slate-800 shadow-xl overflow-hidden max-h-60 overflow-y-auto">
-                {workspaces.map((w) => (
+            {/* Org Switcher Dropdown */}
+            {showOrgDropdown && (
+              <div className="absolute left-0 right-0 mt-2 bg-slate-900 border border-slate-800/80 rounded-2xl p-2.5 shadow-2xl z-50 space-y-1">
+                <span className="text-[9px] uppercase font-bold tracking-wider text-slate-500 px-2 block mb-1">Organizations</span>
+                {organizations.map(o => (
                   <button
-                    key={w.id}
+                    key={o.id}
                     onClick={() => {
-                      setActiveWorkspace(w);
-                      setShowWorkspaceMenu(false);
-                      setIsSidebarOpen(false);
+                      setActiveOrg(o);
+                      setShowOrgDropdown(false);
                     }}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-slate-800 transition-colors flex items-center gap-2"
+                    className={`w-full flex items-center justify-between p-2 rounded-xl text-left text-xs transition-colors ${
+                      activeOrg?.id === o.id ? 'bg-indigo-600/10 text-indigo-400 font-semibold' : 'hover:bg-slate-850/60 text-slate-300'
+                    }`}
                   >
-                    <div className="w-4 h-4 rounded-sm bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-[10px] font-bold">
-                      {w.name.charAt(0)}
-                    </div>
-                    <span className="truncate">{w.name}</span>
+                    <span className="truncate">{o.name}</span>
+                    {o.id === activeOrg?.id && <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />}
                   </button>
                 ))}
-                
-                <div className="border-t border-slate-800 p-2">
-                  <button
+                <div className="border-t border-slate-800/80 mt-2 pt-2">
+                  <button 
                     onClick={() => {
-                      setShowWorkspaceModal(true);
-                      setShowWorkspaceMenu(false);
+                      setShowOrgDropdown(false);
+                      setShowOrgModal(true);
                     }}
-                    className="w-full py-1.5 bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-500/20 rounded-lg text-xs font-semibold text-indigo-400 text-center transition-colors flex items-center justify-center gap-1"
+                    className="w-full flex items-center gap-2 p-2 hover:bg-slate-850/60 text-xs font-semibold text-indigo-400 rounded-xl transition-all"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    <span>Create Workspace</span>
+                    <span>New Organization</span>
                   </button>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Navigation Links */}
-          <nav className="space-y-1.5">
+          {/* Teams Switcher Section */}
+          <div className="space-y-2">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 block px-2">Teams</span>
+            <div className="relative">
+              <button 
+                onClick={() => setShowTeamDropdown(!showTeamDropdown)}
+                className="w-full flex items-center justify-between p-2 rounded-xl hover:bg-slate-850/60 transition-all text-left"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-5 h-5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-[10px] font-bold text-indigo-400">
+                    {activeTeam?.name?.charAt(0) || 'T'}
+                  </div>
+                  {isSidebarOpen && (
+                    <div className="min-w-0">
+                      <span className="text-xs font-semibold text-slate-200 truncate block">{activeTeam?.name || 'General Team'}</span>
+                      <span className="text-[10px] text-slate-500 block truncate">{workspaces.length} workspaces</span>
+                    </div>
+                  )}
+                </div>
+                {isSidebarOpen && <ChevronDown className="w-3.5 h-3.5 text-slate-400" />}
+              </button>
+
+              {showTeamDropdown && (
+                <div className="absolute left-0 right-0 mt-1 bg-slate-900 border border-slate-800 rounded-xl p-2 shadow-xl z-50 space-y-1">
+                  {teams.map(t => (
+                    <button
+                      key={t.id}
+                      onClick={() => {
+                        setActiveTeam(t);
+                        setShowTeamDropdown(false);
+                      }}
+                      className={`w-full p-2 rounded-lg text-left text-xs transition-colors ${
+                        activeTeam?.id === t.id ? 'bg-indigo-600/10 text-indigo-400 font-semibold' : 'hover:bg-slate-850 text-slate-300'
+                      }`}
+                    >
+                      {t.name}
+                    </button>
+                  ))}
+                  <div className="border-t border-slate-800 mt-2 pt-2">
+                    <button
+                      onClick={() => {
+                        setShowTeamDropdown(false);
+                        setShowTeamModal(true);
+                      }}
+                      className="w-full flex items-center gap-2 p-1.5 hover:bg-slate-850 text-xs font-semibold text-indigo-400 rounded-lg"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Create Team</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Sidebar Nav Links */}
+          <div className="space-y-1">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 block px-2 mb-2">Navigation</span>
             <button
-              onClick={() => {
-                setView('all');
-                setIsSidebarOpen(false);
-              }}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
-                view === 'all' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+              onClick={() => setCurrentTab('dashboard')}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                currentTab === 'dashboard' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/15' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
               }`}
             >
               <LayoutDashboard className="w-4 h-4" />
-              <span>All Boards</span>
+              {isSidebarOpen && <span>Overview</span>}
             </button>
             <button
-              onClick={() => {
-                setView('starred');
-                setIsSidebarOpen(false);
-              }}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
-                view === 'starred' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+              onClick={() => setCurrentTab('boards')}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                currentTab === 'boards' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/15' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
               }`}
             >
-              <Star className="w-4 h-4" />
-              <span>Starred</span>
+              <Layers className="w-4 h-4" />
+              {isSidebarOpen && <span>Boards & Canvases</span>}
             </button>
             <button
-              onClick={() => {
-                setView('archive');
-                setIsSidebarOpen(false);
-              }}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
-                view === 'archive' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+              onClick={() => setCurrentTab('members')}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                currentTab === 'members' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/15' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
               }`}
             >
-              <Archive className="w-4 h-4" />
-              <span>Archive</span>
+              <Users className="w-4 h-4" />
+              {isSidebarOpen && <span>Members & Invites</span>}
             </button>
             <button
-              onClick={() => {
-                setView('trash');
-                setIsSidebarOpen(false);
-              }}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
-                view === 'trash' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+              onClick={() => setCurrentTab('activities')}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                currentTab === 'activities' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/15' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
               }`}
             >
-              <Trash2 className="w-4 h-4" />
-              <span>Trash Bin</span>
+              <Activity className="w-4 h-4" />
+              {isSidebarOpen && <span>Activity Trail</span>}
             </button>
             <button
-              onClick={() => {
-                setShowTemplates(true);
-                setIsSidebarOpen(false);
-              }}
-              className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-slate-200 transition-colors"
+              onClick={() => setCurrentTab('settings')}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                currentTab === 'settings' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/15' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
+              }`}
             >
-              <Sparkles className="w-4 h-4 text-indigo-400" />
-              <span>Templates Gallery</span>
+              <Settings className="w-4 h-4" />
+              {isSidebarOpen && <span>Settings & Billing</span>}
             </button>
-          </nav>
-
-          {/* SaaS: Team Section in Sidebar */}
-          {activeWorkspace?.team_id && (
-            <div className="pt-4 border-t border-slate-800/60 space-y-3">
-              <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 px-3">Team & SaaS Panel</span>
-              <div className="space-y-1.5">
-                <button
-                  onClick={() => setShowInviteModal(true)}
-                  disabled={!canManageMembers}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:bg-slate-900 hover:text-slate-200 transition-colors disabled:opacity-50"
-                >
-                  <UserPlus className="w-4 h-4 text-indigo-400" />
-                  <span>Invite Collaborator</span>
-                </button>
-                <button
-                  onClick={() => {
-                    alert(`Team ID: ${activeWorkspace.team_id}\nMembers:\n${teamMembers.map(m => `- ${m.name} (${m.role})`).join('\n')}`);
-                  }}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:bg-slate-900 hover:text-slate-200 transition-colors"
-                >
-                  <Users className="w-4 h-4 text-purple-400" />
-                  <span>View Team Members ({teamMembers.length})</span>
-                </button>
-                <button
-                  onClick={() => setShowBillingModal(true)}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:bg-slate-900 hover:text-slate-200 transition-colors"
-                >
-                  <CreditCard className="w-4 h-4 text-emerald-400" />
-                  <span>Billing & Plans</span>
-                </button>
-              </div>
-            </div>
-          )}
+          </div>
         </div>
 
-        {/* User profile bottom settings item */}
-        <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
-          <Link 
-            to="/profile" 
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity flex-1 min-w-0 mr-2"
-          >
-            {user?.avatar ? (
-              <img 
-                src={user.avatar} 
-                alt={user.name} 
-                className="w-8 h-8 rounded-full object-cover bg-slate-800" 
-              />
-            ) : (
-              <div className="w-8 h-8 rounded-full bg-slate-850 border border-slate-800 flex items-center justify-center text-xs font-semibold uppercase">
-                {user?.name?.charAt(0) || 'U'}
+        {/* User profile and logout */}
+        {isSidebarOpen && (
+          <div className="p-4 border-t border-slate-800/80 bg-slate-900/40">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-white shadow-inner">
+                  {user?.name?.charAt(0) || 'U'}
+                </div>
+                <div className="min-w-0">
+                  <h5 className="text-xs font-bold text-slate-200 truncate">{user?.name || 'Default User'}</h5>
+                  <span className="text-[10px] text-slate-500 block truncate">{user?.email}</span>
+                </div>
               </div>
-            )}
-            <div className="flex flex-col text-left min-w-0 flex-1">
-              <span className="text-xs font-semibold truncate text-slate-200">
-                {user?.name || 'My Profile'}
-              </span>
-              <span className="text-[10px] text-slate-500 font-medium">Settings</span>
+              <button 
+                onClick={handleLogout}
+                className="p-1.5 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-slate-200 transition-colors"
+                title="Logout"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
             </div>
-          </Link>
-          <button 
-            onClick={handleLogout}
-            className="p-1.5 text-slate-400 hover:text-red-400 rounded-lg hover:bg-slate-900 transition-colors"
-            title="Log Out"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
-        </div>
+          </div>
+        )}
       </aside>
 
-      {/* Main Content Area */}
-      <main className="flex-1 p-6 md:p-8 overflow-y-auto relative bg-slate-900">
+      {/* Main Panel */}
+      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto h-screen pb-16">
         
-        {/* Invitations Notification Banner */}
-        {invitations.length > 0 && (
-          <div className="mb-6 p-4 rounded-2xl bg-indigo-950/40 border border-indigo-500/20 flex flex-col sm:flex-row items-center justify-between gap-4 backdrop-blur-md relative z-10 animate-pulse">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-xl flex items-center justify-center text-sm font-bold">
-                ✉
-              </div>
-              <div>
-                <span className="text-xs font-bold text-slate-200 block">Pending Team Invitation</span>
-                <span className="text-[10px] text-slate-400">You have been invited to join a collaborative team.</span>
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <button 
-                onClick={() => handleRespondInvitation(invitations[0].token, 'accept')}
-                className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-[10px] font-bold transition-all shadow-md shadow-indigo-600/10"
-              >
-                Accept
-              </button>
-              <button 
-                onClick={() => handleRespondInvitation(invitations[0].token, 'decline')}
-                className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-xl text-[10px] font-bold transition-all"
-              >
-                Decline
-              </button>
-            </div>
+        {/* Sticky Topbar */}
+        <header className="sticky top-0 bg-slate-955/60 backdrop-blur-md border-b border-slate-800/60 z-20 px-6 py-4 flex items-center justify-between">
+          {/* Breadcrumb Navigation */}
+          <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
+            <button className="hover:text-slate-200" onClick={() => setCurrentTab('dashboard')}>
+              {activeOrg?.name || 'Workspace'}
+            </button>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
+            <span className="text-slate-100 font-bold capitalize">{currentTab}</span>
           </div>
-        )}
 
-        {/* Dashboard Header */}
-        <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 relative z-10">
-          <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-white capitalize bg-gradient-to-r from-slate-100 via-indigo-200 to-indigo-100 bg-clip-text text-transparent">
-              {view} Boards
-            </h1>
-            <p className="text-xs text-slate-400 mt-1">Manage and coordinate your spatial canvas files</p>
-          </div>
-          
-          {/* Create Board Quick Form */}
-          {view === 'all' && (
-            <form onSubmit={handleCreateBoard} className="flex items-center gap-2.5 w-full sm:w-auto">
+          <div className="flex items-center gap-4">
+            {/* Quick Search */}
+            <div className="relative hidden md:block">
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
               <input
                 type="text"
-                required
-                placeholder={canCreateBoard ? "New Board Name..." : "Creation disabled for Viewers"}
-                value={newBoardName}
-                onChange={(e) => setNewBoardName(e.target.value)}
-                disabled={!canCreateBoard}
-                className="flex-1 sm:flex-initial px-4 py-2.5 rounded-2xl border border-slate-800 bg-slate-950/60 text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-xs transition-all backdrop-blur-md disabled:opacity-40"
+                placeholder="Search boards..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-4 py-2 w-56 rounded-full bg-slate-905 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
               />
-              <button
-                type="submit"
-                disabled={!canCreateBoard}
-                className="px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs flex items-center gap-2 shadow-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 hover:-translate-y-0.5 transition-all disabled:opacity-40"
+            </div>
+
+            {/* Notification Center */}
+            <div className="relative">
+              <button 
+                onClick={() => {
+                  setShowNotificationsMenu(!showNotificationsMenu);
+                  if (!showNotificationsMenu) handleMarkNotificationsRead();
+                }}
+                className="p-2 bg-slate-900 border border-slate-800 rounded-xl hover:bg-slate-800 transition-colors relative"
               >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Create Board</span>
+                <Bell className="w-4 h-4 text-slate-300" />
+                {notifications.some(n => !n.is_read) && (
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+                )}
               </button>
-              <button
-                type="button"
-                onClick={() => setShowTemplates(true)}
-                disabled={!canCreateBoard}
-                className="px-5 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs flex items-center gap-2 shadow-lg hover:-translate-y-0.5 transition-all disabled:opacity-40"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-indigo-450" />
-                <span>Templates</span>
-              </button>
-            </form>
-          )}
+
+              {showNotificationsMenu && (
+                <div className="absolute right-0 mt-3 w-80 bg-slate-900 border border-slate-850 rounded-2xl shadow-2xl p-4 z-50 space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                    <h4 className="text-xs font-bold text-white">Notifications</h4>
+                    <span className="text-[10px] text-slate-500">{notifications.length} total</span>
+                  </div>
+                  <div className="max-h-60 overflow-y-auto space-y-2.5">
+                    {notifications.length === 0 ? (
+                      <p className="text-center text-[10px] text-slate-500 py-6">No notifications found.</p>
+                    ) : (
+                      notifications.map(n => (
+                        <div key={n.id} className="p-2.5 rounded-xl bg-slate-950/40 border border-slate-855/60 text-left text-xs">
+                          <h5 className="font-bold text-slate-200">{n.title}</h5>
+                          <p className="text-slate-400 mt-1 text-[11px] leading-relaxed">{n.content}</p>
+                          <span className="text-[9px] text-slate-500 block mt-2">{new Date(n.created_at).toLocaleDateString()}</span>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Quick Action Button */}
+            <button 
+              onClick={() => {
+                setCurrentTab('boards');
+                setBoardSubView('all');
+                setTimeout(() => {
+                  const el = document.getElementById('boardNameInput');
+                  if (el) el.focus();
+                }, 100);
+              }}
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/10 flex items-center gap-2 transition-all"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">New Board</span>
+            </button>
+          </div>
         </header>
 
-        {/* Statistics Banner */}
-        {!loading && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 relative z-10">
-            <div className="bg-slate-950/30 border border-slate-850 rounded-2xl p-4 flex flex-col gap-1 backdrop-blur-md">
-              <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500">All Boards</span>
-              <span className="text-2xl font-black text-slate-100">{boards.filter(b => !b.is_deleted && !b.is_archived).length}</span>
-            </div>
-            <div className="bg-slate-950/30 border border-slate-850 rounded-2xl p-4 flex flex-col gap-1 backdrop-blur-md">
-              <span className="text-[10px] uppercase font-bold tracking-wider text-amber-500/80">Starred</span>
-              <span className="text-2xl font-black text-amber-400">{boards.filter(b => b.is_starred && !b.is_deleted).length}</span>
-            </div>
-            <div className="bg-slate-950/30 border border-slate-850 rounded-2xl p-4 flex flex-col gap-1 backdrop-blur-md">
-              <span className="text-[10px] uppercase font-bold tracking-wider text-indigo-500/80">Archived</span>
-              <span className="text-2xl font-black text-indigo-400">{boards.filter(b => b.is_archived && !b.is_deleted).length}</span>
-            </div>
-            <div className="bg-slate-950/30 border border-slate-850 rounded-2xl p-4 flex flex-col gap-1 backdrop-blur-md">
-              <span className="text-[10px] uppercase font-bold tracking-wider text-rose-500/80">Trash Bin</span>
-              <span className="text-2xl font-black text-rose-400">{boards.filter(b => b.is_deleted).length}</span>
-            </div>
-          </div>
-        )}
-
-        {/* Loading / Content Container */}
-        {loading ? (
-          <div className="flex items-center gap-3 text-slate-400 justify-center py-20 relative z-10">
-            <RefreshCw className="w-5 h-5 animate-spin text-indigo-500" />
-            <span className="text-xs font-semibold">Retrieving workspace...</span>
-          </div>
-        ) : getFilteredBoards().length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 border border-dashed border-slate-800 rounded-3xl bg-slate-950/10 backdrop-blur-md relative z-10">
-            <div className="w-12 h-12 rounded-2xl bg-slate-950/40 border border-slate-800 flex items-center justify-center mb-4">
-              <Folder className="w-5 h-5 text-slate-500" />
-            </div>
-            <p className="text-slate-400 text-xs font-semibold">No boards found in this view.</p>
-            <p className="text-[10px] text-slate-600 mt-1">Get started by creating a new collaborative board above.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
-            {getFilteredBoards().map((b) => (
-              <div 
-                key={b.id}
-                className="p-6 rounded-3xl bg-slate-950/35 border border-slate-850/80 hover:border-indigo-500/40 hover:shadow-xl hover:shadow-indigo-500/5 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between h-44 shadow-lg backdrop-blur-md cursor-pointer group"
-                onClick={() => !b.is_deleted && navigate(`/board/${b.id}`)}
-              >
-                <div>
-                  <div className="flex items-start justify-between">
-                    <h3 className="font-bold text-slate-200 group-hover:text-white truncate max-w-[180px] text-sm transition-colors">
-                      {b.name}
-                    </h3>
-                    <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
-                      <button 
-                        onClick={() => toggleStar(b)}
-                        className={`p-1.5 rounded-lg hover:bg-slate-850 transition-colors ${
-                          b.is_starred ? 'text-amber-400 bg-amber-500/5 border border-amber-500/10' : 'text-slate-500 hover:text-slate-300'
-                        }`}
-                        title={b.is_starred ? 'Unstar Board' : 'Star Board'}
-                      >
-                        <Star className="w-3.5 h-3.5 fill-current" />
-                      </button>
-                      <button 
-                        onClick={() => toggleArchive(b)}
-                        className={`p-1.5 rounded-lg hover:bg-slate-850 transition-colors ${
-                          b.is_archived ? 'text-indigo-400 bg-indigo-500/5 border border-indigo-500/10' : 'text-slate-500 hover:text-slate-300'
-                        }`}
-                        title={b.is_archived ? 'Unarchive Board' : 'Archive Board'}
-                      >
-                        <Archive className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
+        {/* Tab Components */}
+        <div className="p-6 md:p-8 flex-1">
+          {currentTab === 'dashboard' && (
+            <div className="space-y-8 animate-in fade-in duration-300">
+              {/* Quick Actions Header */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800/80 shadow-xl flex items-center justify-between group hover:border-indigo-500/30 transition-all duration-300">
+                  <div className="space-y-1">
+                    <span className="text-[10px] uppercase font-extrabold tracking-widest text-slate-500">Collaborate</span>
+                    <h3 className="text-sm font-bold text-white">Create Board</h3>
+                    <p className="text-xs text-slate-400">Launch a new canvas workspace</p>
                   </div>
-                  <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed font-normal">
-                    {b.description || 'No description provided.'}
-                  </p>
+                  <button 
+                    onClick={() => {
+                      setCurrentTab('boards');
+                      setBoardSubView('all');
+                    }}
+                    className="p-3 bg-indigo-600/10 hover:bg-indigo-600 text-indigo-400 hover:text-white rounded-2xl transition-all"
+                  >
+                    <Plus className="w-5 h-5" />
+                  </button>
                 </div>
-
-                <div className="flex items-center justify-between mt-4 pt-3.5 border-t border-slate-850" onClick={(e) => e.stopPropagation()}>
-                  <span className="text-[9px] uppercase font-extrabold tracking-widest text-slate-500 bg-slate-900 px-2 py-0.5 rounded-full border border-slate-800/60">
-                    {b.visibility}
-                  </span>
-                  
-                  {b.is_deleted ? (
-                    <button 
-                      onClick={() => moveBoardToTrash(b, false)}
-                      className="text-xs font-bold text-indigo-400 hover:text-indigo-300 transition-colors"
-                    >
-                      Restore
-                    </button>
-                  ) : (
-                    <button 
-                      onClick={() => moveBoardToTrash(b, true)}
-                      className="p-1.5 hover:bg-red-500/5 rounded-lg text-slate-500 hover:text-red-400 transition-colors"
-                      title="Move to Trash"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  )}
+                <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800/80 shadow-xl flex items-center justify-between group hover:border-indigo-500/30 transition-all duration-300">
+                  <div className="space-y-1">
+                    <span className="text-[10px] uppercase font-extrabold tracking-widest text-slate-500">Scale</span>
+                    <h3 className="text-sm font-bold text-white">Invite Member</h3>
+                    <p className="text-xs text-slate-400">Bring new minds into the team</p>
+                  </div>
+                  <button 
+                    onClick={() => setShowInviteModal(true)}
+                    className="p-3 bg-indigo-600/10 hover:bg-indigo-600 text-indigo-400 hover:text-white rounded-2xl transition-all"
+                  >
+                    <UserPlus className="w-5 h-5" />
+                  </button>
+                </div>
+                <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800/80 shadow-xl flex items-center justify-between group hover:border-indigo-500/30 transition-all duration-300">
+                  <div className="space-y-1">
+                    <span className="text-[10px] uppercase font-extrabold tracking-widest text-slate-500">Coordinate</span>
+                    <h3 className="text-sm font-bold text-white">Create Team</h3>
+                    <p className="text-xs text-slate-400">Assemble team boards together</p>
+                  </div>
+                  <button 
+                    onClick={() => setShowTeamModal(true)}
+                    className="p-3 bg-indigo-600/10 hover:bg-indigo-600 text-indigo-400 hover:text-white rounded-2xl transition-all"
+                  >
+                    <Users className="w-5 h-5" />
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
+
+              {/* Statistics & Billing details */}
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <div className="p-6 rounded-3xl bg-slate-905 border border-slate-850 flex flex-col justify-between h-36">
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500">Boards Created</span>
+                  <div className="flex items-baseline gap-2 mt-2">
+                    <span className="text-3xl font-extrabold text-white">{boards.length}</span>
+                    <span className="text-xs text-slate-500">/ {billingDetails?.board_limit || 3} limit</span>
+                  </div>
+                  <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-3">
+                    <div 
+                      className="bg-indigo-500 h-full rounded-full transition-all duration-550" 
+                      style={{ width: `${Math.min(100, (boards.length / (billingDetails?.board_limit || 3)) * 100)}%` }} 
+                    />
+                  </div>
+                </div>
+                <div className="p-6 rounded-3xl bg-slate-905 border border-slate-850 flex flex-col justify-between h-36">
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500">Team Members</span>
+                  <div className="flex items-baseline gap-2 mt-2">
+                    <span className="text-3xl font-extrabold text-white">{orgMembers.length}</span>
+                    <span className="text-xs text-slate-500">/ {billingDetails?.member_limit || 3} limit</span>
+                  </div>
+                  <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-3">
+                    <div 
+                      className="bg-indigo-500 h-full rounded-full transition-all duration-550" 
+                      style={{ width: `${Math.min(100, (orgMembers.length / (billingDetails?.member_limit || 3)) * 100)}%` }} 
+                    />
+                  </div>
+                </div>
+                <div className="p-6 rounded-3xl bg-slate-905 border border-slate-850 flex flex-col justify-between h-36">
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500">Active Tier Plan</span>
+                  <div className="flex items-center justify-between mt-2">
+                    <span className="text-xl font-black uppercase text-white bg-indigo-600/10 px-3 py-1 rounded-xl border border-indigo-500/20 text-indigo-400">
+                      {billingDetails?.plan || 'Free'}
+                    </span>
+                    <button 
+                      onClick={() => setShowBillingModal(true)}
+                      className="text-[10px] font-extrabold text-indigo-500 hover:underline"
+                    >
+                      Manage Plan
+                    </button>
+                  </div>
+                  <span className="text-[10px] text-slate-500 block mt-3">Storage space: {billingDetails?.storage_limit || '50 MB'}</span>
+                </div>
+                <div className="p-6 rounded-3xl bg-slate-905 border border-slate-850 flex flex-col justify-between h-36">
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500">Storage Consumption</span>
+                  <div className="flex items-baseline gap-2 mt-2">
+                    <span className="text-xl font-bold text-white">0.2 MB</span>
+                    <span className="text-xs text-slate-500">/ {billingDetails?.storage_limit || '50 MB'}</span>
+                  </div>
+                  <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-3">
+                    <div className="bg-indigo-500 h-full rounded-full" style={{ width: '4%' }} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Recent Activity Logs list and Boards list side-by-side */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Recent activity */}
+                <div className="lg:col-span-1 p-6 rounded-3xl bg-slate-900 border border-slate-800/80 shadow-xl space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-white">Team Activity</h3>
+                    <button onClick={() => setCurrentTab('activities')} className="text-[10px] font-extrabold text-indigo-400 hover:underline">View All</button>
+                  </div>
+                  <div className="space-y-4 max-h-72 overflow-y-auto">
+                    {activityLogs.length === 0 ? (
+                      <p className="text-xs text-slate-500 text-center py-8">No activities recorded yet.</p>
+                    ) : (
+                      activityLogs.slice(0, 5).map(l => (
+                        <div key={l.id} className="flex gap-3 text-xs leading-normal">
+                          <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 shrink-0" />
+                          <div>
+                            <span className="font-semibold text-slate-300">{l.user_name || 'Collaborator'}</span>{' '}
+                            <span className="text-slate-400 font-normal">{l.details || l.action}</span>
+                            <span className="text-[9px] text-slate-500 block mt-0.5">{new Date(l.created_at).toLocaleTimeString()}</span>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+                {/* Recent boards */}
+                <div className="lg:col-span-2 p-6 rounded-3xl bg-slate-900 border border-slate-800/80 shadow-xl space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-white">Recent Boards</h3>
+                    <button onClick={() => setCurrentTab('boards')} className="text-[10px] font-extrabold text-indigo-400 hover:underline">All Boards</button>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {boards.slice(0, 4).map(b => (
+                      <div
+                        key={b.id}
+                        onClick={() => navigate(`/board/${b.id}`)}
+                        className="p-4 rounded-2xl bg-slate-950/40 border border-slate-850 hover:border-indigo-500/35 transition-all text-left cursor-pointer flex flex-col justify-between h-28 group"
+                      >
+                        <div>
+                          <h4 className="font-bold text-slate-200 group-hover:text-white text-xs truncate">{b.name}</h4>
+                          <p className="text-[10px] text-slate-500 mt-1 line-clamp-2 leading-relaxed">{b.description || 'No description'}</p>
+                        </div>
+                        <span className="text-[9px] text-slate-400 self-end">Private</span>
+                      </div>
+                    ))}
+                    {boards.length === 0 && (
+                      <div className="col-span-2 text-center py-10 text-xs text-slate-500">
+                        Create your first board to start collaborating!
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {currentTab === 'boards' && (
+            <div className="space-y-6 animate-in fade-in duration-300">
+              {/* Creator input panel */}
+              {(() => {
+                const canCreateBoard = userOrgRole === 'owner' || userOrgRole === 'admin' || userOrgRole === 'editor';
+                return canCreateBoard && (
+                <form onSubmit={handleCreateBoard} className="p-6 rounded-3xl bg-slate-900 border border-slate-800/85 shadow-lg flex flex-col sm:flex-row gap-4 items-end">
+                  <div className="flex-1 w-full space-y-1 text-left">
+                    <label className="text-[10px] uppercase font-bold text-slate-500 block">Board Name</label>
+                    <input
+                      id="boardNameInput"
+                      type="text"
+                      required
+                      placeholder="e.g. Brainstorming Session"
+                      value={newBoardName}
+                      onChange={(e) => setNewBoardName(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div className="flex-1 w-full space-y-1 text-left">
+                    <label className="text-[10px] uppercase font-bold text-slate-500 block">Description (Optional)</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Design critique & spatial mapping"
+                      value={newBoardDesc}
+                      onChange={(e) => setNewBoardDesc(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div className="flex gap-2 w-full sm:w-auto">
+                    <button
+                      type="button"
+                      onClick={() => setShowTemplates(true)}
+                      className="flex-1 sm:flex-none px-4 py-2.5 bg-slate-850 hover:bg-slate-800 border border-slate-800 text-slate-300 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                      <span>Templates</span>
+                    </button>
+                    <button
+                      type="submit"
+                      className="flex-1 sm:flex-none px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/10 transition-all"
+                    >
+                      Create Canvas
+                    </button>
+                  </div>
+                </form>
+                );
+              })()}
+
+              {/* Sub-view filters */}
+              <div className="flex flex-wrap gap-2.5 border-b border-slate-855 pb-4">
+                {[
+                  { key: 'all', label: 'All Boards' },
+                  { key: 'starred', label: 'Starred' },
+                  { key: 'personal', label: 'Personal' },
+                  { key: 'team', label: 'Team Shared' },
+                  { key: 'archive', label: 'Archived' },
+                  { key: 'trash', label: 'Trash Bin' },
+                ].map(item => (
+                  <button
+                    key={item.key}
+                    onClick={() => setBoardSubView(item.key as any)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                      boardSubView === item.key ? 'bg-indigo-600/15 text-indigo-400 border border-indigo-500/20' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Boards Grid */}
+              {getFilteredBoards().length === 0 ? (
+                <div className="p-12 text-center rounded-3xl border border-dashed border-slate-800/80 bg-slate-900/10">
+                  <Folder className="w-8 h-8 text-slate-600 mx-auto mb-3" />
+                  <p className="text-slate-400 text-xs font-semibold">No boards found in this view.</p>
+                  <p className="text-[10px] text-slate-600 mt-1">Get started by creating a new collaborative board above.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {getFilteredBoards().map((b) => (
+                    <div 
+                      key={b.id}
+                      className="p-6 rounded-3xl bg-slate-900 border border-slate-850/80 hover:border-indigo-500/40 hover:shadow-xl hover:shadow-indigo-500/5 hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between h-44 shadow-lg backdrop-blur-md cursor-pointer group"
+                      onClick={() => !b.is_deleted && navigate(`/board/${b.id}`)}
+                    >
+                      <div>
+                        <div className="flex items-start justify-between">
+                          <h3 className="font-bold text-slate-200 group-hover:text-white truncate max-w-[180px] text-sm transition-colors">
+                            {b.name}
+                          </h3>
+                          <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                            <button 
+                              onClick={() => toggleStar(b)}
+                              className={`p-1.5 rounded-lg hover:bg-slate-850 transition-colors ${
+                                b.is_starred ? 'text-amber-400 bg-amber-500/5 border border-amber-500/10' : 'text-slate-500 hover:text-slate-300'
+                              }`}
+                              title={b.is_starred ? 'Unstar Board' : 'Star Board'}
+                            >
+                              <Star className="w-3.5 h-3.5 fill-current" />
+                            </button>
+                            <button 
+                              onClick={() => toggleArchive(b)}
+                              className={`p-1.5 rounded-lg hover:bg-slate-850 transition-colors ${
+                                b.is_archived ? 'text-indigo-400 bg-indigo-500/5 border border-indigo-500/10' : 'text-slate-500 hover:text-slate-300'
+                              }`}
+                              title={b.is_archived ? 'Unarchive Board' : 'Archive Board'}
+                            >
+                              <Archive className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                        <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed font-normal">
+                          {b.description || 'No description provided.'}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center justify-between mt-4 pt-3.5 border-t border-slate-850" onClick={(e) => e.stopPropagation()}>
+                        <span className="text-[9px] uppercase font-extrabold tracking-widest text-slate-500 bg-slate-955 px-2.5 py-0.5 rounded-full border border-slate-800/60">
+                          {b.visibility}
+                        </span>
+                        
+                        {b.is_deleted ? (
+                          <button 
+                            onClick={() => moveBoardToTrash(b, false)}
+                            className="text-xs font-bold text-indigo-400 hover:text-indigo-300 transition-colors"
+                          >
+                            Restore
+                          </button>
+                        ) : (
+                          <button 
+                            onClick={() => moveBoardToTrash(b, true)}
+                            className="p-1.5 hover:bg-red-500/5 rounded-lg text-slate-500 hover:text-red-400 transition-colors"
+                            title="Move to Trash"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {currentTab === 'members' && (
+            <div className="space-y-6 animate-in fade-in duration-300">
+              {/* Member Invite Header Form */}
+              <div className="flex flex-col md:flex-row gap-4 items-end justify-between p-6 bg-slate-900 border border-slate-800 rounded-3xl">
+                <form onSubmit={handleSendInvite} className="w-full flex flex-col sm:flex-row gap-4 items-end">
+                  <div className="flex-1 w-full space-y-1 text-left">
+                    <label className="text-[10px] uppercase font-bold text-slate-500 block">Email Address</label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="collaborator@example.com"
+                      value={inviteEmail}
+                      onChange={(e) => setInviteEmail(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div className="w-full sm:w-48 space-y-1 text-left">
+                    <label className="text-[10px] uppercase font-bold text-slate-500 block">Role</label>
+                    <select
+                      value={inviteRole}
+                      onChange={(e) => setInviteRole(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                    >
+                      <option value="admin">Admin</option>
+                      <option value="editor">Editor</option>
+                      <option value="viewer">Viewer</option>
+                    </select>
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={isInviting}
+                    className="w-full sm:w-auto px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-indigo-600/10 flex items-center justify-center gap-2"
+                  >
+                    <UserPlus className="w-3.5 h-3.5" />
+                    <span>{isInviting ? 'Inviting...' : 'Invite'}</span>
+                  </button>
+                </form>
+              </div>
+
+              {/* Members Table Filter controls */}
+              <div className="flex flex-col sm:flex-row gap-3 justify-between items-center bg-slate-900/40 p-4 border border-slate-800 rounded-2xl">
+                <div className="relative w-full sm:w-72">
+                  <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                  <input
+                    type="text"
+                    placeholder="Search by name or email..."
+                    value={memberFilter}
+                    onChange={(e) => setMemberFilter(e.target.value)}
+                    className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-955 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  />
+                </div>
+                <select
+                  value={roleFilter}
+                  onChange={(e) => setRoleFilter(e.target.value)}
+                  className="px-3 py-2 rounded-xl bg-slate-955 border border-slate-800 text-xs text-slate-300 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                >
+                  <option value="all">All Roles</option>
+                  <option value="owner">Owner</option>
+                  <option value="admin">Admin</option>
+                  <option value="editor">Editor</option>
+                  <option value="viewer">Viewer</option>
+                </select>
+              </div>
+
+              {/* Responsive Members List */}
+              <div className="border border-slate-800 rounded-3xl bg-slate-900 overflow-hidden shadow-xl">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse text-xs">
+                    <thead>
+                      <tr className="bg-slate-955/50 border-b border-slate-800 text-slate-400 font-bold">
+                        <th className="p-4">Name / Username</th>
+                        <th className="p-4">Email</th>
+                        <th className="p-4">Role</th>
+                        <th className="p-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/60">
+                      {getFilteredMembers().map((m) => (
+                        <tr key={m.user_id} className="hover:bg-slate-850/40 transition-colors">
+                          <td className="p-4 flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-white">
+                              {m.name?.charAt(0) || 'U'}
+                            </div>
+                            <div>
+                              <div className="font-bold text-slate-200">{m.name}</div>
+                              <div className="text-[10px] text-slate-500">@{m.username}</div>
+                            </div>
+                          </td>
+                          <td className="p-4 text-slate-300">{m.email}</td>
+                          <td className="p-4">
+                            <select
+                              value={m.role}
+                              disabled={m.role === 'owner' || userOrgRole === 'viewer'}
+                              onChange={(e) => handleUpdateMemberRole(m.user_id, e.target.value)}
+                              className="bg-slate-955 border border-slate-800 rounded-lg px-2 py-1 text-xs text-slate-300 focus:outline-none disabled:opacity-50"
+                            >
+                              <option value="owner">Owner</option>
+                              <option value="admin">Admin</option>
+                              <option value="editor">Editor</option>
+                              <option value="viewer">Viewer</option>
+                            </select>
+                          </td>
+                          <td className="p-4 text-right">
+                            {m.user_id !== user?.id ? (
+                              <button
+                                onClick={() => handleRemoveMember(m.user_id)}
+                                disabled={userOrgRole === 'viewer'}
+                                className="p-1.5 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white rounded-lg transition-all text-xs font-semibold disabled:opacity-50"
+                              >
+                                Remove
+                              </button>
+                            ) : (
+                              <button
+                                onClick={handleLeaveOrg}
+                                className="p-1.5 bg-amber-500/10 hover:bg-amber-500 text-amber-400 hover:text-white rounded-lg transition-all text-xs font-semibold"
+                              >
+                                Leave Workspace
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {currentTab === 'activities' && (
+            <div className="space-y-6 max-w-2xl mx-auto animate-in fade-in duration-300">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h2 className="text-base font-bold text-white">Activity Trail Log</h2>
+                <button onClick={() => activeOrg && loadActivityLogs(activeOrg.id)} className="p-2 bg-slate-900 border border-slate-800 rounded-lg hover:bg-slate-800 transition-colors">
+                  <RefreshCw className="w-3.5 h-3.5 text-slate-400" />
+                </button>
+              </div>
+
+              <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-800">
+                {activityLogs.map((l) => (
+                  <div key={l.id} className="relative text-xs text-left leading-relaxed">
+                    <div className="absolute -left-[22px] top-1 w-3.5 h-3.5 rounded-full border-2 border-slate-950 bg-indigo-500 flex items-center justify-center shrink-0" />
+                    <div>
+                      <span className="font-bold text-slate-100">{l.user_name || 'Collaborator'}</span>{' '}
+                      <span className="text-slate-400">{l.details || l.action}</span>
+                      <span className="text-[10px] text-slate-500 block mt-1">{new Date(l.created_at).toLocaleString()}</span>
+                    </div>
+                  </div>
+                ))}
+                {activityLogs.length === 0 && (
+                  <p className="text-slate-500 text-center py-10">No activities log found.</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {currentTab === 'settings' && (
+            <div className="max-w-xl mx-auto space-y-8 animate-in fade-in duration-300">
+              {/* Org settings form */}
+              <div className="p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-6">
+                <div>
+                  <h3 className="text-sm font-bold text-white">Organization Settings</h3>
+                  <p className="text-xs text-slate-400 mt-0.5">Customize workspace information.</p>
+                </div>
+                <form onSubmit={handleUpdateOrg} className="space-y-4 text-left">
+                  <div className="space-y-1">
+                    <label className="text-[10px] uppercase font-bold text-slate-500">Org Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={editOrgName}
+                      onChange={(e) => setEditOrgName(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] uppercase font-bold text-slate-500">Domain / URL Prefix</label>
+                    <input
+                      type="text"
+                      value={editOrgDomain}
+                      onChange={(e) => setEditOrgDomain(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] uppercase font-bold text-slate-500">Description</label>
+                    <textarea
+                      value={editOrgDesc}
+                      onChange={(e) => setEditOrgDesc(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 h-20"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-indigo-600/10"
+                  >
+                    Save Changes
+                  </button>
+                </form>
+              </div>
+
+              {/* Team Settings Panel */}
+              {activeTeam && (
+                <div className="p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-6">
+                  <div>
+                    <h3 className="text-sm font-bold text-white">Team Configuration</h3>
+                    <p className="text-xs text-slate-400 mt-0.5">Edit settings for team "{activeTeam.name}".</p>
+                  </div>
+                  <form onSubmit={handleUpdateTeam} className="space-y-4 text-left">
+                    <div className="space-y-1">
+                      <label className="text-[10px] uppercase font-bold text-slate-500">Team Name</label>
+                      <input
+                        type="text"
+                        required
+                        value={editTeamName}
+                        onChange={(e) => setEditTeamName(e.target.value)}
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] uppercase font-bold text-slate-500">Team Description</label>
+                      <input
+                        type="text"
+                        value={editTeamDesc}
+                        onChange={(e) => setEditTeamDesc(e.target.value)}
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        type="submit"
+                        className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-indigo-600/10"
+                      >
+                        Update Team
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleDeleteTeam}
+                        className="px-5 py-2.5 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white rounded-xl text-xs font-bold transition-all"
+                      >
+                        Delete Team
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
+
+              {/* Danger Zone */}
+              <div className="p-6 bg-red-500/5 border border-red-500/15 rounded-3xl space-y-4 text-left">
+                <div>
+                  <h3 className="text-sm font-bold text-red-400">Danger Zone</h3>
+                  <p className="text-xs text-slate-400 mt-0.5">Destructive actions for organization managers.</p>
+                </div>
+                <button
+                  onClick={handleDeleteOrg}
+                  disabled={userOrgRole !== 'owner'}
+                  className="px-5 py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-bold transition-all disabled:opacity-50"
+                >
+                  Delete Organization Workspace
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </main>
 
       {/* Invite Member Modal */}
-      {showInviteModal && activeWorkspace?.team_id && (
+      {showInviteModal && activeTeam && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-md" onClick={() => setShowInviteModal(false)} />
           <form onSubmit={handleSendInvite} className="relative bg-slate-900 border border-slate-850 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 text-left text-slate-100">
             <div>
               <h3 className="text-base font-bold text-white">Invite to Team Workspace</h3>
-              <p className="text-xs text-slate-400 mt-1">Send a direct token to invite editors or viewers.</p>
+              <p className="text-xs text-slate-400 mt-1">Send a direct token link to invite users.</p>
             </div>
             
             {inviteSuccess && (
               <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl text-xs">
-                Invitation sent successfully! The invite url has been logged to the server terminal.
+                Invitation sent successfully! Link is printed to backend server log.
               </div>
             )}
 
@@ -693,7 +1461,7 @@ export const Dashboard: React.FC = () => {
                   placeholder="collaborator@example.com"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
@@ -702,11 +1470,11 @@ export const Dashboard: React.FC = () => {
                 <select
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 >
-                  <option value="admin">Admin (Manage members & edit boards)</option>
-                  <option value="editor">Editor (Create and edit boards)</option>
-                  <option value="viewer">Viewer (Read-only access)</option>
+                  <option value="admin">Admin</option>
+                  <option value="editor">Editor</option>
+                  <option value="viewer">Viewer</option>
                 </select>
               </div>
             </div>
@@ -718,7 +1486,7 @@ export const Dashboard: React.FC = () => {
                   setShowInviteModal(false);
                   setInviteSuccess(false);
                 }}
-                className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-705 text-slate-300 rounded-xl font-semibold text-xs transition-all"
+                className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-300 rounded-xl font-semibold text-xs transition-all"
               >
                 Close
               </button>
@@ -727,82 +1495,110 @@ export const Dashboard: React.FC = () => {
                 disabled={isInviting}
                 className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs transition-all shadow-lg shadow-indigo-600/10"
               >
-                {isInviting ? 'Sending...' : 'Send Invitation'}
+                {isInviting ? 'Inviting...' : 'Send'}
               </button>
             </div>
           </form>
         </div>
       )}
 
-      {/* Create Workspace Modal */}
-      {showWorkspaceModal && (
+      {/* Create Org Modal */}
+      {showOrgModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-md" onClick={() => setShowWorkspaceModal(false)} />
-          <form onSubmit={handleCreateWorkspace} className="relative bg-slate-900 border border-slate-850 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 text-left text-slate-100">
+          <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-md" onClick={() => setShowOrgModal(false)} />
+          <form onSubmit={handleCreateOrg} className="relative bg-slate-900 border border-slate-850 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 text-left text-slate-100">
             <div>
-              <h3 className="text-base font-bold text-white">Create New Workspace</h3>
-              <p className="text-xs text-slate-400 mt-1">Set up a space to coordinate boards.</p>
+              <h3 className="text-base font-bold text-white">New Organization</h3>
+              <p className="text-xs text-slate-400 mt-1">Spin up a new workspace tenant.</p>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Workspace Name</label>
+                <label className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Organization Name</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Design Team Workspace"
-                  value={newWorkspaceName}
-                  onChange={(e) => setNewWorkspaceName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  placeholder="e.g. Acme Corp"
+                  value={newOrgName}
+                  onChange={(e) => setNewOrgName(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
-
               <div>
-                <label className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Workspace Type</label>
-                <select
-                  value={newWorkspaceType}
-                  onChange={(e) => setNewWorkspaceType(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                >
-                  <option value="team">Team Workspace (Shared with team members)</option>
-                  <option value="personal">Personal Workspace (Private to you)</option>
-                </select>
+                <label className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Domain URL Prefix (Optional)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. acme"
+                  value={newOrgDomain}
+                  onChange={(e) => setNewOrgDomain(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                />
               </div>
             </div>
 
             <div className="flex gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setShowWorkspaceModal(false)}
-                className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-705 text-slate-300 rounded-xl font-semibold text-xs transition-all"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs transition-all shadow-lg shadow-indigo-600/10"
-              >
-                Create
-              </button>
+              <button type="button" onClick={() => setShowOrgModal(false)} className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-300 rounded-xl font-semibold text-xs transition-all">Cancel</button>
+              <button type="submit" className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs transition-all shadow-lg shadow-indigo-600/10">Create</button>
             </div>
           </form>
         </div>
       )}
 
-      {activeWorkspace?.team_id && (
+      {/* Create Team Modal */}
+      {showTeamModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-955/80 backdrop-blur-md" onClick={() => setShowTeamModal(false)} />
+          <form onSubmit={handleCreateTeam} className="relative bg-slate-900 border border-slate-855 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 text-left text-slate-100">
+            <div>
+              <h3 className="text-base font-bold text-white">Create New Team</h3>
+              <p className="text-xs text-slate-400 mt-1">Spin up a team unit within the organization.</p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Team Name</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Frontend Engineering"
+                  value={newTeamName}
+                  onChange={(e) => setNewTeamName(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
+                <label className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Description</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Design systems and UI specs"
+                  value={newTeamDesc}
+                  onChange={(e) => setNewTeamDesc(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-955 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-2">
+              <button type="button" onClick={() => setShowTeamModal(false)} className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-300 rounded-xl font-semibold text-xs transition-all">Cancel</button>
+              <button type="submit" className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-xs transition-all shadow-lg shadow-indigo-600/10">Create</button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Billing Portal Modal */}
+      {activeTeam && (
         <BillingPortal
-          teamId={activeWorkspace.team_id!}
+          teamId={activeTeam.id}
           isOpen={showBillingModal}
           onClose={() => setShowBillingModal(false)}
           onPlanChanged={() => {
-            if (activeWorkspace) {
-              loadTeamDetails(activeWorkspace.team_id!);
-              loadBoards(activeWorkspace.id);
-            }
+            if (activeTeam) loadBillingDetails(activeTeam.id);
           }}
         />
       )}
 
+      {/* Templates Modal */}
       {showTemplates && (
         <TemplatesModal
           onClose={() => setShowTemplates(false)}
@@ -810,13 +1606,11 @@ export const Dashboard: React.FC = () => {
             if (!activeWorkspace) return;
             const name = window.prompt("Enter board name:", `Template ${templateId.replace('-', ' ')}`);
             if (!name) return;
-
             try {
               const b = await api.createBoard(activeWorkspace.id, name);
-              // Navigate directly with the ?template= query parameter
               navigate(`/board/${b.id}?template=${templateId}`);
             } catch (e) {
-              alert('Failed to create board with template');
+              showToast("Failed to create template board", "error");
             }
           }}
         />

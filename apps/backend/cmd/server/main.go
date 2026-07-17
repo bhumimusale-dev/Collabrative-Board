@@ -200,12 +200,42 @@ func main() {
 	http.HandleFunc("/api/boards/status", CORS(api.AuthMiddleware(boardHandler.UpdateBoardStatus)))
 
 	// Organization & Team Routes
-	http.HandleFunc("/api/orgs", CORS(api.AuthMiddleware(orgHandler.CreateOrganization)))
+	http.HandleFunc("/api/orgs", CORS(api.AuthMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet {
+			orgHandler.GetOrganizations(w, r)
+		} else if r.Method == http.MethodPost {
+			orgHandler.CreateOrganization(w, r)
+		} else if r.Method == http.MethodPut {
+			orgHandler.UpdateOrganization(w, r)
+		} else if r.Method == http.MethodDelete {
+			orgHandler.DeleteOrganization(w, r)
+		} else {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	})))
+	http.HandleFunc("/api/orgs/members", CORS(api.AuthMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet {
+			orgHandler.ListOrgMembers(w, r)
+		} else if r.Method == http.MethodPut || r.Method == http.MethodPost {
+			orgHandler.UpdateOrgMemberRole(w, r)
+		} else if r.Method == http.MethodDelete {
+			orgHandler.RemoveOrgMember(w, r)
+		} else {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	})))
+	http.HandleFunc("/api/orgs/activities", CORS(api.AuthMiddleware(orgHandler.GetActivityLogs)))
+	http.HandleFunc("/api/notifications", CORS(api.AuthMiddleware(orgHandler.GetNotifications)))
+
 	http.HandleFunc("/api/teams", CORS(api.AuthMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
 			orgHandler.ListTeams(w, r)
 		} else if r.Method == http.MethodPost {
 			orgHandler.CreateTeam(w, r)
+		} else if r.Method == http.MethodPut {
+			orgHandler.UpdateTeam(w, r)
+		} else if r.Method == http.MethodDelete {
+			orgHandler.DeleteTeam(w, r)
 		} else {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}

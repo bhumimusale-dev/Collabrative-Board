@@ -253,6 +253,40 @@ func NewStore(dbPath string) (*Store, error) {
 		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 		FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE
 	);
+	-- Organization Members Table
+	CREATE TABLE IF NOT EXISTS org_members (
+		org_id TEXT NOT NULL,
+		user_id TEXT NOT NULL,
+		role TEXT DEFAULT 'viewer', -- 'owner', 'admin', 'editor', 'viewer'
+		joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		PRIMARY KEY (org_id, user_id),
+		FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE,
+		FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+	);
+
+	-- Notifications Table
+	CREATE TABLE IF NOT EXISTS notifications (
+		id TEXT PRIMARY KEY,
+		user_id TEXT NOT NULL,
+		title TEXT NOT NULL,
+		content TEXT NOT NULL,
+		type TEXT NOT NULL, -- 'board_shared', 'invite_received', 'user_joined', 'user_removed', 'role_changed'
+		is_read INTEGER DEFAULT 0,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+	);
+
+	-- Activity Logs Table
+	CREATE TABLE IF NOT EXISTS activity_logs (
+		id TEXT PRIMARY KEY,
+		org_id TEXT NOT NULL,
+		user_id TEXT NOT NULL,
+		action TEXT NOT NULL, -- 'board_created', 'board_deleted', 'member_invited', 'member_removed', 'role_updated', 'board_renamed', 'team_created'
+		details TEXT,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE,
+		FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+	);
 	`
 	if _, err := db.Exec(query); err != nil {
 		db.Close()
@@ -263,6 +297,7 @@ func NewStore(dbPath string) (*Store, error) {
 	_, _ = db.Exec("ALTER TABLE board_versions ADD COLUMN description TEXT;")
 	_, _ = db.Exec("ALTER TABLE board_versions ADD COLUMN author_id TEXT;")
 	_, _ = db.Exec("ALTER TABLE workspaces ADD COLUMN team_id TEXT;")
+	_, _ = db.Exec("ALTER TABLE organizations ADD COLUMN owner_id TEXT;")
 
 	return &Store{db: db}, nil
 }
