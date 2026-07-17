@@ -2,11 +2,17 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"collabboard-backend/internal/auth"
 	"collabboard-backend/internal/storage"
 )
+
+func mustGenerateToken() string {
+	t, _ := auth.GenerateRandomToken()
+	return t
+}
 
 type OrgHandler struct {
 	Store *storage.Store
@@ -129,7 +135,7 @@ func (h *OrgHandler) UpdateOrganization(w http.ResponseWriter, r *http.Request) 
 	}
 
 	_ = h.Store.WriteActivityLog(&storage.ActivityLog{
-		ID:      "act_" + auth.MustGenerateToken()[:16],
+		ID:      "act_" + mustGenerateToken()[:16],
 		OrgID:   orgID,
 		UserID:  userID,
 		Action:  "org_updated",
@@ -248,7 +254,7 @@ func (h *OrgHandler) UpdateOrgMemberRole(w http.ResponseWriter, r *http.Request)
 
 	// Create user notification
 	_ = h.Store.CreateNotification(&storage.Notification{
-		ID:      "notif_" + auth.MustGenerateToken()[:16],
+		ID:      "notif_" + mustGenerateToken()[:16],
 		UserID:  req.UserID,
 		Title:   "Role Changed",
 		Content: fmt.Sprintf("Your role in organization was updated to %s", req.Role),
@@ -256,7 +262,7 @@ func (h *OrgHandler) UpdateOrgMemberRole(w http.ResponseWriter, r *http.Request)
 	})
 
 	_ = h.Store.WriteActivityLog(&storage.ActivityLog{
-		ID:      "act_" + auth.MustGenerateToken()[:16],
+		ID:      "act_" + mustGenerateToken()[:16],
 		OrgID:   req.OrgID,
 		UserID:  userID,
 		Action:  "role_updated",
@@ -312,7 +318,7 @@ func (h *OrgHandler) RemoveOrgMember(w http.ResponseWriter, r *http.Request) {
 		}
 
 		_ = h.Store.CreateNotification(&storage.Notification{
-			ID:      "notif_" + auth.MustGenerateToken()[:16],
+			ID:      "notif_" + mustGenerateToken()[:16],
 			UserID:  targetUserID,
 			Title:   "Removed from Organization",
 			Content: "You have been removed from the organization",
@@ -321,7 +327,7 @@ func (h *OrgHandler) RemoveOrgMember(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_ = h.Store.WriteActivityLog(&storage.ActivityLog{
-		ID:      "act_" + auth.MustGenerateToken()[:16],
+		ID:      "act_" + mustGenerateToken()[:16],
 		OrgID:   orgID,
 		UserID:  userID,
 		Action:  "member_removed",
@@ -375,7 +381,7 @@ func (h *OrgHandler) CreateTeam(w http.ResponseWriter, r *http.Request) {
 
 	// Write log
 	_ = h.Store.WriteActivityLog(&storage.ActivityLog{
-		ID:      "act_" + auth.MustGenerateToken()[:16],
+		ID:      "act_" + mustGenerateToken()[:16],
 		OrgID:   req.OrgID,
 		UserID:  userID,
 		Action:  "team_created",
